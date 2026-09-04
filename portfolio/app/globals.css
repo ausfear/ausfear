@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─── */
+:root {
+  --color-bg: #fafafa;
+  --color-bg-alt: #f0f0f0;
+  --color-surface: #ffffff;
+  --color-text: #0a0a0a;
+  --color-text-muted: #737373;
+  --color-text-faint: #a3a3a3;
+  --color-border: #e5e5e5;
+  --color-accent: #000000;
+  --color-pop: #ff6b2b;
+  --color-pop-glow: #ff8f5e;
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-syne);
+}
+
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+::selection {
+  background: var(--color-pop);
+  color: #fff;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
+
+/* ─── Navbar Pill ─── */
+.nav-pill {
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 9999px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-pill-scrolled {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Hero Giant BG Text ─── */
+.hero-giant-text {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 0.85;
+  color: #eeeeee;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ─── Hero Foreground Bold ─── */
+.hero-fg-bold {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--color-text);
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* ─── Hero ausfear accent (Syne Tactile) ─── */
+.hero-fg-tactile {
+  font-family: var(--font-syne-tactile), cursive;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--color-pop);
+  user-select: none;
+  white-space: nowrap;
+  text-shadow: 0 0 50px rgba(255, 107, 43, 0.3);
+}
+
+/* ─── Photo Bottom Mask ─── */
+.hero-photo-mask {
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+}
+
+/* ─── Particle Animations ─── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(8deg); }
+}
+@keyframes float-med {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(14px) rotate(-6deg); }
+}
+@keyframes float-fast {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(12deg); }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ─── Interest Section ─── */
+.interest-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--color-border);
+}
+.interest-section:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ─── Gamer Badge ─── */
+.gamer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  transition: all 0.3s ease;
+}
+.gamer-badge:hover {
+  border-color: var(--color-pop);
+  color: var(--color-pop);
+  box-shadow: 0 0 20px rgba(255, 107, 43, 0.1);
+}
+
+/* ─── Music Embed Container ─── */
+.music-embed-glow {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--color-border);
+}
+.music-embed-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,107,43,0.15), transparent 50%, rgba(255,107,43,0.08));
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ─── CTA Underline ─── */
+.cta-underline {
+  position: relative;
+  display: inline-block;
+}
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: var(--color-pop);
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-underline:hover::after {
+  width: 100%;
+}
+
+/* ─── Kinetic Marquee ─── */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 20s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+.marquee-word {
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-border);
+  transition: all 0.4s ease;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+}
+.marquee-word:hover {
+  -webkit-text-stroke: 2px var(--color-pop);
+  color: var(--color-pop);
+  text-shadow: 0 0 60px rgba(255, 107, 43, 0.3);
+}
+
+/* ─── Stat Bar ─── */
+.stat-bar-bg {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-bg-alt);
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--color-pop), var(--color-pop-glow));
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── Steam Embed ─── */
+.steam-embed-wrapper {
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.2);
+}

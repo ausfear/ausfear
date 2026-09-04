@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Audinta Sakti Firmansyah</title>
+    <link rel="stylesheet" href="index_assets/stylesheet.css">
+    <link rel="stylesheet" href="index_assets/responsive.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans+SC:ital,wght@0,100;0,300;0,700;1,100;1,300;1,700&family=Allan:wght@400;700&family=Amatic+SC:wght@400;700&family=Bad+Script&family=Carter+One&family=Caveat:wght@400;500;700&family=Chakra+Petch:ital,wght@0,300;0,700;1,300;1,700&family=Dancing+Script:wght@400;700&family=Kalam:wght@300;400;700&family=Merienda:wght@400;700&family=Nanum+Pen+Script&family=Poiret+One&family=Press+Start+2P&family=Sacramento&family=Tangerine:wght@400;700&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;1,200;1,300;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/30649559aa.js" crossorigin="anonymous"></script>
+    <link rel="icon" href="index_assets/outcircle-1.png" type="png">
+
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+
+  </head>
+  <body onload="startTime(); startDate(); genQuote()">
+    
+    <div class="pos-f-t">
+        <nav class="autohide navbar navbar-expand-lg navbar-dark ">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="index.html">
+                <img class="logo" src="index_assets/ausfear-logo-cropped.png">
+              </a>
+              <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation" data-bs-target="#navbarNavDarkDropdown">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="navbar-collapse collapse" id="navbarNavDarkDropdown">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link active-nav">Home</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      My Interest
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark animate slideIn" aria-labelledby="navbarDarkDropdownMenuLink">
+                      <li><a class="dropdown-item" href="math.html">Math</a></li>
+                      <li><a class="dropdown-item" href="coding.html">Coding</a></li>
+                      <li><a class="dropdown-item" href="gaming.html">Gaming</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </div>
+    
+    <header class="page-header header container-fluid" 
+    style="background: radial-gradient(transparent, black), url(index_assets/mirroredresize.jpg);
+     background-size: cover; background-position: center;">
+    <div class="top-wrapper">
+      <div class="container description">
+        <h1>The best thing isn't always the best choice.</h1>
+        <p class="title-bottom">- Audinta "ausfear" Sakti -</p>
+      </div>
+      <div class="footer-copyright" id="date"></div>
+      <div class="footer-copyright" id="display"></div>   
+    </div>
+    </header>
+    <div class=introduce>
+        <div class=container>
+            <h1 class="show-on-scroll">Welcome, everyone!</h1>
+            <div class="logo-center show-on-scroll">
+                <img src="index_assets/sasir-1.jpg" class="introduce-image">
+            </div>
+            <h2 class='name-int show-on-scroll'>Audinta Sakti Firmansyah</h2>
+            <h3 class='undername-int show-on-scroll' style="font-size: 20px;">Math '20 at ULM</h3>
+            <p class='paragraph-int show-on-scroll'>
+                Saya adalah seorang mahasiswa (tidak) biasa, yang selalu ingin menambah pengetahuan baru. 
+                Selain di matematika, saya juga memiliki minat di bidang programming, seperti machine learning dan desain web 
+                (ya, web ini salah satu contohnya). Dan juga, saya juga memiliki sedikit skill di bidang editing, 
+                baik editing foto (Photoshop, Canva), editing & producing lagu (FL Studio), maupun editing video (VideoPad, Kinemaster).
+                <br/> Read more about me on <a href="about.html">About</a> page!
+
+                
+            </p>
+        </div>
+    </div>
+     
+    <div class="container features" style="margin-top: 2em !important;" id="myInterest">
+      <h2 style='text-align: center; margin-bottom: 1em;'><u>My Interest</u></h2>
+      <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-12 show-on-scroll">
+              <h3 class="feature-title" style="text-align: center;">Math</h3>
+              <a href="math.html"><img src="index_assets/math-wp.jpg" class="img-fluid hoversize "></a>
+              <p>Kenapa matematika? Gak capek ngitung? Emang gimana belajar matematikanya?</p>
+          </div>
+          
+          <div class="col-lg-4 col-md-4 col-sm-12 show-on-scroll">
+              <h3 class="feature-title" style="text-align: center;">Coding</h3>
+              <a href="coding.html"><img src="index_assets/coding-wp.jpg" class="img-fluid hoversize"></a>
+              <p>Ngapain coding? Ribet-ribet bikin aplikasi, kan kita bisa tinggal pakai? Nyusahin diri sendiri?
+                Kalo emang bisa coding, bisa tolong hack akun instagram mantan saya gak?
+              </p>
+          </div>
+          
+          <div class="col-lg-4 col-md-4 col-sm-12 show-on-scroll">
+              <h3 class="feature-title" style="text-align: center;">Gaming</h3>
+              <a href="gaming.html"><img src="index_assets/gaming-wp.jpg" class="img-fluid hoversize"></a>
+              <p>Main terus, pengangguran ya? Gabisa melakukan hal yang produktif gitu selain ngegame?</p>
+          </div>
+      </div>
+  </div>
+  
+  
+  <div>
+    <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+    <defs>
+    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+    </defs>
+    <g class="parallax">
+    <use xlink:href="#gentle-wave" x="50" y="0" fill="rgba(0,0,0,0.7" />
+    <use xlink:href="#gentle-wave" x="50" y="3" fill="rgba(0,0,0,0.5)" />
+    <use xlink:href="#gentle-wave" x="50" y="5" fill="rgba(0,0,0,0.3)" />
+    <use xlink:href="#gentle-wave" x="50" y="7" fill="#222" />
+    </g>
+    </svg>
+  </div>
+  
+  <footer class="page-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12">
+                <h6 class="text-uppercase font-weight-bold">About this site</h6>
+                <p>This is my own website. Currently it hosted at <a href="https://app.infinityfree.net/">Infinity Free</a> 
+                  and used a domain from <a href="https://www.hostinger.com/">Hostinger</a>. Some parts of this website are inspired
+                  from many designers at <a href="https://codepen.io/">CodePen</a>. And also, big thanks to 
+                <a href="https://startbootstrap.com/">Start Bootstrap</a> for providing ready-to-use Bootstrap templates! 
+                <br/>
+                <br/>Last but not least, thank you for visiting my website!</p>
+                
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <h6 class="text-uppercase font-weight-bold">Contact</h6>
+            <p>Simpang Empat, Tanah Bumbu, 
+            <br/>Kalimantan Selatan, Indonesia
+            <br/>audintasf@gmail.com
+            <br/>+62 821 5503 2976</p>
+        </div>
+    <div>
+    <div class="footer-copyright text-center">
+      © 2021 Audinta Sakti Firmansyah
+    </div>
+    <div class='flex-footer text-center'>
+      <img src="index_assets/logo-footer.png" class="img-fluid">            
+    </div>
+    <div id="content-quotes">
+    <p id="quote"></p>
+    </div>
+  </footer>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
