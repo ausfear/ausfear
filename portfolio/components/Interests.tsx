@@ -1,9 +1,113 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Music, Gamepad2, Sigma } from "lucide-react";
 import TiltCard from "./TiltCard";
+
+/* ═══════════════════════════════════════════════════
+   MUSIC DATA
+   ═══════════════════════════════════════════════════ */
+
+const mainPlaylists = [
+  {
+    label: "acoustic",
+    src: "https://embed.music.apple.com/id/playlist/acoustic/pl.u-kv9l2aaIJ36ybe0",
+  },
+  {
+    label: "2024 recap | edm",
+    src: "https://embed.music.apple.com/id/playlist/2024-recap-ytmusic/pl.u-KVXBkXVCLedbN9B",
+  },
+  {
+    label: "jowo",
+    src: "https://embed.music.apple.com/id/playlist/jowo/pl.u-KVXBkPLtLedbN9B",
+  },
+];
+
+const scatteredSongs = [
+  {
+    genre: "EDM - Melodic Bass",
+    src: "https://embed.music.apple.com/id/song/deep-blue-feat-monika-santucci/1652371778",
+    height: 175,
+    labelPos: "above" as const,
+    targetX: "-175%",
+    targetY: "-130%",
+    rotate: -4,
+    delay: 0.1,
+    floatDuration: 3.8,
+    // SVG line endpoint (% of container from center)
+    lineEndX: -38,
+    lineEndY: -34,
+  },
+  {
+    genre: "Acoustic",
+    src: "https://embed.music.apple.com/id/song/all-you-need-to-know-feat-calle-lehmann-acoustic/1482863953",
+    height: 175,
+    labelPos: "above" as const,
+    targetX: "165%",
+    targetY: "-140%",
+    rotate: 3,
+    delay: 0.2,
+    floatDuration: 4.2,
+    lineEndX: 36,
+    lineEndY: -36,
+  },
+  {
+    genre: "Koplo - Dangdut",
+    src: "https://embed.music.apple.com/id/song/wirang/1726193449",
+    height: 175,
+    labelPos: "below" as const,
+    targetX: "-160%",
+    targetY: "120%",
+    rotate: -2,
+    delay: 0.15,
+    floatDuration: 5.5,
+    lineEndX: -35,
+    lineEndY: 30,
+  },
+  {
+    genre: "Anime",
+    src: "https://embed.music.apple.com/id/song/next-frontier/1813815070",
+    height: 175,
+    labelPos: "below" as const,
+    targetX: "-20%",
+    targetY: "150%",
+    rotate: 5,
+    delay: 0.25,
+    floatDuration: 4.8,
+    lineEndX: -4,
+    lineEndY: 38,
+  },
+  {
+    genre: "Alt Z",
+    src: "https://embed.music.apple.com/id/song/cold/1473421589",
+    height: 175,
+    labelPos: "below" as const,
+    targetX: "180%",
+    targetY: "110%",
+    rotate: -6,
+    delay: 0.3,
+    floatDuration: 3.2,
+    lineEndX: 39,
+    lineEndY: 28,
+  },
+];
+
+/* Floating particles scattered around the spiderweb */
+const spiderwebParticles = [
+  { x: "12%", y: "18%", size: 4, opacity: 0.15, dur: 4.5, type: "dot" as const },
+  { x: "85%", y: "22%", size: 6, opacity: 0.1, dur: 5.2, type: "ring" as const },
+  { x: "8%", y: "72%", size: 5, opacity: 0.12, dur: 3.8, type: "dot" as const },
+  { x: "78%", y: "80%", size: 4, opacity: 0.18, dur: 4.1, type: "cross" as const },
+  { x: "50%", y: "10%", size: 3, opacity: 0.1, dur: 5.8, type: "dot" as const },
+  { x: "25%", y: "45%", size: 5, opacity: 0.08, dur: 4.9, type: "ring" as const },
+  { x: "72%", y: "48%", size: 3, opacity: 0.14, dur: 3.5, type: "dot" as const },
+  { x: "92%", y: "55%", size: 5, opacity: 0.1, dur: 6.1, type: "cross" as const },
+  { x: "35%", y: "88%", size: 4, opacity: 0.12, dur: 4.3, type: "ring" as const },
+  { x: "60%", y: "92%", size: 3, opacity: 0.16, dur: 5.0, type: "dot" as const },
+  { x: "18%", y: "30%", size: 6, opacity: 0.07, dur: 5.5, type: "cross" as const },
+  { x: "88%", y: "38%", size: 4, opacity: 0.11, dur: 4.7, type: "dot" as const },
+];
 
 /* ═══════════════════════════════════════════════════
    MUSIC SECTION
@@ -12,67 +116,323 @@ import TiltCard from "./TiltCard";
 function MusicSection() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [activeIndex, setActiveIndex] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
+
+  /* Detect mobile for conditional scatter animation */
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  /* Circular modulo logic — always exactly 1 center, 1 left, 1 right */
+  const getCarouselVariant = (index: number) => {
+    if (index === activeIndex)
+      return { x: "0%", scale: 1, zIndex: 10, opacity: 1 };
+    if (index === (activeIndex + 1) % 3)
+      return { x: "60%", scale: 0.85, zIndex: 5, opacity: 0.4 };
+    // index === (activeIndex + 2) % 3  →  left
+    return { x: "-60%", scale: 0.85, zIndex: 5, opacity: 0.4 };
+  };
+
+  /* Swipe handler for mobile carousel */
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: { offset: { x: number } }) => {
+    if (info.offset.x < -50) {
+      // Swiped left → next
+      setActiveIndex((prev) => (prev + 1) % 3);
+    } else if (info.offset.x > 50) {
+      // Swiped right → prev
+      setActiveIndex((prev) => (prev + 2) % 3);
+    }
+  };
 
   return (
     <div ref={ref} className="interest-section py-20 md:py-32 px-4 md:px-10">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 items-start">
-          {/* Left — Copy */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-lg bg-[var(--color-bg-alt)] flex items-center justify-center">
-                <Music size={20} className="text-[var(--color-pop)]" />
-              </div>
-              <span className="text-xs tracking-[0.4em] uppercase text-[var(--color-text-faint)] font-medium">
-                What I Listen To
-              </span>
+        {/* Header row */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 md:mb-16"
+        >
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-lg bg-[var(--color-bg-alt)] flex items-center justify-center">
+              <Music size={20} className="text-[var(--color-pop)]" />
             </div>
+            <span className="text-xs tracking-[0.4em] uppercase text-[var(--color-text-faint)] font-medium">
+              What I Listen To
+            </span>
+          </div>
 
-            <h3 className="font-[family-name:var(--font-syne)] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-              Music
-            </h3>
+          <h3 className="font-[family-name:var(--font-syne)] text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
+            Music
+          </h3>
 
-            <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4">
-              If I&apos;m not gaming or staring at code, I&apos;m probably lost in a playlist somewhere.
-              My taste is all over the place — one minute it&apos;s lo-fi beats, the next it&apos;s
-              full-blown EDM drops that make my neighbors question their life choices.
-            </p>
-            <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed">
-              I also mess around with music production in FL Studio from time to time.
-              Nothing serious — just enough to appreciate how insanely talented real producers are.
-            </p>
-          </motion.div>
+          <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4 max-w-2xl">
+            If I&apos;m not gaming or staring at code, I&apos;m probably lost in a playlist somewhere.
+            My taste is all over the place — one minute it&apos;s lo-fi beats, the next it&apos;s
+            full-blown EDM drops that make my neighbors question their life choices.
+          </p>
+          <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl">
+            I also mess around with music production in FL Studio from time to time.
+            Nothing serious — just enough to appreciate how insanely talented real producers are.
+          </p>
+        </motion.div>
 
-          {/* Right — Apple Music Embed with 3D Tilt */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <TiltCard tiltAmount={8} glareEnabled className="rounded-2xl">
-              <div className="music-embed-glow p-1.5 md:p-2">
-                <iframe
-                  allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-                  frameBorder="0"
-                  height="450"
+        {/* ── Cover Flow Playlist Carousel ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-24 md:mb-32"
+        >
+          <div className="relative flex items-center justify-center w-full" style={{ height: 500 }}>
+            {mainPlaylists.map((pl, i) => {
+              const variant = getCarouselVariant(i);
+              const isActive = i === activeIndex;
+              return (
+                <motion.div
+                  key={pl.label}
+                  animate={variant}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={handleDragEnd}
+                  className="absolute"
                   style={{
                     width: "100%",
-                    maxWidth: "660px",
-                    overflow: "hidden",
-                    borderRadius: "10px",
-                    display: "block",
+                    maxWidth: 660,
+                    zIndex: variant.zIndex,
                   }}
-                  sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                  src="https://embed.music.apple.com/id/playlist/2024-recap-ytmusic/pl.u-KVXBkXVCLedbN9B"
-                  title="Apple Music Playlist"
+                >
+                  <div className={`relative transition-shadow duration-500 ${isActive ? "shadow-2xl shadow-black/30" : ""}`}>
+                    {/* Transparent overlay catches clicks on inactive iframes */}
+                    {!isActive && (
+                      <div
+                        className="absolute inset-0 z-50 cursor-pointer"
+                        onClick={() => setActiveIndex(i)}
+                      />
+                    )}
+                    <iframe
+                      allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+                      frameBorder="0"
+                      height="450"
+                      style={{
+                        width: "100%",
+                        maxWidth: "660px",
+                        overflow: "hidden",
+                        borderRadius: "10px",
+                        display: "block",
+                      }}
+                      sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+                      src={pl.src}
+                      title={`Playlist — ${pl.label}`}
+                    />
+                  </div>
+                  {/* Playlist label pill */}
+                  <div className="flex justify-center mt-4">
+                    <span
+                      className={`text-[10px] md:text-xs tracking-[0.3em] uppercase font-medium px-4 py-1.5 rounded-full border transition-all duration-300 ${isActive
+                        ? "bg-[var(--color-pop)]/10 border-[var(--color-pop)]/30 text-[var(--color-pop)]"
+                        : "bg-transparent border-[var(--color-border)] text-[var(--color-text-faint)]"
+                        }`}
+                    >
+                      {pl.label}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex justify-center gap-2.5 mt-6">
+            {mainPlaylists.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIndex(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeIndex
+                  ? "bg-[var(--color-pop)] scale-125 shadow-[0_0_8px_var(--color-pop)]"
+                  : "bg-[var(--color-text-faint)]/30 hover:bg-[var(--color-text-faint)]/60"
+                  }`}
+                aria-label={`Show playlist ${i + 1}`}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        {/* ── Spiderweb Ingredients ── */}
+        <div className="relative w-full flex flex-col items-center gap-10 md:block" style={{ minHeight: isMobile ? "auto" : "90vh" }}>
+          {/* SVG connecting lines — hidden on mobile */}
+          <svg
+            className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              {scatteredSongs.map((song, i) => (
+                <linearGradient
+                  key={`grad-${i}`}
+                  id={`line-fade-${i}`}
+                  x1="50%" y1="50%"
+                  x2={`${50 + song.lineEndX}%`}
+                  y2={`${50 + song.lineEndY}%`}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                  <stop offset="25%" stopColor="currentColor" stopOpacity="0.12" />
+                  <stop offset="75%" stopColor="currentColor" stopOpacity="0.12" />
+                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+                </linearGradient>
+              ))}
+            </defs>
+            {scatteredSongs.map((song, i) => (
+              <motion.line
+                key={`line-${i}`}
+                x1="50" y1="50"
+                x2={50 + song.lineEndX}
+                y2={50 + song.lineEndY}
+                stroke={`url(#line-fade-${i})`}
+                strokeWidth="0.15"
+                className="text-[var(--color-text-faint)]"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 0.3 + song.delay, ease: "easeOut" }}
+              />
+            ))}
+          </svg>
+
+          {/* Floating particles — hidden on mobile */}
+          {spiderwebParticles.map((p, i) => (
+            <motion.div
+              key={`particle-${i}`}
+              className="absolute pointer-events-none z-[1] hidden md:block"
+              style={{ left: p.x, top: p.y }}
+              animate={{ y: ["-8px", "8px"], opacity: [p.opacity, p.opacity * 1.8, p.opacity] }}
+              transition={{
+                duration: p.dur,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+                delay: i * 0.15,
+              }}
+            >
+              {p.type === "dot" && (
+                <div
+                  className="rounded-full bg-[var(--color-text-faint)]"
+                  style={{ width: p.size, height: p.size, opacity: p.opacity }}
                 />
-              </div>
-            </TiltCard>
-          </motion.div>
+              )}
+              {p.type === "ring" && (
+                <div
+                  className="rounded-full border border-[var(--color-text-faint)]"
+                  style={{ width: p.size * 2, height: p.size * 2, opacity: p.opacity }}
+                />
+              )}
+              {p.type === "cross" && (
+                <div className="relative" style={{ width: p.size * 2, height: p.size * 2, opacity: p.opacity }}>
+                  <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--color-text-faint)] -translate-y-1/2" />
+                  <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--color-text-faint)] -translate-x-1/2" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+
+          {/* Central readable title */}
+          <div className="flex items-center justify-center py-10 md:py-0" style={isMobile ? {} : { minHeight: "90vh" }}>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="text-center select-none relative z-[3]"
+            >
+              <h4 className="font-[family-name:var(--font-syne)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-[var(--color-text)]">
+                INGREDIENTS OF
+                <br />
+                MY MUSIC LIBRARY
+              </h4>
+            </motion.div>
+          </div>
+
+          {/* Scattered song embeds — stacked on mobile, explode on desktop */}
+          {scatteredSongs.map((song) => (
+            <motion.div
+              key={song.src}
+              className={`z-[4] w-[280px] ${
+                isMobile
+                  ? "relative"
+                  : "absolute top-1/2 left-1/2"
+              }`}
+              style={isMobile ? {} : { marginLeft: "-140px", marginTop: "-88px" }}
+              initial={{ opacity: 0, scale: 0.8, y: isMobile ? 30 : 0 }}
+              whileInView={
+                isMobile
+                  ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }
+                  : {
+                      opacity: 1,
+                      scale: 1,
+                      x: song.targetX,
+                      y: song.targetY,
+                      rotate: song.rotate,
+                    }
+              }
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{
+                type: "spring",
+                stiffness: 180,
+                damping: 18,
+                delay: song.delay,
+              }}
+            >
+              {/* Continuous async floating (desktop only) */}
+              <motion.div
+                animate={isMobile ? {} : { y: ["-10px", "10px"] }}
+                transition={{
+                  duration: song.floatDuration,
+                  repeat: Infinity,
+                  repeatType: "mirror",
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="relative">
+                  {(song.labelPos === "above" || isMobile) && (
+                    <span className="absolute bottom-full mb-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)]/50 whitespace-nowrap">
+                      {song.genre}
+                    </span>
+                  )}
+                  <TiltCard tiltAmount={10} glareEnabled className="rounded-xl">
+                    <iframe
+                      allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+                      frameBorder="0"
+                      height={song.height}
+                      style={{
+                        width: "100%",
+                        maxWidth: "660px",
+                        overflow: "hidden",
+                        borderRadius: "10px",
+                        display: "block",
+                      }}
+                      sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+                      src={song.src}
+                      title={song.genre}
+                    />
+                  </TiltCard>
+                  {song.labelPos === "below" && !isMobile && (
+                    <span className="absolute top-full mt-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)]/50 whitespace-nowrap">
+                      {song.genre}
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>
