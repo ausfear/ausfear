@@ -53,7 +53,7 @@ function MusicSection() {
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            <TiltCard tiltAmount={8} className="rounded-2xl">
+            <TiltCard tiltAmount={8} glareEnabled className="rounded-2xl">
               <div className="music-embed-glow p-1.5 md:p-2">
                 <iframe
                   allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
@@ -117,10 +117,10 @@ const gamingPlatforms = [
 ];
 
 const gameStats = [
-  { label: "Hours Wasted", value: "5,000+", width: "85%" },
-  { label: "Games Owned (Unplayed)", value: "200+", width: "70%" },
-  { label: "Skill Level", value: "Copium", width: "35%" },
-  { label: "Rage Quit Frequency", value: "Moderate", width: "55%" },
+  { label: "Hours Wasted", value: "5,000+" },
+  { label: "Games Owned (Unplayed)", value: "200+" },
+  { label: "Skill Level", value: "Copium" },
+  { label: "Rage Quit Frequency", value: "Moderate" },
 ];
 
 function GamingSection() {
@@ -150,120 +150,120 @@ function GamingSection() {
           </h3>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* Left — Copy + Steam Embed */}
+        {/* Swapped layout: Steam Showcase on LEFT, Gaming text description and metrics on RIGHT */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          {/* Left Column — Steam Widget (Wider wrapper w-[340px] to prevent clipping) */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-5 flex flex-col items-center lg:items-start justify-start order-2 lg:order-1"
+          >
+            <div className="w-full max-w-[406px]">
+              <div className="flex items-center justify-between mb-3 px-1">
+                <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
+                  Steam Live
+                </span>
+                <a
+                  href="https://steamcommunity.com/id/ausfear/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] md:text-xs text-[var(--color-pop)] hover:underline tracking-wider uppercase font-medium flex items-center gap-1"
+                >
+                  Profile ↗
+                </a>
+              </div>
+
+              <div className="w-full max-w-[406px] h-[406px]">
+                <iframe
+                  src="https://gamer2810.github.io/steam-miniprofile/?accountId=887140676&appId=730&interactive=true&vanityId=ausfear"
+                  style={{
+                    border: "0px #ffffff none",
+                    display: "block",
+                  }}
+                  name="myiFrame"
+                  scrolling="no"
+                  frameBorder="1"
+                  marginHeight={0}
+                  marginWidth={0}
+                  className="w-[325px] h-[325px] scale-[1.25] origin-top-left"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Column — Gaming text description + Redesigned Player Metrics + Connected Handles */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-8"
+            className="lg:col-span-7 space-y-8 order-1 lg:order-2"
           >
-            <div>
-              <p className="text-white/50 text-sm md:text-base lg:text-lg leading-relaxed mb-4">
+            {/* Descriptive Text */}
+            <div className="space-y-4">
+              <p className="text-white/60 text-sm md:text-base lg:text-lg leading-relaxed">
                 I have an unhealthy relationship with my Steam library. Hundreds of
                 games, most untouched, while I keep playing the same three on rotation.
                 It&apos;s a lifestyle choice, not a problem.
               </p>
-              <p className="text-white/50 text-sm md:text-base lg:text-lg leading-relaxed mb-4">
+              <p className="text-white/60 text-sm md:text-base lg:text-lg leading-relaxed">
                 From competitive FPS rounds where I convince myself &quot;that was lag&quot; to
                 story-driven RPGs that make me question my life at 3 AM — gaming is
                 where I decompress, strategize, and occasionally rage quit with dignity.
               </p>
-              <p className="text-white/30 text-xs md:text-sm leading-relaxed italic">
+              <p className="text-white/35 text-xs md:text-sm leading-relaxed italic">
                 Current status: telling myself &quot;one more game&quot; for the fourth hour in a row.
               </p>
             </div>
 
-            {/* Steam Mini-Profile — 3D Tilt */}
-            <TiltCard tiltAmount={12} className="rounded-2xl inline-block">
-              <div className="steam-embed-wrapper w-[280px] h-[230px] overflow-hidden">
-                <iframe
-                  src="https://gamer2810.github.io/steam-miniprofile/?accountId=76561198847406404&appId=730"
-                  width="280"
-                  height="230"
-                  scrolling="no"
-                  style={{
-                    border: "none",
-                    borderRadius: "1rem",
-                    display: "block",
-                    overflow: "hidden",
-                  }}
-                  title="Steam Mini-Profile"
-                  loading="lazy"
-                />
+            {/* Redesigned Player Metrics: Reduced padding, smaller label, drastically larger value, bottom-left and bottom-right anchored */}
+            <div className="pt-2">
+              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold mb-4 block">
+                Player Metrics &amp; Habits
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {gameStats.map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.3 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    className="px-4 py-3.5 rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm hover:border-white/20 transition-colors flex flex-row items-end justify-between gap-3 overflow-hidden"
+                  >
+                    <span className="text-white/40 text-[10px] md:text-[11px] tracking-wider uppercase font-medium pb-1 leading-snug">
+                      {stat.label}
+                    </span>
+                    <span className="text-[var(--color-pop)] text-2xl md:text-3xl font-[family-name:var(--font-syne-tactile)] leading-none text-right flex-shrink-0">
+                      {stat.value}
+                    </span>
+                  </motion.div>
+                ))}
               </div>
-            </TiltCard>
-          </motion.div>
+            </div>
 
-          {/* Right — Gamer Profile Card — 3D Tilt */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <TiltCard tiltAmount={6} glareEnabled className="rounded-2xl">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-8 backdrop-blur-sm">
-                {/* Header */}
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-[var(--color-pop)] to-orange-600 flex items-center justify-center text-white font-bold text-lg md:text-xl font-[family-name:var(--font-syne)]">
-                    A
-                  </div>
-                  <div className="min-w-0">
-                    <h4 className="font-[family-name:var(--font-syne)] font-bold text-base md:text-lg truncate">
-                      ausféar™
-                    </h4>
-                    <p className="text-white/40 text-[10px] md:text-xs tracking-wider uppercase">
-                      Online · Probably in-game
-                    </p>
-                  </div>
-                  <div className="ml-auto flex-shrink-0">
-                    <span className="inline-block w-3 h-3 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                  </div>
-                </div>
-
-                {/* Stats */}
-                <div className="space-y-4 md:space-y-5">
-                  {gameStats.map((stat, i) => (
-                    <motion.div
-                      key={stat.label}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.5, delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-white/50 text-[10px] md:text-xs tracking-wider uppercase">{stat.label}</span>
-                        <span className="text-white/80 text-[10px] md:text-xs font-medium">{stat.value}</span>
-                      </div>
-                      <div className="stat-bar-bg !bg-white/[0.06]">
-                        <motion.div
-                          className="stat-bar-fill"
-                          initial={{ transform: "scaleX(0)" }}
-                          animate={isInView ? { transform: "scaleX(1)" } : {}}
-                          transition={{ duration: 1, delay: 0.5 + i * 0.15, ease: [0.22, 1, 0.36, 1] }}
-                          style={{ width: stat.width }}
-                        />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* Platform Badges */}
-                <div className="flex flex-wrap gap-2 md:gap-3 mt-6 md:mt-8 pt-5 md:pt-6 border-t border-white/10">
-                  {gamingPlatforms.map((platform) => (
-                    <a
-                      key={platform.name}
-                      href={platform.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="gamer-badge !bg-white/[0.03] !border-white/10 !text-white/50 hover:!border-[var(--color-pop)] hover:!text-[var(--color-pop)] !text-[10px] md:!text-xs"
-                    >
-                      {platform.icon}
-                      <span>{platform.name}</span>
-                    </a>
-                  ))}
-                </div>
+            {/* Connected Platform Handles */}
+            <div className="pt-2">
+              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold mb-3 block">
+                Connected Handles
+              </span>
+              <div className="flex flex-wrap gap-2.5">
+                {gamingPlatforms.map((platform) => (
+                  <a
+                    key={platform.name}
+                    href={platform.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="gamer-badge !bg-white/[0.03] !border-white/10 !text-white/60 hover:!border-[var(--color-pop)] hover:!text-[var(--color-pop)] !text-[11px] md:!text-xs py-2 px-3.5 transition-all duration-200"
+                  >
+                    {platform.icon}
+                    <span>{platform.name}</span>
+                    <span className="text-white/30 text-[10px]">({platform.handle})</span>
+                  </a>
+                ))}
               </div>
-            </TiltCard>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -393,7 +393,9 @@ export default function Interests() {
     };
 
     initGSAP();
-    return () => { ctx?.revert(); };
+    return () => {
+      ctx?.revert();
+    };
   }, []);
 
   return (

@@ -1,13 +1,19 @@
 "use client";
 
-import { useRef, useState, type ReactNode, type MouseEvent } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useEffect, type ReactNode } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate,
+} from "framer-motion";
 
 interface TiltCardProps {
   children: ReactNode;
   className?: string;
   tiltAmount?: number;
   glareEnabled?: boolean;
+  onClick?: () => void;
 }
 
 export default function TiltCard({
@@ -15,64 +21,93 @@ export default function TiltCard({
   className = "",
   tiltAmount = 10,
   glareEnabled = false,
+  onClick,
 }: TiltCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  // Raw tilt motion values
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
   const glareX = useMotionValue(50);
   const glareY = useMotionValue(50);
+  const glareOpacity = useMotionValue(0);
 
-  const springRotateX = useSpring(rotateX, { stiffness: 200, damping: 20 });
-  const springRotateY = useSpring(rotateY, { stiffness: 200, damping: 20 });
+  // Smooth springs for fluid, responsive tilt physics
+  const springRotateX = useSpring(rotateX, { stiffness: 220, damping: 22 });
+  const springRotateY = useSpring(rotateY, { stiffness: 220, damping: 22 });
+  const springGlareOpacity = useSpring(glareOpacity, { stiffness: 250, damping: 25 });
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const mouseX = e.clientX - centerX;
-    const mouseY = e.clientY - centerY;
+  // Dynamic glare radial gradient
+  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.14) 0%, transparent 65%)`;
 
-    const tiltX = -(mouseY / (rect.height / 2)) * tiltAmount;
-    const tiltY = (mouseX / (rect.width / 2)) * tiltAmount;
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
 
-    rotateX.set(tiltX);
-    rotateY.set(tiltY);
-    glareX.set(((e.clientX - rect.left) / rect.width) * 100);
-    glareY.set(((e.clientY - rect.top) / rect.height) * 100);
-  };
+      const { clientX, clientY } = e;
+      const isInside =
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom;
 
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    rotateX.set(0);
-    rotateY.set(0);
-  };
+      if (isInside) {
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        const normalizedX = x / rect.width - 0.5;
+        const normalizedY = y / rect.height - 0.5;
+
+        rotateX.set(-normalizedY * 2 * tiltAmount);
+        rotateY.set(normalizedX * 2 * tiltAmount);
+        glareX.set((x / rect.width) * 100);
+        glareY.set((y / rect.height) * 100);
+        glareOpacity.set(1);
+      } else {
+        if (rotateX.get() !== 0 || rotateY.get() !== 0 || glareOpacity.get() !== 0) {
+          rotateX.set(0);
+          rotateY.set(0);
+          glareOpacity.set(0);
+          glareX.set(50);
+          glareY.set(50);
+        }
+      }
+    };
+
+    window.addEventListener("mousemove", handleGlobalMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
+    };
+  }, [tiltAmount, rotateX, rotateY, glareX, glareY, glareOpacity]);
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        rotateX: springRotateX,
-        rotateY: springRotateY,
-        transformStyle: "preserve-3d",
-        perspective: 1000,
-      }}
-      className={`relative ${className}`}
+    <div
+      ref={containerRef}
+      onClick={onClick}
+      style={{ perspective: 1100 }}
+      className={`relative select-none ${className}`}
     >
-      {children}
-      {glareEnabled && isHovered && (
-        <motion.div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] z-10"
-          style={{
-            background: `radial-gradient(circle at ${glareX.get()}% ${glareY.get()}%, rgba(255,255,255,0.08) 0%, transparent 60%)`,
-          }}
-        />
-      )}
-    </motion.div>
+      <motion.div
+        style={{
+          rotateX: springRotateX,
+          rotateY: springRotateY,
+          transformStyle: "preserve-3d",
+        }}
+        className="w-full h-full relative"
+      >
+        {children}
+
+        {glareEnabled && (
+          <motion.div
+            className="pointer-events-none absolute inset-0 rounded-[inherit] z-20 overflow-hidden"
+            style={{
+              background: glareBg,
+              opacity: springGlareOpacity,
+            }}
+          />
+        )}
+      </motion.div>
+    </div>
   );
 }
