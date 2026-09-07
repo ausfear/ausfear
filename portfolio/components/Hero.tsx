@@ -1,9 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import Image from "next/image";
-import FloatingShapes from "./FloatingShapes";
+import FloatingShapes, { MobileFloatingParticles } from "./FloatingShapes";
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -18,6 +18,12 @@ export default function Hero() {
   // Smooth springs for fluid, physics-based 3D parallax
   const springX = useSpring(mouseX, { stiffness: 120, damping: 22 });
   const springY = useSpring(mouseY, { stiffness: 120, damping: 22 });
+
+  // Scroll tracking for mobile vertical parallax
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
 
   // Parallax transforms per layer
   // Background giant watermark (Layer 0)
@@ -86,10 +92,13 @@ export default function Hero() {
       {/* ═══════════════════════════════════════════
           MOBILE LAYOUT (stacked, clean)
           ═══════════════════════════════════════════ */}
-      <div className="md:hidden flex flex-col items-center justify-between h-full pt-20 pb-4">
+      <div className="md:hidden flex flex-col items-center justify-between h-full pt-20 pb-4 relative z-10">
+        {/* Mobile Floating Particles with on-scroll vertical parallax */}
+        <MobileFloatingParticles scrollYProgress={scrollYProgress} />
+
         {/* Top: Text */}
         <motion.div
-          className="text-center px-4 pt-4 space-y-1"
+          className="text-center px-4 pt-4 space-y-1 z-10"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
@@ -108,9 +117,21 @@ export default function Hero() {
           </h1>
         </motion.div>
 
+        {/* Quote on Mobile — Placed between Name (below SAKTI) and Picture */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+          className="text-center px-6 my-auto py-1 z-10 pointer-events-none select-none"
+        >
+          <p className="font-[family-name:var(--font-syne-tactile)] text-xl sm:text-2xl text-[var(--color-text)] leading-snug">
+            the best thing isn&apos;t<br />always the best choice.
+          </p>
+        </motion.div>
+
         {/* Middle: Image */}
         <motion.div
-          className="relative flex-1 w-[80vw] max-w-[360px] mt-2"
+          className="relative flex-1 w-[80vw] max-w-[360px] mt-1 z-10"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
@@ -129,7 +150,7 @@ export default function Hero() {
 
         {/* Bottom: Tagline */}
         <motion.p
-          className="text-[9px] text-[var(--color-text-muted)] tracking-[0.2em] uppercase font-medium text-center pb-2"
+          className="text-[9px] text-[var(--color-text-muted)] tracking-[0.2em] uppercase font-medium text-center pb-2 z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.6 }}

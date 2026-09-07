@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Music, Gamepad2, Sigma } from "lucide-react";
+import { Music, Gamepad2, Sigma, ChevronLeft, ChevronRight } from "lucide-react";
 import TiltCard from "./TiltCard";
 
 /* ═══════════════════════════════════════════════════
@@ -172,13 +172,14 @@ function MusicSection() {
           </h3>
 
           <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4 max-w-2xl">
-            If I&apos;m not gaming or staring at code, I&apos;m probably lost in a playlist somewhere.
-            My taste is all over the place — one minute it&apos;s lo-fi beats, the next it&apos;s
-            full-blown EDM drops that make my neighbors question their life choices.
+            If I&apos;m not gaming or doomscrolling without purpose, I&apos;m probably lost in a playlist somewhere.
+            My taste has zero consistency — one minute it&apos;s stripped-back acoustic tracks, the next it&apos;s
+            aggressive EDM drops, and occasionally a sudden pivot straight into Koplo without any warning.
           </p>
           <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl">
-            I also mess around with music production in FL Studio from time to time.
-            Nothing serious — just enough to appreciate how insanely talented real producers are.
+            Beyond just listening, I also play a few instruments myself — guitar, keyboard, and even the flute.
+            A textbook jack-of-all-trades: just good enough to look like I know what I&apos;m doing for thirty
+            seconds, but definitely not taking any stage requests.
           </p>
         </motion.div>
 
@@ -233,8 +234,22 @@ function MusicSection() {
                       title={`Playlist — ${pl.label}`}
                     />
                   </div>
-                  {/* Playlist label pill */}
-                  <div className="flex justify-center mt-4">
+                  {/* Playlist label pill with navigation arrows */}
+                  <div className="flex items-center justify-center gap-2.5 mt-4">
+                    {isActive ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveIndex((prev) => (prev + 2) % 3);
+                        }}
+                        className="w-7 h-7 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-pop)] hover:border-[var(--color-pop)] transition-colors active:scale-90 shadow-sm cursor-pointer"
+                        aria-label="Previous playlist"
+                      >
+                        <ChevronLeft size={14} />
+                      </button>
+                    ) : null}
+
                     <span
                       className={`text-[10px] md:text-xs tracking-[0.3em] uppercase font-medium px-4 py-1.5 rounded-full border transition-all duration-300 ${isActive
                         ? "bg-[var(--color-pop)]/10 border-[var(--color-pop)]/30 text-[var(--color-pop)]"
@@ -243,6 +258,20 @@ function MusicSection() {
                     >
                       {pl.label}
                     </span>
+
+                    {isActive ? (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveIndex((prev) => (prev + 1) % 3);
+                        }}
+                        className="w-7 h-7 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-text-muted)] hover:text-[var(--color-pop)] hover:border-[var(--color-pop)] transition-colors active:scale-90 shadow-sm cursor-pointer"
+                        aria-label="Next playlist"
+                      >
+                        <ChevronRight size={14} />
+                      </button>
+                    ) : null}
                   </div>
                 </motion.div>
               );
@@ -365,10 +394,10 @@ function MusicSection() {
           {scatteredSongs.map((song) => (
             <motion.div
               key={song.src}
-              className={`z-[4] w-[280px] ${
+              className={`z-[4] ${
                 isMobile
-                  ? "relative"
-                  : "absolute top-1/2 left-1/2"
+                  ? "relative w-full max-w-[380px]"
+                  : "w-[280px] absolute top-1/2 left-1/2"
               }`}
               style={isMobile ? {} : { marginLeft: "-140px", marginTop: "-88px" }}
               initial={{ opacity: 0, scale: 0.8, y: isMobile ? 30 : 0 }}
@@ -407,7 +436,7 @@ function MusicSection() {
                       {song.genre}
                     </span>
                   )}
-                  <TiltCard tiltAmount={10} glareEnabled className="rounded-xl">
+                  <TiltCard tiltAmount={10} glareEnabled className="rounded-xl w-full">
                     <iframe
                       allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                       frameBorder="0"
@@ -446,7 +475,7 @@ function MusicSection() {
 const gamingPlatforms = [
   {
     name: "Steam",
-    handle: "ausféar™",
+    handle: "ausfear",
     href: "https://steamcommunity.com/id/ausfear/",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -456,7 +485,7 @@ const gamingPlatforms = [
   },
   {
     name: "Epic Games",
-    handle: "ausfear",
+    handle: "ausféar",
     href: "#",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -466,7 +495,7 @@ const gamingPlatforms = [
   },
   {
     name: "Riot Games",
-    handle: "ausfear#SEA",
+    handle: "ausfear#247",
     href: "#",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -519,7 +548,7 @@ function GamingSection() {
             transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-5 flex flex-col items-center lg:items-start justify-start order-2 lg:order-1"
           >
-            <div className="w-full max-w-[406px]">
+            <div className="w-full max-w-[325px] sm:max-w-[406px]">
               <div className="flex items-center justify-between mb-3 px-1">
                 <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
@@ -535,7 +564,7 @@ function GamingSection() {
                 </a>
               </div>
 
-              <div className="w-full max-w-[406px] h-[406px]">
+              <div className="w-[325px] h-[325px] sm:w-[406px] sm:h-[406px] overflow-hidden rounded-xl bg-white/[0.02] flex justify-center sm:justify-start">
                 <iframe
                   src="https://gamer2810.github.io/steam-miniprofile/?accountId=887140676&appId=730&interactive=true&vanityId=ausfear"
                   style={{
@@ -547,7 +576,7 @@ function GamingSection() {
                   frameBorder="1"
                   marginHeight={0}
                   marginWidth={0}
-                  className="w-[325px] h-[325px] scale-[1.25] origin-top-left"
+                  className="w-[325px] h-[325px] scale-100 sm:scale-[1.25] origin-top-left flex-shrink-0"
                   allowFullScreen
                 />
               </div>
@@ -675,7 +704,7 @@ function MathSection() {
               and appreciate the aesthetic of Greek symbols.
             </p>
             <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4">
-              Four years of proofs and theorems, and my most practical application
+              Years of proofs and theorems, and my most practical application
               is figuring out whether a 0.6% banner rate is worth my dignity.
               Spoiler: it never is, but I pull anyway.
             </p>

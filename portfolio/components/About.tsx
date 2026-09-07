@@ -6,8 +6,8 @@ import { motion, useInView } from "framer-motion";
 const aboutLines = [
   "I'm Audinta — but most people on the internet know me as ausfear.",
   "I'm not a professional developer, designer, or any of that fancy stuff. I just like making cool things on the internet for fun, listening to good tracks on repeat until they lose all meaning, and spending way too many hours in games I'll never actually master.",
-  "I studied Mathematics at Universitas Lambung Mangkurat — which sounds impressive until you realize I mostly use that knowledge to calculate gacha pull probabilities and argue about optimal damage builds.",
-  "This site? It's just my little corner of the web. No portfolio, no résumé, no hustle. Just vibes.",
+  "I managed to finish a Mathematics degree at Universitas Lambung Mangkurat in about 3.5 years. Sounds impressive, but graduating early in abstract math doesn't stop me from needing ten seconds of total silence just to split a dinner bill. Mostly, that degree just gets put to work calculating gacha pity rates and min-maxing build stats.",
+  "Consider this my corner of the web to tinker, build, and leave things unpolished on purpose.",
 ];
 
 function RevealLine({ text, index }: { text: string; index: number }) {

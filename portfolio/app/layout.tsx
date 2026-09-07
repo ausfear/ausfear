@@ -41,6 +41,13 @@ export const metadata: Metadata = {
       "Game enjoyer, music listener & occasional math guy. Just vibing on the internet.",
     type: "website",
   },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

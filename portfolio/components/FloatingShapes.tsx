@@ -266,3 +266,244 @@ export default function FloatingShapes({
     </div>
   );
 }
+
+/* ═══════════════════════════════════════════════════
+   MOBILE FLOATING PARTICLES (Vertical On-Scroll Parallax)
+   ═══════════════════════════════════════════════════ */
+
+interface MobileParallaxItemProps {
+  className?: string;
+  scrollYProgress: MotionValue<number>;
+  speed?: number;
+  delay?: number;
+  children: React.ReactNode;
+}
+
+function MobileParallaxItem({
+  className = "",
+  scrollYProgress,
+  speed = 160,
+  delay = 0,
+  children,
+}: MobileParallaxItemProps) {
+  const y = useTransform(scrollYProgress, [0, 1], [0, -speed]);
+
+  return (
+    <motion.div
+      className={`absolute pointer-events-none select-none ${className}`}
+      style={{ y }}
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 0.3 + delay, duration: 0.6 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function MobileFloatingParticles({
+  scrollYProgress,
+}: {
+  scrollYProgress: MotionValue<number>;
+}) {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-[5]">
+      {/* Top Left (above name) */}
+      <MobileParallaxItem
+        className="top-[7%] left-[6%]"
+        scrollYProgress={scrollYProgress}
+        speed={180}
+        delay={0.1}
+      >
+        <div
+          className="relative"
+          style={{
+            width: 16,
+            height: 16,
+            animation: "float-med 5s ease-in-out infinite",
+          }}
+        >
+          <div className="absolute top-1/2 left-0 w-full h-[1.5px] -translate-y-1/2 bg-[var(--color-pop)]" />
+          <div className="absolute top-0 left-1/2 w-[1.5px] h-full -translate-x-1/2 bg-[var(--color-pop)]" />
+        </div>
+      </MobileParallaxItem>
+
+      {/* Top Right (above name) */}
+      <MobileParallaxItem
+        className="top-[9%] right-[8%]"
+        scrollYProgress={scrollYProgress}
+        speed={130}
+        delay={0.15}
+      >
+        <div
+          className="rounded-full border-2 border-[var(--color-border)]"
+          style={{
+            width: 38,
+            height: 38,
+            animation: "pulse-soft 6s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Upper Right (near ausfear) */}
+      <MobileParallaxItem
+        className="top-[18%] right-[7%]"
+        scrollYProgress={scrollYProgress}
+        speed={240}
+        delay={0.2}
+      >
+        <div
+          className="rounded-full bg-[var(--color-pop)]"
+          style={{
+            width: 5,
+            height: 5,
+            animation: "pulse-soft 4s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Upper Left (near AUDINTA) */}
+      <MobileParallaxItem
+        className="top-[21%] left-[7%]"
+        scrollYProgress={scrollYProgress}
+        speed={150}
+        delay={0.25}
+      >
+        <div
+          className="rounded-full border-[1.5px] border-[var(--color-border)]"
+          style={{
+            width: 8,
+            height: 8,
+            animation: "float-slow 7s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Mid Left (beside quote) */}
+      <MobileParallaxItem
+        className="top-[33%] left-[5%]"
+        scrollYProgress={scrollYProgress}
+        speed={260}
+        delay={0.3}
+      >
+        <div
+          style={{
+            width: 11,
+            height: 11,
+            border: "1.5px solid var(--color-pop)",
+            transform: "rotate(45deg)",
+            animation: "spin-slow 20s linear infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Mid Right (beside quote) */}
+      <MobileParallaxItem
+        className="top-[35%] right-[6%]"
+        scrollYProgress={scrollYProgress}
+        speed={190}
+        delay={0.2}
+      >
+        <div
+          className="relative"
+          style={{
+            width: 14,
+            height: 14,
+            animation: "float-med 6s ease-in-out infinite",
+          }}
+        >
+          <div className="absolute top-1/2 left-0 w-full h-[1.5px] -translate-y-1/2 bg-[var(--color-text-faint)]" />
+          <div className="absolute top-0 left-1/2 w-[1.5px] h-full -translate-x-1/2 bg-[var(--color-text-faint)]" />
+        </div>
+      </MobileParallaxItem>
+
+      {/* Below quote / above photo */}
+      <MobileParallaxItem
+        className="top-[45%] left-[10%]"
+        scrollYProgress={scrollYProgress}
+        speed={270}
+        delay={0.35}
+      >
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "6px solid transparent",
+            borderRight: "6px solid transparent",
+            borderBottom: "11px solid var(--color-text-faint)",
+            animation: "float-slow 8s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Photo Right Flank */}
+      <MobileParallaxItem
+        className="top-[54%] right-[7%]"
+        scrollYProgress={scrollYProgress}
+        speed={170}
+        delay={0.3}
+      >
+        <div
+          className="rounded-full border-[1.5px] border-[var(--color-border)]"
+          style={{
+            width: 28,
+            height: 28,
+            animation: "pulse-soft 5s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Photo Left Flank */}
+      <MobileParallaxItem
+        className="top-[67%] left-[6%]"
+        scrollYProgress={scrollYProgress}
+        speed={220}
+        delay={0.4}
+      >
+        <div
+          className="rounded-full border-[1.5px] border-[var(--color-pop)]"
+          style={{
+            width: 7,
+            height: 7,
+            animation: "float-fast 4s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Photo Lower Right Flank */}
+      <MobileParallaxItem
+        className="top-[73%] right-[8%]"
+        scrollYProgress={scrollYProgress}
+        speed={280}
+        delay={0.45}
+      >
+        <div
+          style={{
+            width: 9,
+            height: 9,
+            border: "1.5px solid var(--color-border)",
+            transform: "rotate(45deg)",
+            animation: "spin-slow 24s linear infinite",
+          }}
+        />
+      </MobileParallaxItem>
+
+      {/* Bottom Center-Left */}
+      <MobileParallaxItem
+        className="top-[82%] left-[10%]"
+        scrollYProgress={scrollYProgress}
+        speed={160}
+        delay={0.3}
+      >
+        <div
+          className="rounded-full bg-[var(--color-pop)]"
+          style={{
+            width: 4,
+            height: 4,
+            animation: "pulse-soft 4s ease-in-out infinite",
+          }}
+        />
+      </MobileParallaxItem>
+    </div>
+  );
+}
