@@ -199,10 +199,10 @@ function MusicSection() {
                   key={pl.label}
                   animate={variant}
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  drag="x"
+                  drag={isActive ? "x" : false}
                   dragConstraints={{ left: 0, right: 0 }}
                   dragElastic={0.2}
-                  onDragEnd={handleDragEnd}
+                  onDragEnd={isActive ? handleDragEnd : undefined}
                   className="absolute"
                   style={{
                     width: "100%",
@@ -476,7 +476,6 @@ const gamingPlatforms = [
   {
     name: "Steam",
     handle: "ausfear",
-    href: "https://steamcommunity.com/id/ausfear/",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 12.021-5.373 12.021-12S18.606 0 11.979 0z" />
@@ -486,7 +485,6 @@ const gamingPlatforms = [
   {
     name: "Epic Games",
     handle: "ausféar",
-    href: "#",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M3.537 0C2.165 0 1.66.506 1.66 1.879V18.44c0 .325.024.61.068.858.128.718.49 1.211 1.1 1.455.162.065.362.12.595.162.047.009 1.373.239 1.373.239L12 24l7.399-2.84s2.142-.362 2.564-1.478c.099-.261.138-.564.138-.912V1.879C22.101.506 21.596 0 20.225 0H3.537zm10.752 3.14c1.721 0 2.573.82 2.573 2.364v1.57c0 1.546-.853 2.366-2.573 2.366H12.4v3.12h-1.78V3.14h3.669zm-5.904.001h1.778v9.42H8.385zm5.753 1.473H12.4v3.354h1.738c.6 0 .944-.314.944-.931V5.543c0-.618-.345-.93-.944-.93z" />
@@ -496,7 +494,6 @@ const gamingPlatforms = [
   {
     name: "Riot Games",
     handle: "ausfear#247",
-    href: "#",
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12.534 21.77l-1.09-2.81 10.52-2.96V3.96L2.036 8.67v9.5l3.655 1.03-.58 2.81L0 19.7V7.73L24 1.31v16.49l-11.466 3.97z" />
@@ -639,17 +636,14 @@ function GamingSection() {
               </span>
               <div className="flex flex-wrap gap-2.5">
                 {gamingPlatforms.map((platform) => (
-                  <a
+                  <div
                     key={platform.name}
-                    href={platform.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="gamer-badge !bg-white/[0.03] !border-white/10 !text-white/60 hover:!border-[var(--color-pop)] hover:!text-[var(--color-pop)] !text-[11px] md:!text-xs py-2 px-3.5 transition-all duration-200"
+                    className="gamer-badge !bg-white/[0.03] !border-white/10 !text-white/60 hover:!border-white/20 hover:!text-white/80 !text-[11px] md:!text-xs py-2 px-3.5 transition-all duration-200 select-text cursor-default"
                   >
                     {platform.icon}
                     <span>{platform.name}</span>
                     <span className="text-white/30 text-[10px]">({platform.handle})</span>
-                  </a>
+                  </div>
                 ))}
               </div>
             </div>
