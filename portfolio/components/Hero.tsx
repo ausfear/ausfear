@@ -1,15 +1,52 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useScroll, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import FloatingShapes, { MobileFloatingParticles } from "./FloatingShapes";
+
+const HERO_PHOTOS = [
+  { src: "/cutouts/sunglasses.png", alt: "Audinta with sunglasses" },
+  { src: "/cutouts/guitar.png", alt: "Audinta with guitar" },
+  { src: "/cutouts/gamepad.png", alt: "Audinta with gamepad" },
+  { src: "/cutouts/sunglasses2.png", alt: "Audinta posing with sunglasses" },
+];
+
+// Vertical scanline wipe transition (Bottom-to-Top, zero-ghosting split)
+const scanlineReveal = {
+  initial: {
+    clipPath: "inset(100% 0% 0% 0%)",
+  },
+  animate: {
+    clipPath: "inset(0% 0% 0% 0%)",
+    transition: {
+      duration: 0.65,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+  exit: {
+    clipPath: "inset(0% 0% 100% 0%)",
+    transition: {
+      duration: 0.65,
+      ease: [0.16, 1, 0.3, 1] as const,
+    },
+  },
+};
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const audintaRef = useRef<HTMLDivElement>(null);
   const tCharRef = useRef<HTMLSpanElement>(null);
   const [anchorDistance, setAnchorDistance] = useState(0);
+  const [photoIndex, setPhotoIndex] = useState(0);
+
+  // Automatic photo rotation every 6.5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPhotoIndex((prev) => (prev + 1) % HERO_PHOTOS.length);
+    }, 6500);
+    return () => clearInterval(timer);
+  }, []);
 
   // Mouse tracking motion values (-0.5 to 0.5 normalized)
   const mouseX = useMotionValue(0);
@@ -49,6 +86,14 @@ export default function Hero() {
   // Foreground SAKTI (Layer 4)
   const saktiX = useTransform(springX, [-0.5, 0.5], [-55, 55]);
   const saktiY = useTransform(springY, [-0.5, 0.5], [-38, 38]);
+
+  // Relative transforms for white text clones inside the photo container
+  // Photo moves by (photoX, photoY). White text moves by (audintaDiffX, audintaDiffY) inside photo.
+  // Net visual translation = photoX + audintaDiffX = [-55, 55] = audintaX!
+  const audintaDiffX = useTransform(springX, [-0.5, 0.5], [-33, 33]);
+  const audintaDiffY = useTransform(springY, [-0.5, 0.5], [-24, 24]);
+  const saktiDiffX = useTransform(springX, [-0.5, 0.5], [-33, 33]);
+  const saktiDiffY = useTransform(springY, [-0.5, 0.5], [-24, 24]);
 
   // Strict mathematical centering logic for AUDINTA and SAKTI
   useEffect(() => {
@@ -131,20 +176,47 @@ export default function Hero() {
 
         {/* Middle: Image */}
         <motion.div
-          className="relative flex-1 w-[80vw] max-w-[360px] mt-1 z-10"
+          className="relative flex-1 w-[90vw] max-w-[420px] mt-1 z-10 overflow-hidden"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           <div className="hero-photo-mask relative w-full h-full">
-            <Image
-              src="/person-udin.png"
-              alt="Audinta Sakti Firmansyah"
-              fill
-              priority
-              className="object-contain object-bottom"
-              sizes="80vw"
-            />
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={photoIndex}
+                variants={scanlineReveal}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="absolute inset-0"
+              >
+                <Image
+                  src={HERO_PHOTOS[photoIndex].src}
+                  alt={HERO_PHOTOS[photoIndex].alt}
+                  fill
+                  priority
+                  className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
+                  sizes="90vw"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
+            <motion.div
+              key={`scan-m-${photoIndex}`}
+              className="absolute inset-x-0 pointer-events-none z-20"
+              initial={{ top: "100%", opacity: 0 }}
+              animate={{ top: "0%", opacity: [0, 1, 1, 0] }}
+              transition={{
+                duration: 0.65,
+                ease: [0.16, 1, 0.3, 1],
+                times: [0, 0.06, 0.82, 1],
+              }}
+            >
+              <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_14px_var(--color-pop),0_0_28px_var(--color-pop)]" />
+              <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -176,23 +248,110 @@ export default function Hero() {
         {/* Autonomous Floating Particles with Mouse Parallax — Layer 1 */}
         <FloatingShapes springX={springX} springY={springY} />
 
-        {/* Central Photo — Layer 2 (Dominates lower 3/4 of screen, head reaches ~78-80% height) */}
+        {/* Central Photo — Layer 2 (+15% height: h-[88vh] lg:h-[92vh], Vertical Scanline Switch) */}
         <motion.div
           className="relative z-10 flex-shrink-0"
           style={{ x: photoX, y: photoY }}
-          initial={{ opacity: 0, y: 80, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
         >
-          <div className="hero-photo-mask relative h-[78vh] lg:h-[80vh] aspect-[437/518]">
-            <Image
-              src="/person-udin.png"
-              alt="Audinta Sakti Firmansyah"
-              fill
-              priority
-              className="object-contain object-bottom"
-              sizes="(max-width: 1024px) 70vw, 55vw"
-            />
+          <div className="hero-photo-mask relative h-[88vh] lg:h-[92vh] aspect-[5/6]">
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={photoIndex}
+                variants={scanlineReveal}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="absolute inset-0"
+              >
+                <Image
+                  src={HERO_PHOTOS[photoIndex].src}
+                  alt={HERO_PHOTOS[photoIndex].alt}
+                  fill
+                  priority
+                  className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
+                  sizes="(max-width: 1024px) 70vw, 55vw"
+                />
+
+                {/* White Text Overlay Masked to Photo Silhouette */}
+                <div
+                  className="absolute inset-0 z-10 pointer-events-none select-none"
+                  style={{
+                    maskImage: `url('${HERO_PHOTOS[photoIndex].src}')`,
+                    WebkitMaskImage: `url('${HERO_PHOTOS[photoIndex].src}')`,
+                    maskSize: "contain",
+                    WebkitMaskSize: "contain",
+                    maskPosition: "bottom center",
+                    WebkitMaskPosition: "bottom center",
+                    maskRepeat: "no-repeat",
+                    WebkitMaskRepeat: "no-repeat",
+                  }}
+                >
+                  {/* White "AUDINTA" */}
+                  <div
+                    className="absolute pointer-events-none select-none whitespace-nowrap"
+                    style={{
+                      bottom: "22vh",
+                      left: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
+                    }}
+                  >
+                    <motion.div style={{ x: audintaDiffX, y: audintaDiffY }}>
+                      <span
+                        className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
+                        style={{ color: "#ffffff" }}
+                      >
+                        <span>AUDIN</span>
+                        <span>T</span>
+                        <span>A</span>
+                      </span>
+                    </motion.div>
+                  </div>
+
+                  {/* White "SAKTI" */}
+                  <div
+                    className="absolute pointer-events-none select-none whitespace-nowrap"
+                    style={{
+                      bottom: "15vh",
+                      right: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
+                    }}
+                  >
+                    <motion.div style={{ x: saktiDiffX, y: saktiDiffY }}>
+                      <span
+                        className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
+                        style={{ color: "#ffffff" }}
+                      >
+                        SAKTI
+                      </span>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
+            <motion.div
+              key={`scan-d-${photoIndex}`}
+              className="absolute inset-x-0 pointer-events-none z-20"
+              initial={{ top: "100%", opacity: 0 }}
+              animate={{ top: "0%", opacity: [0, 1, 1, 0] }}
+              transition={{
+                duration: 0.65,
+                ease: [0.16, 1, 0.3, 1],
+                times: [0, 0.06, 0.82, 1],
+              }}
+            >
+              <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_16px_var(--color-pop),0_0_32px_var(--color-pop)]" />
+              <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+            </motion.div>
+
+            {/* Hidden image preloader for zero-latency switching */}
+            <div className="hidden" aria-hidden="true">
+              {HERO_PHOTOS.map((p, i) => (
+                <Image key={i} src={p.src} alt="" width={10} height={12} priority />
+              ))}
+            </div>
           </div>
         </motion.div>
 
@@ -233,10 +392,10 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* "AUDINTA" — Layer 4 (Reverted to bottom-[22vh], 'T' centered on vertical center line) */}
+        {/* "AUDINTA" — Base Layer (Behind Photo, z-[5], Black) */}
         <div
           ref={audintaRef}
-          className="absolute pointer-events-none select-none z-20 whitespace-nowrap"
+          className="absolute pointer-events-none select-none z-[5] whitespace-nowrap"
           style={{
             bottom: "22vh",
             left: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
@@ -246,7 +405,7 @@ export default function Hero() {
             style={{ x: audintaX, y: audintaY }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
           >
             <span className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-90 leading-none inline-block">
               <span>AUDIN</span>
@@ -256,9 +415,9 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* "SAKTI" — Layer 4 (Foreground text, bottom-[15vh], right edge equidistant to AUDINTA left) */}
+        {/* "SAKTI" — Base Layer (Behind Photo, z-[5], Black) */}
         <div
-          className="absolute pointer-events-none select-none z-20 whitespace-nowrap"
+          className="absolute pointer-events-none select-none z-[5] whitespace-nowrap"
           style={{
             bottom: "15vh",
             right: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
@@ -268,13 +427,16 @@ export default function Hero() {
             style={{ x: saktiX, y: saktiY }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
           >
             <span className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-90 leading-none inline-block">
               SAKTI
             </span>
           </motion.div>
         </div>
+
+        {/* Bottom Ambient White Gradation — Softens photo edge & guarantees tagline contrast */}
+        <div className="absolute bottom-0 inset-x-0 h-28 lg:h-32 bg-gradient-to-t from-[var(--color-bg)] via-[var(--color-bg)]/85 to-transparent pointer-events-none z-20" />
 
         {/* Tagline */}
         <motion.div
@@ -283,7 +445,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.7 }}
         >
-          <p className="text-xs text-[var(--color-text-muted)] tracking-[0.3em] uppercase font-medium">
+          <p className="text-xs text-[var(--color-text)] opacity-75 tracking-[0.3em] uppercase font-medium">
             Game Enjoyer · Music Listener · Occasional Math Guy
           </p>
         </motion.div>

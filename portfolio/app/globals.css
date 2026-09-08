@@ -101,8 +101,15 @@ body {
 
 /* ─── Photo Bottom Mask ─── */
 .hero-photo-mask {
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+}
+
+@media (min-width: 768px) {
+  .hero-photo-mask {
+    mask-image: linear-gradient(to bottom, black 82%, transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 95%);
+  }
 }
 
 /* ─── Particle Animations ─── */
