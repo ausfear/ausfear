@@ -57,6 +57,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${inter.variable} ${syne.variable} ${syneTactile.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://embed.music.apple.com" />
+        <link rel="dns-prefetch" href="https://embed.music.apple.com" />
+        <link rel="preconnect" href="https://play.itunes.apple.com" />
+        <link rel="dns-prefetch" href="https://play.itunes.apple.com" />
+      </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
         {children}
         <Analytics />

@@ -115,7 +115,7 @@ const spiderwebParticles = [
 
 function MusicSection() {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "350px 0px" });
   const [activeIndex, setActiveIndex] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -219,6 +219,7 @@ function MusicSection() {
                       />
                     )}
                     <iframe
+                      loading="eager"
                       allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                       frameBorder="0"
                       height="450"
@@ -412,7 +413,7 @@ function MusicSection() {
                       rotate: song.rotate,
                     }
               }
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={{ once: true, margin: "300px 0px" }}
               transition={{
                 type: "spring",
                 stiffness: 180,
@@ -438,6 +439,7 @@ function MusicSection() {
                   )}
                   <TiltCard tiltAmount={10} glareEnabled className="rounded-xl w-full">
                     <iframe
+                      loading="eager"
                       allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                       frameBorder="0"
                       height={song.height}

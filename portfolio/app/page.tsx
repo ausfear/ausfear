@@ -1,3 +1,4 @@
+import LoadingScreen from "@/components/LoadingScreen";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Interests from "@/components/Interests";
@@ -7,6 +8,7 @@ import Navbar from "@/components/Navbar";
 export default function Home() {
   return (
     <main className="relative">
+      <LoadingScreen />
       <Navbar />
       <Hero />
       <About />

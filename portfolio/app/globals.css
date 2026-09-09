@@ -256,3 +256,29 @@ body {
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(0,0,0,0.2);
 }
+
+/* ─── Preloader Liquid Wave & Glow ─── */
+@keyframes liquid-wave {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes liquid-wave-reverse {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.liquid-wave-layer-1 {
+  animation: liquid-wave 2.8s linear infinite;
+  will-change: transform;
+}
+
+.liquid-wave-layer-2 {
+  animation: liquid-wave-reverse 4.2s linear infinite;
+  will-change: transform;
+}
+
+.preloader-glow {
+  box-shadow: 0 0 60px rgba(255, 107, 43, 0.25), inset 0 0 30px rgba(255, 107, 43, 0.08);
+}
+
