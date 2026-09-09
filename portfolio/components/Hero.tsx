@@ -22,23 +22,53 @@ export default function Hero() {
   const photoIndexRef = useRef(0);
   const animRef = useRef<ReturnType<typeof animate> | null>(null);
 
+  // Pre-load and pre-decode all 4 hero photos in the browser immediately on mount
+  useEffect(() => {
+    HERO_PHOTOS.forEach((photo) => {
+      const img = new window.Image();
+      img.src = photo.src;
+      if (img.decode) {
+        img.decode().catch(() => {});
+      }
+    });
+  }, []);
+
   // Synchronized scanline wipe progress: 0 (start of wipe) -> 1 (wipe complete)
   const wipeProgress = useMotionValue(1);
   const scanlineTop = useTransform(wipeProgress, (v) => `${(1 - v) * 100}%`);
   const newPhotoClip = useTransform(wipeProgress, (v) => `inset(${(1 - v) * 100}% 0% 0% 0%)`);
-  const oldPhotoClip = useTransform(wipeProgress, (v) => `inset(0% 0% ${v * 100}% 0%)`);
+  // Overlap by 0.2% to guarantee zero subpixel seam, seamlessly covered by the 3px laser scanline
+  const oldPhotoClip = useTransform(
+    wipeProgress,
+    (v) => `inset(0% 0% ${Math.max(0, v * 100 - 0.2)}% 0%)`
+  );
   const scanlineOpacity = useTransform(wipeProgress, [0, 0.06, 0.82, 1], [0, 1, 1, 0]);
 
-  // Automatic photo rotation every 6.5 seconds with zero-latency synchronized sweep
+  // Automatic photo rotation every 6.5 seconds with zero-latency pre-decoded synchronized sweep
   useEffect(() => {
-    const timer = setInterval(() => {
+    const rotate = async () => {
+      // Skip transition if tab is in the background
+      if (document.hidden) return;
+
       const current = photoIndexRef.current;
       const next = (current + 1) % HERO_PHOTOS.length;
+
+      // Verify the incoming image is fully decoded before starting the visual wipe
+      try {
+        const img = new window.Image();
+        img.src = HERO_PHOTOS[next].src;
+        if (img.decode) {
+          await img.decode();
+        }
+      } catch {
+        // Continue if decode API encounters any issue
+      }
+
+      wipeProgress.set(0);
       setPrevPhotoIndex(current);
       setPhotoIndex(next);
       photoIndexRef.current = next;
 
-      wipeProgress.set(0);
       animRef.current?.stop();
       animRef.current = animate(wipeProgress, 1, {
         duration: 0.65,
@@ -47,7 +77,9 @@ export default function Hero() {
           setPrevPhotoIndex(null);
         },
       });
-    }, 6500);
+    };
+
+    const timer = setInterval(rotate, 6500);
 
     return () => {
       clearInterval(timer);
@@ -102,19 +134,32 @@ export default function Hero() {
   const saktiDiffX = useTransform(springX, [-0.5, 0.5], [-33, 33]);
   const saktiDiffY = useTransform(springY, [-0.5, 0.5], [-24, 24]);
 
-  const renderDesktopPhoto = (idx: number, clipStyle?: any, isExiting?: boolean) => {
+  const renderDesktopPhoto = (
+    idx: number,
+    clipStyle: any,
+    zIndex: number,
+    opacity: number,
+    pointerEvents: "auto" | "none"
+  ) => {
     const photo = HERO_PHOTOS[idx];
     return (
       <motion.div
-        key={`photo-d-${idx}-${isExiting ? "exit" : "enter"}`}
+        key={`photo-d-${idx}`}
         className="absolute inset-0"
-        style={clipStyle ? { clipPath: clipStyle } : undefined}
+        style={{
+          clipPath: clipStyle ?? "none",
+          zIndex,
+          opacity,
+          pointerEvents,
+          willChange: "clip-path",
+        }}
       >
         <Image
           src={photo.src}
           alt={photo.alt}
           fill
           priority
+          unoptimized
           className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
           sizes="(max-width: 1024px) 70vw, 55vw"
         />
@@ -262,43 +307,46 @@ export default function Hero() {
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           <div className="hero-photo-mask relative w-full h-full">
-            {prevPhotoIndex !== null && (
-              <motion.div
-                key={`photo-m-${prevPhotoIndex}-exit`}
-                className="absolute inset-0"
-                style={{ clipPath: oldPhotoClip }}
-              >
-                <Image
-                  src={HERO_PHOTOS[prevPhotoIndex].src}
-                  alt={HERO_PHOTOS[prevPhotoIndex].alt}
-                  fill
-                  priority
-                  className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
-                  sizes="90vw"
-                />
-              </motion.div>
-            )}
+            {HERO_PHOTOS.map((photo, idx) => {
+              const isEntering = prevPhotoIndex !== null && idx === photoIndex;
+              const isExiting = prevPhotoIndex !== null && idx === prevPhotoIndex;
+              const isCurrent = prevPhotoIndex === null && idx === photoIndex;
+              const isVisible = isEntering || isExiting || isCurrent;
 
-            <motion.div
-              key={`photo-m-${photoIndex}`}
-              className="absolute inset-0"
-              style={prevPhotoIndex !== null ? { clipPath: newPhotoClip } : undefined}
-            >
-              <Image
-                src={HERO_PHOTOS[photoIndex].src}
-                alt={HERO_PHOTOS[photoIndex].alt}
-                fill
-                priority
-                className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
-                sizes="90vw"
-              />
-            </motion.div>
+              return (
+                <motion.div
+                  key={`photo-m-${idx}`}
+                  className="absolute inset-0"
+                  style={{
+                    clipPath: isEntering
+                      ? newPhotoClip
+                      : isExiting
+                      ? oldPhotoClip
+                      : "none",
+                    zIndex: isEntering ? 10 : isExiting ? 5 : isCurrent ? 10 : 0,
+                    opacity: isVisible ? 1 : 0,
+                    pointerEvents: isVisible ? "auto" : "none",
+                    willChange: "clip-path",
+                  }}
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    priority
+                    unoptimized
+                    className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
+                    sizes="90vw"
+                  />
+                </motion.div>
+              );
+            })}
 
             {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
             {prevPhotoIndex !== null && (
               <motion.div
                 key={`scan-m-${photoIndex}`}
-                className="absolute inset-x-0 pointer-events-none z-20"
+                className="absolute inset-x-0 pointer-events-none z-20 -translate-y-1/2"
                 style={{ top: scanlineTop, opacity: scanlineOpacity }}
               >
                 <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_14px_var(--color-pop),0_0_28px_var(--color-pop)]" />
@@ -345,27 +393,32 @@ export default function Hero() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
         >
           <div className="hero-photo-mask relative h-[88vh] lg:h-[92vh] aspect-[5/6]">
-            {prevPhotoIndex !== null && renderDesktopPhoto(prevPhotoIndex, oldPhotoClip, true)}
-            {renderDesktopPhoto(photoIndex, prevPhotoIndex !== null ? newPhotoClip : undefined, false)}
+            {HERO_PHOTOS.map((_, idx) => {
+              const isEntering = prevPhotoIndex !== null && idx === photoIndex;
+              const isExiting = prevPhotoIndex !== null && idx === prevPhotoIndex;
+              const isCurrent = prevPhotoIndex === null && idx === photoIndex;
+              const isVisible = isEntering || isExiting || isCurrent;
+
+              return renderDesktopPhoto(
+                idx,
+                isEntering ? newPhotoClip : isExiting ? oldPhotoClip : undefined,
+                isEntering ? 10 : isExiting ? 5 : isCurrent ? 10 : 0,
+                isVisible ? 1 : 0,
+                isVisible ? "auto" : "none"
+              );
+            })}
 
             {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
             {prevPhotoIndex !== null && (
               <motion.div
                 key={`scan-d-${photoIndex}`}
-                className="absolute inset-x-0 pointer-events-none z-20"
+                className="absolute inset-x-0 pointer-events-none z-20 -translate-y-1/2"
                 style={{ top: scanlineTop, opacity: scanlineOpacity }}
               >
                 <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_16px_var(--color-pop),0_0_32px_var(--color-pop)]" />
                 <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
               </motion.div>
             )}
-
-            {/* Hidden image preloader for zero-latency switching */}
-            <div className="hidden" aria-hidden="true">
-              {HERO_PHOTOS.map((p, i) => (
-                <Image key={i} src={p.src} alt="" width={10} height={12} priority />
-              ))}
-            </div>
           </div>
         </motion.div>
 
