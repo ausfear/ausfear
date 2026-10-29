@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Audinta Sakti Firmansyah (ausfear)",
     description:
-      "Game enjoyer, music listener & occasional math guy. Just vibing on the internet.",
+      "Game enjoyer, music listener & occasional math guy.",
     type: "website",
     url: "/",
     siteName: "ausfear",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Audinta Sakti Firmansyah (ausfear)",
     description:
-      "Game enjoyer, music listener & occasional math guy. Just vibing on the internet.",
+      "Game enjoyer, music listener & occasional math guy.",
   },
   // Icons come from the file conventions: app/favicon.ico, app/icon.png, app/apple-icon.png
 };
