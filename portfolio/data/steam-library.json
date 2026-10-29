@@ -1,0 +1,3060 @@
+[
+  {
+    "appid": 730,
+    "name": "Counter-Strike 2",
+    "hours": 1832,
+    "lastPlayed": "2026-10-23",
+    "tags": [
+      "FPS",
+      "Shooter",
+      "Multiplayer",
+      "Competitive",
+      "Action",
+      "Team-Based",
+      "e-sports",
+      "Tactical"
+    ]
+  },
+  {
+    "appid": 380600,
+    "name": "Fishing Planet",
+    "hours": 216.7,
+    "lastPlayed": "2026-10-25",
+    "tags": [
+      "Fishing",
+      "Free to Play",
+      "Multiplayer",
+      "Simulation",
+      "Relaxing",
+      "Sports",
+      "Realistic",
+      "Massively Multiplayer"
+    ]
+  },
+  {
+    "appid": 287700,
+    "name": "METAL GEAR SOLID V: THE PHANTOM PAIN",
+    "hours": 151.7,
+    "lastPlayed": "2026-10-18",
+    "tags": [
+      "Stealth",
+      "Open World",
+      "Action",
+      "Story Rich",
+      "Tactical",
+      "Cinematic",
+      "Third Person",
+      "Great Soundtrack"
+    ]
+  },
+  {
+    "appid": 550,
+    "name": "Left 4 Dead 2",
+    "hours": 133.9,
+    "lastPlayed": "2026-08-29",
+    "tags": [
+      "Zombies",
+      "Co-op",
+      "FPS",
+      "Multiplayer",
+      "Shooter",
+      "Online Co-Op",
+      "Action",
+      "Survival"
+    ]
+  },
+  {
+    "appid": 227300,
+    "name": "Euro Truck Simulator 2",
+    "hours": 109.7,
+    "lastPlayed": "2026-07-19",
+    "tags": [
+      "Driving",
+      "Transportation",
+      "Simulation",
+      "Open World",
+      "Automobile Sim",
+      "Realistic",
+      "Moddable",
+      "Relaxing"
+    ]
+  },
+  {
+    "appid": 3419430,
+    "name": "Bongo Cat",
+    "hours": 98.8,
+    "lastPlayed": "2026-04-17",
+    "tags": []
+  },
+  {
+    "appid": 3280350,
+    "name": "DEATH STRANDING 2: ON THE BEACH",
+    "hours": 94.3,
+    "lastPlayed": "2026-05-23",
+    "tags": []
+  },
+  {
+    "appid": 993090,
+    "name": "Lossless Scaling",
+    "hours": 92.9,
+    "lastPlayed": "2026-10-11",
+    "tags": [
+      "Utilities",
+      "Software",
+      "Pixel Graphics",
+      "3D",
+      "FPS",
+      "2D"
+    ]
+  },
+  {
+    "appid": 464920,
+    "name": "Surviving Mars",
+    "hours": 90.3,
+    "lastPlayed": "2026-07-11",
+    "tags": [
+      "Colony Sim",
+      "City Builder",
+      "Strategy",
+      "Survival",
+      "Space",
+      "Base-Building",
+      "Mars",
+      "Simulation"
+    ]
+  },
+  {
+    "appid": 3224770,
+    "name": "Umamusume: Pretty Derby",
+    "hours": 83.6,
+    "lastPlayed": "2025-11-16",
+    "tags": []
+  },
+  {
+    "appid": 2483190,
+    "name": "Forza Horizon 6",
+    "hours": 75.5,
+    "lastPlayed": "2026-09-05",
+    "tags": []
+  },
+  {
+    "appid": 8190,
+    "name": "Just Cause 2",
+    "hours": 71.6,
+    "lastPlayed": "2021-11-01",
+    "tags": [
+      "Open World",
+      "Action",
+      "Sandbox",
+      "Third Person",
+      "Multiplayer",
+      "Adventure",
+      "Third-Person Shooter",
+      "Shooter"
+    ]
+  },
+  {
+    "appid": 225540,
+    "name": "Just Cause 3",
+    "hours": 65.4,
+    "lastPlayed": "2026-01-04",
+    "tags": [
+      "Open World",
+      "Action",
+      "Destruction",
+      "Third-Person Shooter",
+      "Multiplayer",
+      "Singleplayer",
+      "Shooter",
+      "Adventure"
+    ]
+  },
+  {
+    "appid": 2669320,
+    "name": "EA SPORTS FC™ 25",
+    "hours": 64.4,
+    "lastPlayed": "2026-03-14",
+    "tags": [
+      "Sports",
+      "Football (Soccer)",
+      "Simulation",
+      "Controller",
+      "Multiplayer",
+      "e-sports",
+      "Competitive",
+      "Local Co-Op"
+    ]
+  },
+  {
+    "appid": 322170,
+    "name": "Geometry Dash",
+    "hours": 60,
+    "lastPlayed": "2026-05-26",
+    "tags": [
+      "Difficult",
+      "Music",
+      "Level Editor",
+      "Great Soundtrack",
+      "Precision Platformer",
+      "2D",
+      "Rhythm",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 3606890,
+    "name": "Upload Labs",
+    "hours": 58.2,
+    "lastPlayed": "2026-10-17",
+    "tags": []
+  },
+  {
+    "appid": 1659040,
+    "name": "HITMAN World of Assassination",
+    "hours": 56.2,
+    "lastPlayed": "2026-08-07",
+    "tags": [
+      "Stealth",
+      "Assassin",
+      "Action",
+      "Singleplayer",
+      "VR",
+      "Sandbox",
+      "Shooter",
+      "Violent"
+    ]
+  },
+  {
+    "appid": 291550,
+    "name": "Brawlhalla",
+    "hours": 53.8,
+    "lastPlayed": "2025-11-22",
+    "tags": [
+      "Free to Play",
+      "Multiplayer",
+      "Fighting",
+      "2D Fighter",
+      "2D Platformer",
+      "Casual",
+      "Local Multiplayer",
+      "Co-op"
+    ]
+  },
+  {
+    "appid": 243470,
+    "name": "Watch_Dogs",
+    "hours": 52.9,
+    "lastPlayed": "2026-08-21",
+    "tags": [
+      "Open World",
+      "Hacking",
+      "Action",
+      "Multiplayer",
+      "Third Person",
+      "Adventure",
+      "Stealth",
+      "Third-Person Shooter"
+    ]
+  },
+  {
+    "appid": 646910,
+    "name": "The Crew 2",
+    "hours": 50.7,
+    "lastPlayed": "2026-05-14",
+    "tags": [
+      "Racing",
+      "Open World",
+      "Automobile Sim",
+      "Multiplayer",
+      "Driving",
+      "Massively Multiplayer",
+      "Action",
+      "Flight"
+    ]
+  },
+  {
+    "appid": 599140,
+    "name": "Graveyard Keeper",
+    "hours": 50.6,
+    "lastPlayed": "2026-06-04",
+    "tags": [
+      "Pixel Graphics",
+      "Crafting",
+      "RPG",
+      "Simulation",
+      "Sandbox",
+      "Management",
+      "Indie",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 1119730,
+    "name": "Ranch Simulator",
+    "hours": 49.8,
+    "lastPlayed": "2026-07-19",
+    "tags": [
+      "Simulation",
+      "Multiplayer",
+      "Online Co-Op",
+      "Open World",
+      "Farming Sim",
+      "Farming",
+      "Job Simulator",
+      "Co-op"
+    ]
+  },
+  {
+    "appid": 3669870,
+    "name": "CONTROL Resonant",
+    "hours": 48.9,
+    "lastPlayed": "2026-10-04",
+    "tags": []
+  },
+  {
+    "appid": 2507950,
+    "name": "Delta Force",
+    "hours": 41.5,
+    "lastPlayed": "2026-07-04",
+    "tags": []
+  },
+  {
+    "appid": 3564740,
+    "name": "Where Winds Meet",
+    "hours": 39.9,
+    "lastPlayed": "2026-06-21",
+    "tags": []
+  },
+  {
+    "appid": 359550,
+    "name": "Tom Clancy's Rainbow Six Siege",
+    "hours": 35.4,
+    "lastPlayed": "2026-09-19",
+    "tags": [
+      "FPS",
+      "PvP",
+      "Multiplayer",
+      "Tactical",
+      "e-sports",
+      "Shooter",
+      "Competitive",
+      "Online Co-Op"
+    ]
+  },
+  {
+    "appid": 489830,
+    "name": "The Elder Scrolls V: Skyrim Special Edition",
+    "hours": 35.1,
+    "lastPlayed": "2026-07-25",
+    "tags": [
+      "Open World",
+      "RPG",
+      "Adventure",
+      "Singleplayer",
+      "Fantasy",
+      "Character Customization",
+      "Moddable",
+      "Dragons"
+    ]
+  },
+  {
+    "appid": 1222140,
+    "name": "Detroit: Become Human",
+    "hours": 33.7,
+    "lastPlayed": "2026-02-14",
+    "tags": [
+      "Choices Matter",
+      "Story Rich",
+      "Multiple Endings",
+      "Cinematic",
+      "Singleplayer",
+      "Emotional",
+      "Futuristic",
+      "Robots"
+    ]
+  },
+  {
+    "appid": 6880,
+    "name": "Just Cause",
+    "hours": 32.7,
+    "lastPlayed": "2020-02-15",
+    "tags": [
+      "Action",
+      "Open World",
+      "Shooter",
+      "Third Person",
+      "Singleplayer",
+      "Adventure",
+      "Sandbox",
+      "Third-Person Shooter"
+    ]
+  },
+  {
+    "appid": 578080,
+    "name": "PUBG: BATTLEGROUNDS",
+    "hours": 32.2,
+    "lastPlayed": "2026-10-23",
+    "tags": [
+      "Survival",
+      "Shooter",
+      "Battle Royale",
+      "Multiplayer",
+      "FPS",
+      "PvP",
+      "Third-Person Shooter",
+      "Action"
+    ]
+  },
+  {
+    "appid": 33230,
+    "name": "Assassin's Creed II",
+    "hours": 31.1,
+    "lastPlayed": "2021-10-20",
+    "tags": [
+      "Action",
+      "Open World",
+      "Parkour",
+      "Assassin",
+      "Stealth",
+      "Adventure",
+      "Historical",
+      "Third Person"
+    ]
+  },
+  {
+    "appid": 242760,
+    "name": "The Forest",
+    "hours": 30.7,
+    "lastPlayed": "2026-08-28",
+    "tags": [
+      "Open World Survival Craft",
+      "Survival",
+      "Open World",
+      "Horror",
+      "Crafting",
+      "Adventure",
+      "Building",
+      "Survival Horror"
+    ]
+  },
+  {
+    "appid": 3314790,
+    "name": "CloverPit",
+    "hours": 30.7,
+    "lastPlayed": "2026-03-03",
+    "tags": []
+  },
+  {
+    "appid": 307690,
+    "name": "Sleeping Dogs: Definitive Edition",
+    "hours": 29.8,
+    "lastPlayed": "2025-05-29",
+    "tags": [
+      "Open World",
+      "Action",
+      "Martial Arts",
+      "Crime",
+      "Singleplayer",
+      "Third Person",
+      "Story Rich",
+      "Parkour"
+    ]
+  },
+  {
+    "appid": 2231380,
+    "name": "Ghost Recon Breakpoint",
+    "hours": 29.6,
+    "lastPlayed": "2026-08-28",
+    "tags": [
+      "Open World",
+      "Co-op",
+      "Singleplayer",
+      "Multiplayer",
+      "Shooter",
+      "Action",
+      "Military",
+      "Stealth"
+    ]
+  },
+  {
+    "appid": 4732690,
+    "name": "Arknights: Endfield",
+    "hours": 27.9,
+    "lastPlayed": "2026-10-29",
+    "tags": []
+  },
+  {
+    "appid": 239140,
+    "name": "Dying Light",
+    "hours": 27.4,
+    "lastPlayed": "2026-07-05",
+    "tags": [
+      "Zombies",
+      "Survival Horror",
+      "Horror",
+      "Online Co-Op",
+      "Open World",
+      "Parkour",
+      "First-Person",
+      "Survival"
+    ]
+  },
+  {
+    "appid": 812140,
+    "name": "Assassin's Creed Odyssey",
+    "hours": 26.5,
+    "lastPlayed": "2026-08-16",
+    "tags": [
+      "Open World",
+      "RPG",
+      "Singleplayer",
+      "Historical",
+      "Action",
+      "Assassin",
+      "Third Person",
+      "Adventure"
+    ]
+  },
+  {
+    "appid": 1293830,
+    "name": "Forza Horizon 4",
+    "hours": 26.2,
+    "lastPlayed": "2026-04-28",
+    "tags": [
+      "Racing",
+      "Open World",
+      "Driving",
+      "Multiplayer",
+      "Automobile Sim",
+      "Realistic",
+      "Online Co-Op",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 681280,
+    "name": "Descenders",
+    "hours": 25.3,
+    "lastPlayed": "2026-10-18",
+    "tags": [
+      "Sports",
+      "Racing",
+      "Cycling",
+      "Action",
+      "Bikes",
+      "Multiplayer",
+      "Great Soundtrack",
+      "Procedural Generation"
+    ]
+  },
+  {
+    "appid": 223470,
+    "name": "POSTAL 2",
+    "hours": 23.6,
+    "lastPlayed": "2026-08-31",
+    "tags": [
+      "Violent",
+      "Dark Humor",
+      "Open World",
+      "Mature",
+      "First-Person",
+      "Funny",
+      "Comedy",
+      "Sandbox"
+    ]
+  },
+  {
+    "appid": 739630,
+    "name": "Phasmophobia",
+    "hours": 22.9,
+    "lastPlayed": "2026-10-24",
+    "tags": [
+      "Horror",
+      "Online Co-Op",
+      "Multiplayer",
+      "Psychological Horror",
+      "Co-op",
+      "Supernatural",
+      "VR",
+      "First-Person"
+    ]
+  },
+  {
+    "appid": 1449560,
+    "name": "Metro Exodus Enhanced Edition",
+    "hours": 22.9,
+    "lastPlayed": "2026-04-12",
+    "tags": []
+  },
+  {
+    "appid": 230410,
+    "name": "Warframe",
+    "hours": 21.3,
+    "lastPlayed": "2026-08-30",
+    "tags": [
+      "Free to Play",
+      "Action RPG",
+      "Looter Shooter",
+      "Third-Person Shooter",
+      "Action",
+      "RPG",
+      "Third Person",
+      "Character Customization"
+    ]
+  },
+  {
+    "appid": 518790,
+    "name": "theHunter: Call of the Wild™",
+    "hours": 20.4,
+    "lastPlayed": "2026-01-04",
+    "tags": [
+      "Hunting",
+      "Open World",
+      "Multiplayer",
+      "Nature",
+      "Relaxing",
+      "Stealth",
+      "FPS",
+      "Sandbox"
+    ]
+  },
+  {
+    "appid": 440,
+    "name": "Team Fortress 2",
+    "hours": 20.2,
+    "lastPlayed": "2020-06-04",
+    "tags": [
+      "Free to Play",
+      "Hero Shooter",
+      "Multiplayer",
+      "FPS",
+      "Shooter",
+      "Action",
+      "Class-Based",
+      "Team-Based"
+    ]
+  },
+  {
+    "appid": 893520,
+    "name": "CreativeDestruction",
+    "hours": 19.9,
+    "lastPlayed": "2020-06-27",
+    "tags": [
+      "Multiplayer",
+      "Battle Royale",
+      "Action",
+      "Free to Play",
+      "Shooter",
+      "FPS",
+      "Building",
+      "Massively Multiplayer"
+    ]
+  },
+  {
+    "appid": 960990,
+    "name": "Beyond: Two Souls",
+    "hours": 19.3,
+    "lastPlayed": "2025-11-01",
+    "tags": [
+      "Adventure",
+      "Choices Matter",
+      "Story Rich",
+      "Female Protagonist",
+      "Cinematic",
+      "Singleplayer",
+      "Emotional",
+      "Co-op"
+    ]
+  },
+  {
+    "appid": 264710,
+    "name": "Subnautica",
+    "hours": 18.7,
+    "lastPlayed": "2026-10-16",
+    "tags": [
+      "Open World Survival Craft",
+      "Survival",
+      "Horror",
+      "Open World",
+      "Underwater",
+      "Exploration",
+      "Crafting",
+      "Base-Building"
+    ]
+  },
+  {
+    "appid": 2666510,
+    "name": "Rusty's Retirement",
+    "hours": 16,
+    "lastPlayed": "2026-09-01",
+    "tags": [
+      "Idler",
+      "Farming Sim",
+      "Automation",
+      "Pixel Graphics",
+      "Simulation",
+      "Management",
+      "Relaxing",
+      "Farming"
+    ]
+  },
+  {
+    "appid": 870780,
+    "name": "Control Ultimate Edition",
+    "hours": 15.8,
+    "lastPlayed": "2026-06-07",
+    "tags": [
+      "Action",
+      "Supernatural",
+      "Female Protagonist",
+      "Story Rich",
+      "Adventure",
+      "Third Person",
+      "Atmospheric",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 220,
+    "name": "Half-Life 2",
+    "hours": 15.6,
+    "lastPlayed": "2024-11-21",
+    "tags": [
+      "FPS",
+      "Action",
+      "Sci-fi",
+      "Classic",
+      "Singleplayer",
+      "Story Rich",
+      "Shooter",
+      "First-Person"
+    ]
+  },
+  {
+    "appid": 1326470,
+    "name": "Sons Of The Forest",
+    "hours": 15.6,
+    "lastPlayed": "2026-09-12",
+    "tags": [
+      "Survival",
+      "Open World",
+      "Multiplayer",
+      "Co-op",
+      "Survival Horror",
+      "Base-Building",
+      "Horror",
+      "Crafting"
+    ]
+  },
+  {
+    "appid": 2609610,
+    "name": "CONVRGENCE",
+    "hours": 14.9,
+    "lastPlayed": "2026-09-25",
+    "tags": [
+      "VR",
+      "Atmospheric",
+      "Post-apocalyptic",
+      "Shooter",
+      "Extraction Shooter",
+      "Survival Horror",
+      "Survival",
+      "Horror"
+    ]
+  },
+  {
+    "appid": 21690,
+    "name": "Resident Evil 5",
+    "hours": 14.5,
+    "lastPlayed": "2026-04-17",
+    "tags": [
+      "Co-op",
+      "Action",
+      "Zombies",
+      "Co-op Campaign",
+      "Third-Person Shooter",
+      "Online Co-Op",
+      "Horror",
+      "Multiplayer"
+    ]
+  },
+  {
+    "appid": 44350,
+    "name": "GRID 2",
+    "hours": 13.9,
+    "lastPlayed": "2025-11-25",
+    "tags": [
+      "Racing",
+      "Driving",
+      "Sports",
+      "Multiplayer",
+      "Simulation",
+      "Arcade",
+      "Singleplayer",
+      "Realistic"
+    ]
+  },
+  {
+    "appid": 203140,
+    "name": "Hitman: Absolution",
+    "hours": 13.7,
+    "lastPlayed": "2025-07-11",
+    "tags": [
+      "Stealth",
+      "Action",
+      "Third Person",
+      "Assassin",
+      "Singleplayer",
+      "Third-Person Shooter",
+      "Tactical",
+      "Shooter"
+    ]
+  },
+  {
+    "appid": 2764370,
+    "name": "Starward",
+    "hours": 13,
+    "lastPlayed": "2024-12-07",
+    "tags": []
+  },
+  {
+    "appid": 552520,
+    "name": "Far Cry 5",
+    "hours": 12.8,
+    "lastPlayed": "2026-10-10",
+    "tags": [
+      "Open World",
+      "Action-Adventure",
+      "Multiplayer",
+      "Co-op",
+      "FPS",
+      "Shooter",
+      "Exploration",
+      "Story Rich"
+    ]
+  },
+  {
+    "appid": 1422450,
+    "name": "Deadlock",
+    "hours": 12.3,
+    "lastPlayed": "2026-02-20",
+    "tags": []
+  },
+  {
+    "appid": 460930,
+    "name": "Tom Clancy's Ghost Recon® Wildlands",
+    "hours": 11.6,
+    "lastPlayed": "2026-08-26",
+    "tags": [
+      "Open World",
+      "Shooter",
+      "Co-op",
+      "Stealth",
+      "Multiplayer",
+      "Singleplayer",
+      "Tactical",
+      "Action"
+    ]
+  },
+  {
+    "appid": 945360,
+    "name": "Among Us",
+    "hours": 11.4,
+    "lastPlayed": "2020-10-16",
+    "tags": [
+      "Multiplayer",
+      "Social Deduction",
+      "Online Co-Op",
+      "Space",
+      "Survival",
+      "2D",
+      "Funny",
+      "Psychological"
+    ]
+  },
+  {
+    "appid": 1222680,
+    "name": "Need for Speed™ Heat ",
+    "hours": 10.7,
+    "lastPlayed": "2026-05-02",
+    "tags": [
+      "Racing",
+      "Open World",
+      "Multiplayer",
+      "Driving",
+      "Action",
+      "Singleplayer",
+      "Co-op",
+      "Adventure"
+    ]
+  },
+  {
+    "appid": 468920,
+    "name": "Ultimate Fishing Simulator®",
+    "hours": 10,
+    "lastPlayed": "2026-02-23",
+    "tags": [
+      "3D",
+      "America",
+      "Fishing",
+      "Simulation",
+      "Sports",
+      "Nature",
+      "Immersive Sim",
+      "Atmospheric"
+    ]
+  },
+  {
+    "appid": 1003590,
+    "name": "Tetris® Effect: Connected",
+    "hours": 9.8,
+    "lastPlayed": "2026-09-20",
+    "tags": [
+      "Puzzle",
+      "Family Friendly",
+      "Singleplayer",
+      "Multiplayer",
+      "Competitive",
+      "Indie",
+      "Online Co-Op",
+      "Music"
+    ]
+  },
+  {
+    "appid": 10,
+    "name": "Counter-Strike",
+    "hours": 9.7,
+    "lastPlayed": "2025-11-04",
+    "tags": [
+      "Action",
+      "FPS",
+      "Multiplayer",
+      "Shooter",
+      "Classic",
+      "Team-Based",
+      "First-Person",
+      "Competitive"
+    ]
+  },
+  {
+    "appid": 1089980,
+    "name": "The Henry Stickmin Collection",
+    "hours": 9.6,
+    "lastPlayed": "2025-07-02",
+    "tags": [
+      "Funny",
+      "Multiple Endings",
+      "Choose Your Own Adventure",
+      "Memes",
+      "Comedy",
+      "Singleplayer",
+      "Choices Matter",
+      "Classic"
+    ]
+  },
+  {
+    "appid": 1172470,
+    "name": "Apex Legends",
+    "hours": 9.2,
+    "lastPlayed": "2026-07-31",
+    "tags": [
+      "Free to Play",
+      "Battle Royale",
+      "Multiplayer",
+      "FPS",
+      "Shooter",
+      "First-Person",
+      "PvP",
+      "Action"
+    ]
+  },
+  {
+    "appid": 265930,
+    "name": "Goat Simulator",
+    "hours": 9.1,
+    "lastPlayed": "2023-01-12",
+    "tags": [
+      "Simulation",
+      "Funny",
+      "Comedy",
+      "Open World",
+      "Sandbox",
+      "Physics",
+      "Destruction",
+      "Casual"
+    ]
+  },
+  {
+    "appid": 1715130,
+    "name": "Crysis Remastered",
+    "hours": 8.9,
+    "lastPlayed": "2025-01-10",
+    "tags": [
+      "Action",
+      "FPS",
+      "Shooter",
+      "Sci-fi",
+      "Stealth",
+      "Sandbox",
+      "Singleplayer",
+      "Aliens"
+    ]
+  },
+  {
+    "appid": 400,
+    "name": "Portal",
+    "hours": 8.7,
+    "lastPlayed": "2019-07-11",
+    "tags": [
+      "Puzzle",
+      "Puzzle-Platformer",
+      "First-Person",
+      "3D Platformer",
+      "Singleplayer",
+      "Sci-fi",
+      "Comedy",
+      "Female Protagonist"
+    ]
+  },
+  {
+    "appid": 312990,
+    "name": "The Expendabros",
+    "hours": 7.3,
+    "lastPlayed": "2019-07-15",
+    "tags": [
+      "Free to Play",
+      "Action",
+      "Pixel Graphics",
+      "2D",
+      "Multiplayer",
+      "Local Co-Op",
+      "Shooter",
+      "Co-op"
+    ]
+  },
+  {
+    "appid": 367520,
+    "name": "Hollow Knight",
+    "hours": 7.3,
+    "lastPlayed": "2025-09-07",
+    "tags": [
+      "Metroidvania",
+      "Souls-like",
+      "Platformer",
+      "Great Soundtrack",
+      "2D",
+      "Difficult",
+      "Indie",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 2417610,
+    "name": "METAL GEAR SOLID Δ: SNAKE EATER",
+    "hours": 7.1,
+    "lastPlayed": "2026-05-01",
+    "tags": []
+  },
+  {
+    "appid": 620,
+    "name": "Portal 2",
+    "hours": 6.9,
+    "lastPlayed": "2024-12-07",
+    "tags": [
+      "Platformer",
+      "Puzzle",
+      "First-Person",
+      "Dark Humor",
+      "Story Rich",
+      "Puzzle-Platformer",
+      "Funny",
+      "Female Protagonist"
+    ]
+  },
+  {
+    "appid": 308600,
+    "name": "Skillshot City",
+    "hours": 6.9,
+    "lastPlayed": "2026-08-05",
+    "tags": [
+      "Battle Royale",
+      "Rogue-lite",
+      "Free to Play",
+      "Top-Down Shooter",
+      "Multiplayer",
+      "PvP",
+      "Hero Shooter",
+      "Action"
+    ]
+  },
+  {
+    "appid": 2644470,
+    "name": "PICO PARK 2",
+    "hours": 6.9,
+    "lastPlayed": "2026-03-21",
+    "tags": [
+      "Casual",
+      "Multiplayer",
+      "Action",
+      "Online Co-Op",
+      "Psychological Horror",
+      "Platformer",
+      "Co-op",
+      "Cute"
+    ]
+  },
+  {
+    "appid": 620980,
+    "name": "Beat Saber",
+    "hours": 6.5,
+    "lastPlayed": "2026-08-29",
+    "tags": [
+      "VR",
+      "Rhythm",
+      "Music",
+      "Moddable",
+      "Fast-Paced",
+      "Singleplayer",
+      "Difficult",
+      "First-Person"
+    ]
+  },
+  {
+    "appid": 2096600,
+    "name": "Crysis 2 Remastered",
+    "hours": 6.2,
+    "lastPlayed": "2026-06-03",
+    "tags": [
+      "Action",
+      "FPS",
+      "Shooter",
+      "Sandbox",
+      "First-Person",
+      "Aliens",
+      "Hero Shooter",
+      "Shoot 'Em Up"
+    ]
+  },
+  {
+    "appid": 3354750,
+    "name": "skate.",
+    "hours": 6,
+    "lastPlayed": "2026-05-14",
+    "tags": []
+  },
+  {
+    "appid": 714010,
+    "name": "Aimlabs",
+    "hours": 5.6,
+    "lastPlayed": "2021-03-28",
+    "tags": [
+      "Free to Play",
+      "FPS",
+      "Shooter",
+      "Simulation",
+      "First-Person",
+      "Singleplayer",
+      "Action",
+      "Multiplayer"
+    ]
+  },
+  {
+    "appid": 55140,
+    "name": "MX vs. ATV Reflex",
+    "hours": 5.5,
+    "lastPlayed": "2026-08-19",
+    "tags": [
+      "Racing",
+      "Motocross",
+      "Offroad",
+      "Multiplayer",
+      "Motorbike",
+      "Open World",
+      "Singleplayer",
+      "Sports"
+    ]
+  },
+  {
+    "appid": 203160,
+    "name": "Tomb Raider",
+    "hours": 5.3,
+    "lastPlayed": "2026-06-01",
+    "tags": [
+      "Adventure",
+      "Action",
+      "Female Protagonist",
+      "Third Person",
+      "Singleplayer",
+      "Story Rich",
+      "Third-Person Shooter",
+      "Multiplayer"
+    ]
+  },
+  {
+    "appid": 367450,
+    "name": "Poly Bridge",
+    "hours": 5.3,
+    "lastPlayed": "2022-12-12",
+    "tags": [
+      "Building",
+      "Simulation",
+      "Physics",
+      "Puzzle",
+      "Singleplayer",
+      "Sandbox",
+      "Difficult",
+      "Indie"
+    ]
+  },
+  {
+    "appid": 924140,
+    "name": "Hand Simulator: Survival",
+    "hours": 5.2,
+    "lastPlayed": "2021-11-03",
+    "tags": [
+      "Survival",
+      "Multiplayer",
+      "Adventure",
+      "Simulation",
+      "PvP",
+      "Funny",
+      "RPG",
+      "Action"
+    ]
+  },
+  {
+    "appid": 301640,
+    "name": "Zombie Army Trilogy",
+    "hours": 5.1,
+    "lastPlayed": "2021-10-30",
+    "tags": [
+      "Zombies",
+      "Action",
+      "Co-op",
+      "Multiplayer",
+      "World War II",
+      "Third-Person Shooter",
+      "Horror",
+      "Gore"
+    ]
+  },
+  {
+    "appid": 1509960,
+    "name": "PICO PARK",
+    "hours": 5.1,
+    "lastPlayed": "2025-01-03",
+    "tags": [
+      "Multiplayer",
+      "Online Co-Op",
+      "Puzzle-Platformer",
+      "Co-op",
+      "Local Co-Op",
+      "Casual",
+      "Cute",
+      "Local Multiplayer"
+    ]
+  },
+  {
+    "appid": 815370,
+    "name": "Green Hell",
+    "hours": 5,
+    "lastPlayed": "2026-10-23",
+    "tags": [
+      "Open World Survival Craft",
+      "Survival",
+      "Multiplayer",
+      "Online Co-Op",
+      "Open World",
+      "Crafting",
+      "Action",
+      "Base-Building"
+    ]
+  },
+  {
+    "appid": 824270,
+    "name": "KovaaK's",
+    "hours": 4.8,
+    "lastPlayed": "2026-05-29",
+    "tags": [
+      "Action",
+      "Shooter",
+      "Simulation",
+      "FPS",
+      "Indie",
+      "First-Person",
+      "Software Training",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 977400,
+    "name": "Cell to Singularity - Evolution Never Ends",
+    "hours": 4.8,
+    "lastPlayed": "2026-10-01",
+    "tags": [
+      "Clicker",
+      "Free to Play",
+      "Simulation",
+      "Science",
+      "Idler",
+      "Casual",
+      "Historical",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 341800,
+    "name": "Keep Talking and Nobody Explodes",
+    "hours": 4.7,
+    "lastPlayed": "2025-01-23",
+    "tags": [
+      "Co-op",
+      "Local Multiplayer",
+      "Puzzle",
+      "Party Game",
+      "Board Game",
+      "Local Co-Op",
+      "Multiplayer",
+      "Party"
+    ]
+  },
+  {
+    "appid": 431960,
+    "name": "Wallpaper Engine",
+    "hours": 4.7,
+    "lastPlayed": "2026-10-20",
+    "tags": [
+      "Mature",
+      "Utilities",
+      "Anime",
+      "Software",
+      "Design & Illustration",
+      "Animation & Modeling",
+      "First-Person",
+      "NSFW"
+    ]
+  },
+  {
+    "appid": 1059990,
+    "name": "Trombone Champ",
+    "hours": 4.7,
+    "lastPlayed": "2025-05-17",
+    "tags": [
+      "Rhythm",
+      "Comedy",
+      "Funny",
+      "Music",
+      "Cute",
+      "Cartoon",
+      "Casual",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 500,
+    "name": "Left 4 Dead",
+    "hours": 4.6,
+    "lastPlayed": "2019-05-31",
+    "tags": [
+      "Zombies",
+      "Co-op",
+      "Multiplayer",
+      "FPS",
+      "Action",
+      "Horror",
+      "Shooter",
+      "Online Co-Op"
+    ]
+  },
+  {
+    "appid": 221040,
+    "name": "Resident Evil 6",
+    "hours": 4.6,
+    "lastPlayed": "2026-10-23",
+    "tags": [
+      "Zombies",
+      "Action",
+      "Co-op",
+      "Third-Person Shooter",
+      "Horror",
+      "Co-op Campaign",
+      "Online Co-Op",
+      "Multiplayer"
+    ]
+  },
+  {
+    "appid": 460920,
+    "name": "Steep",
+    "hours": 4.4,
+    "lastPlayed": "2026-05-22",
+    "tags": [
+      "Sports",
+      "Open World",
+      "Multiplayer",
+      "Action",
+      "Simulation",
+      "Atmospheric",
+      "Exploration",
+      "Great Soundtrack"
+    ]
+  },
+  {
+    "appid": 2208570,
+    "name": "Dark Hours",
+    "hours": 4.3,
+    "lastPlayed": "2026-07-25",
+    "tags": [
+      "Early Access",
+      "Horror",
+      "Multiplayer",
+      "Heist",
+      "Online Co-Op",
+      "Funny",
+      "Co-op",
+      "Survival Horror"
+    ]
+  },
+  {
+    "appid": 201870,
+    "name": "Assassin's Creed Revelations",
+    "hours": 4.2,
+    "lastPlayed": "2025-06-01",
+    "tags": [
+      "Action",
+      "Open World",
+      "Parkour",
+      "Stealth",
+      "Adventure",
+      "Assassin",
+      "Third Person",
+      "Multiplayer"
+    ]
+  },
+  {
+    "appid": 1274570,
+    "name": "DEVOUR",
+    "hours": 4.1,
+    "lastPlayed": "2026-01-15",
+    "tags": [
+      "Horror",
+      "Online Co-Op",
+      "Multiplayer",
+      "Survival Horror",
+      "Sexual Content",
+      "Co-op",
+      "Psychological Horror",
+      "Dark"
+    ]
+  },
+  {
+    "appid": 12210,
+    "name": "Grand Theft Auto IV: The Complete Edition",
+    "hours": 4,
+    "lastPlayed": "2026-09-12",
+    "tags": [
+      "Open World",
+      "Action",
+      "Automobile Sim",
+      "Multiplayer",
+      "Crime",
+      "Third Person",
+      "Adventure",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 1426210,
+    "name": "It Takes Two",
+    "hours": 4,
+    "lastPlayed": "2026-07-03",
+    "tags": [
+      "Co-op",
+      "Multiplayer",
+      "Split Screen",
+      "Local Co-Op",
+      "Puzzle",
+      "Online Co-Op",
+      "Adventure",
+      "Story Rich"
+    ]
+  },
+  {
+    "appid": 319630,
+    "name": "Life is Strange™",
+    "hours": 3.9,
+    "lastPlayed": "2021-07-15",
+    "tags": [
+      "Story Rich",
+      "Choices Matter",
+      "Great Soundtrack",
+      "Female Protagonist",
+      "Time Travel",
+      "Atmospheric",
+      "Episodic",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 2225070,
+    "name": "Trackmania",
+    "hours": 3.7,
+    "lastPlayed": "2025-05-16",
+    "tags": []
+  },
+  {
+    "appid": 3059070,
+    "name": "The Headliners",
+    "hours": 3.6,
+    "lastPlayed": "2026-03-26",
+    "tags": [
+      "Online Co-Op",
+      "Horror",
+      "Co-op",
+      "Funny",
+      "Action",
+      "Multiplayer",
+      "Indie",
+      "Action-Adventure"
+    ]
+  },
+  {
+    "appid": 850190,
+    "name": "Goat Simulator 3",
+    "hours": 3.5,
+    "lastPlayed": "2025-01-12",
+    "tags": [
+      "Exploration",
+      "Physics",
+      "Sandbox",
+      "Open World",
+      "Character Customization",
+      "Simulation",
+      "3D",
+      "Casual"
+    ]
+  },
+  {
+    "appid": 1233570,
+    "name": "Mirror's Edge™ Catalyst",
+    "hours": 3.4,
+    "lastPlayed": "2026-09-13",
+    "tags": [
+      "Parkour",
+      "Female Protagonist",
+      "Open World",
+      "Runner",
+      "First-Person",
+      "3D Platformer",
+      "Cyberpunk",
+      "Action-Adventure"
+    ]
+  },
+  {
+    "appid": 264200,
+    "name": "One Finger Death Punch",
+    "hours": 2.9,
+    "lastPlayed": "2020-05-24",
+    "tags": [
+      "Action",
+      "2D Fighter",
+      "Fast-Paced",
+      "Indie",
+      "Beat 'em up",
+      "Fighting",
+      "Singleplayer",
+      "Addictive"
+    ]
+  },
+  {
+    "appid": 546560,
+    "name": "Half-Life: Alyx",
+    "hours": 2.9,
+    "lastPlayed": "2026-07-17",
+    "tags": [
+      "VR",
+      "FPS",
+      "Story Rich",
+      "Horror",
+      "Female Protagonist",
+      "Shooter",
+      "Singleplayer",
+      "First-Person"
+    ]
+  },
+  {
+    "appid": 1611740,
+    "name": "BattleBit Remastered Playtest",
+    "hours": 2.8,
+    "lastPlayed": "2022-10-01",
+    "tags": []
+  },
+  {
+    "appid": 1237970,
+    "name": "Titanfall® 2",
+    "hours": 2.6,
+    "lastPlayed": "2026-08-01",
+    "tags": [
+      "FPS",
+      "Mechs",
+      "Multiplayer",
+      "Shooter",
+      "Singleplayer",
+      "Action",
+      "Parkour",
+      "Sci-fi"
+    ]
+  },
+  {
+    "appid": 4465480,
+    "name": "Counter-Strike:Global Offensive",
+    "hours": 2.3,
+    "lastPlayed": "2026-03-14",
+    "tags": []
+  },
+  {
+    "appid": 43110,
+    "name": "Metro 2033",
+    "hours": 2.1,
+    "lastPlayed": "2024-09-18",
+    "tags": [
+      "FPS",
+      "Post-apocalyptic",
+      "Action",
+      "Atmospheric",
+      "Horror",
+      "Singleplayer",
+      "Based On A Novel",
+      "Shooter"
+    ]
+  },
+  {
+    "appid": 240,
+    "name": "Counter-Strike: Source",
+    "hours": 2,
+    "lastPlayed": "2026-07-30",
+    "tags": [
+      "Shooter",
+      "FPS",
+      "Action",
+      "Multiplayer",
+      "Team-Based",
+      "First-Person",
+      "Competitive",
+      "Tactical"
+    ]
+  },
+  {
+    "appid": 346110,
+    "name": "ARK: Survival Evolved",
+    "hours": 2,
+    "lastPlayed": "2025-12-24",
+    "tags": [
+      "Open World Survival Craft",
+      "Survival",
+      "Multiplayer",
+      "Open World",
+      "Dinosaurs",
+      "Crafting",
+      "Building",
+      "Adventure"
+    ]
+  },
+  {
+    "appid": 413150,
+    "name": "Stardew Valley",
+    "hours": 2,
+    "lastPlayed": "2026-07-31",
+    "tags": [
+      "Farming Sim",
+      "Pixel Graphics",
+      "Multiplayer",
+      "Life Sim",
+      "RPG",
+      "Relaxing",
+      "Agriculture",
+      "Simulation"
+    ]
+  },
+  {
+    "appid": 728740,
+    "name": "Sniper Elite V2 Remastered",
+    "hours": 2,
+    "lastPlayed": "2026-08-15",
+    "tags": [
+      "Sniper",
+      "Action",
+      "World War II",
+      "Multiplayer",
+      "Gore",
+      "Violent",
+      "Stealth",
+      "Singleplayer"
+    ]
+  },
+  {
+    "appid": 80,
+    "name": "Counter-Strike: Condition Zero",
+    "hours": 1.9,
+    "lastPlayed": "2019-10-08",
+    "tags": [
+      "Action",
+      "FPS",
+      "Shooter",
+      "Multiplayer",
+      "First-Person",
+      "Singleplayer",
+      "Classic",
+      "Tactical"
+    ]
+  },
+  {
+    "appid": 244210,
+    "name": "Assetto Corsa",
+    "hours": 1.8,
+    "lastPlayed": "2026-07-24",
+    "tags": [
+      "Racing",
+      "Automobile Sim",
+      "Simulation",
+      "Driving",
+      "Multiplayer",
+      "VR",
+      "Realistic",
+      "Sports"
+    ]
+  },
+  {
+    "appid": 755540,
+    "name": "LIV",
+    "hours": 1.8,
+    "lastPlayed": "2026-08-06",
+    "tags": [
+      "Utilities",
+      "Video Production",
+      "Web Publishing",
+      "VR"
+    ]
+  },
+  {
+    "appid": 1815780,
+    "name": "Asphalt Legends ",
+    "hours": 1.8,
+    "lastPlayed": "2025-11-25",
+    "tags": []
+  },
+  {
+    "appid": 17520,
+    "name": "Synergy",
+    "hours": 1.3,
+    "lastPlayed": "2024-12-08",
+    "tags": [
+      "Free to Play",
+      "Co-op",
+      "Action",
+      "Mod",
+      "Multiplayer",
+      "FPS",
+      "Online Co-Op",
+      "Shooter"
+    ]
+  },
+  {
+    "appid": 1104450,
+    "name": "Bombergrounds: Reborn",
+    "hours": 1.3,
+    "lastPlayed": "2021-02-25",
+    "tags": [
+      "Multiplayer",
+      "Battle Royale",
+      "Funny",
+      "Family Friendly",
+      "Online Co-Op",
+      "Cute",
+      "Arcade",
+      "Massively Multiplayer"
+    ]
+  },
+  {
+    "appid": 287290,
+    "name": "Resident Evil Revelations 2",
+    "hours": 1.2,
+    "lastPlayed": "2026-03-13",
+    "tags": [
+      "Zombies",
+      "Horror",
+      "Multiplayer",
+      "Survival Horror",
+      "Action",
+      "Co-op",
+      "Adventure",
+      "Third-Person Shooter"
+    ]
+  },
+  {
+    "appid": 383870,
+    "name": "Firewatch",
+    "hours": 1.2,
+    "lastPlayed": "2025-06-01",
+    "tags": [
+      "Adventure",
+      "Atmospheric",
+      "Story Rich",
+      "Walking Simulator",
+      "Mystery",
+      "First-Person",
+      "Singleplayer",
+      "Exploration"
+    ]
+  },
+  {
+    "appid": 732430,
+    "name": "Superflight",
+    "hours": 1.2,
+    "lastPlayed": "2021-04-27",
+    "tags": [
+      "Flight",
+      "Indie",
+      "Relaxing",
+      "Casual",
+      "Procedural Generation",
+      "Atmospheric",
+      "Singleplayer",
+      "Action"
+    ]
+  },
+  {
+    "appid": 757240,
+    "name": "Aimtastic",
+    "hours": 1.2,
+    "lastPlayed": "2020-04-26",
+    "tags": [
+      "Free to Play",
+      "Action",
+      "FPS",
+      "Indie",
+      "Early Access",
+      "e-sports",
+      "Shooter",
+      "First-Person"
+    ]
+  },
+  {
+    "appid": 2810210,
+    "name": "Codename CURE II",
+    "hours": 1.2,
+    "lastPlayed": "2026-08-04",
+    "tags": []
+  },
+  {
+    "appid": 475550,
+    "name": "Beholder",
+    "hours": 1.1,
+    "lastPlayed": "2019-05-27",
+    "tags": [
+      "Dystopian ",
+      "Choices Matter",
+      "Political Sim",
+      "Strategy",
+      "Dark",
+      "Atmospheric",
+      "Singleplayer",
+      "Simulation"
+    ]
+  },
+  {
+    "appid": 3405690,
+    "name": "EA SPORTS FC™ 26",
+    "hours": 1.1,
+    "lastPlayed": "2026-07-05",
+    "tags": []
+  },
+  {
+    "appid": 6980,
+    "name": "Thief: Deadly Shadows",
+    "hours": 1,
+    "lastPlayed": "2019-04-03",
+    "tags": [
+      "Stealth",
+      "Atmospheric",
+      "Action",
+      "Steampunk",
+      "First-Person",
+      "Classic",
+      "Dark",
+      "Third Person"
+    ]
+  },
+  {
+    "appid": 284160,
+    "name": "BeamNG.drive",
+    "hours": 1,
+    "lastPlayed": "2026-05-16",
+    "tags": [
+      "Simulation",
+      "Driving",
+      "Physics",
+      "Realistic",
+      "Destruction",
+      "Automobile Sim",
+      "Sandbox",
+      "Open World"
+    ]
+  },
+  {
+    "appid": 1332010,
+    "name": "Stray",
+    "hours": 1,
+    "lastPlayed": "2026-03-27",
+    "tags": [
+      "Cats",
+      "Adventure",
+      "Atmospheric",
+      "Cyberpunk",
+      "Singleplayer",
+      "Cute",
+      "Exploration",
+      "Robots"
+    ]
+  },
+  {
+    "appid": 314650,
+    "name": "SpaceEngine",
+    "hours": 0.9,
+    "lastPlayed": "2026-05-01",
+    "tags": []
+  },
+  {
+    "appid": 613100,
+    "name": "House Flipper",
+    "hours": 0.9,
+    "lastPlayed": "2026-06-01",
+    "tags": []
+  },
+  {
+    "appid": 684680,
+    "name": "Polygoneer",
+    "hours": 0.9,
+    "lastPlayed": "2020-05-23",
+    "tags": []
+  },
+  {
+    "appid": 1591520,
+    "name": "Clownfield 2042",
+    "hours": 0.9,
+    "lastPlayed": "2022-06-22",
+    "tags": []
+  },
+  {
+    "appid": 555000,
+    "name": "GOAT OF DUTY",
+    "hours": 0.8,
+    "lastPlayed": "2021-03-27",
+    "tags": []
+  },
+  {
+    "appid": 391000,
+    "name": "Farm Frenzy Collection",
+    "hours": 0.7,
+    "lastPlayed": "2026-03-27",
+    "tags": []
+  },
+  {
+    "appid": 461040,
+    "name": "PICO PARK:Classic Edition",
+    "hours": 0.7,
+    "lastPlayed": "2026-03-14",
+    "tags": []
+  },
+  {
+    "appid": 582160,
+    "name": "Assassin's Creed Origins",
+    "hours": 0.7,
+    "lastPlayed": "2026-06-08",
+    "tags": []
+  },
+  {
+    "appid": 611670,
+    "name": "The Elder Scrolls V: Skyrim VR",
+    "hours": 0.7,
+    "lastPlayed": "2026-07-12",
+    "tags": []
+  },
+  {
+    "appid": 617670,
+    "name": "Zup! S",
+    "hours": 0.7,
+    "lastPlayed": "2026-08-31",
+    "tags": []
+  },
+  {
+    "appid": 2290180,
+    "name": "Riders Republic",
+    "hours": 0.7,
+    "lastPlayed": "2025-09-25",
+    "tags": []
+  },
+  {
+    "appid": 22380,
+    "name": "Fallout: New Vegas",
+    "hours": 0.6,
+    "lastPlayed": "2026-04-01",
+    "tags": []
+  },
+  {
+    "appid": 232770,
+    "name": "POSTAL",
+    "hours": 0.6,
+    "lastPlayed": "2019-06-22",
+    "tags": []
+  },
+  {
+    "appid": 304930,
+    "name": "Unturned",
+    "hours": 0.6,
+    "lastPlayed": "2020-05-20",
+    "tags": []
+  },
+  {
+    "appid": 1179210,
+    "name": "Kill It With Fire",
+    "hours": 0.6,
+    "lastPlayed": "2021-10-31",
+    "tags": []
+  },
+  {
+    "appid": 1209040,
+    "name": "Cyber Hunter",
+    "hours": 0.6,
+    "lastPlayed": "2021-03-28",
+    "tags": []
+  },
+  {
+    "appid": 1665460,
+    "name": "eFootball™",
+    "hours": 0.6,
+    "lastPlayed": "2024-11-21",
+    "tags": []
+  },
+  {
+    "appid": 705210,
+    "name": "Cube Racer",
+    "hours": 0.5,
+    "lastPlayed": "2024-01-07",
+    "tags": []
+  },
+  {
+    "appid": 805550,
+    "name": "Assetto Corsa Competizione",
+    "hours": 0.5,
+    "lastPlayed": "2026-07-11",
+    "tags": []
+  },
+  {
+    "appid": 3330,
+    "name": "Zuma Deluxe",
+    "hours": 0.4,
+    "lastPlayed": "2026-01-13",
+    "tags": []
+  },
+  {
+    "appid": 105600,
+    "name": "Terraria",
+    "hours": 0.3,
+    "lastPlayed": "2026-09-11",
+    "tags": []
+  },
+  {
+    "appid": 435790,
+    "name": "10 Second Ninja X",
+    "hours": 0.3,
+    "lastPlayed": "2020-08-04",
+    "tags": []
+  },
+  {
+    "appid": 504370,
+    "name": "Battlerite",
+    "hours": 0.3,
+    "lastPlayed": "2019-05-13",
+    "tags": []
+  },
+  {
+    "appid": 1059380,
+    "name": "Dollhouse Open Beta",
+    "hours": 0.3,
+    "lastPlayed": "2019-04-21",
+    "tags": []
+  },
+  {
+    "appid": 1084020,
+    "name": "TheoTown",
+    "hours": 0.3,
+    "lastPlayed": "2026-07-08",
+    "tags": []
+  },
+  {
+    "appid": 3664820,
+    "name": "Sandboxels",
+    "hours": 0.3,
+    "lastPlayed": "2025-05-17",
+    "tags": []
+  },
+  {
+    "appid": 441380,
+    "name": "PAC-MAN™ CHAMPIONSHIP EDITION 2",
+    "hours": 0.2,
+    "lastPlayed": "2020-05-09",
+    "tags": []
+  },
+  {
+    "appid": 703080,
+    "name": "Planet Zoo",
+    "hours": 0.2,
+    "lastPlayed": "2026-07-29",
+    "tags": []
+  },
+  {
+    "appid": 880850,
+    "name": "War Rock",
+    "hours": 0.2,
+    "lastPlayed": "2019-02-23",
+    "tags": []
+  },
+  {
+    "appid": 1078000,
+    "name": "Gamecraft",
+    "hours": 0.2,
+    "lastPlayed": "2020-08-19",
+    "tags": []
+  },
+  {
+    "appid": 360,
+    "name": "Half-Life Deathmatch: Source",
+    "hours": 0.1,
+    "lastPlayed": "2019-04-27",
+    "tags": []
+  },
+  {
+    "appid": 537340,
+    "name": "Guts and Glory",
+    "hours": 0.1,
+    "lastPlayed": "2025-01-19",
+    "tags": []
+  },
+  {
+    "appid": 2707930,
+    "name": "Palia",
+    "hours": 0.1,
+    "lastPlayed": "2026-07-26",
+    "tags": []
+  },
+  {
+    "appid": 2767030,
+    "name": "Marvel Rivals",
+    "hours": 0.1,
+    "lastPlayed": "2026-09-04",
+    "tags": []
+  },
+  {
+    "appid": 100,
+    "name": "Counter-Strike: Condition Zero Deleted Scenes",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 320,
+    "name": "Half-Life 2: Deathmatch",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 4000,
+    "name": "Garry's Mod",
+    "hours": 0,
+    "lastPlayed": "2026-02-18",
+    "tags": []
+  },
+  {
+    "appid": 6100,
+    "name": "Eets",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 6850,
+    "name": "Hitman 2: Silent Assassin",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 6860,
+    "name": "Hitman: Blood Money",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 6900,
+    "name": "Hitman: Codename 47",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 8650,
+    "name": "RACE 07: Andy Priaulx Crowne Plaza Raceway",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 16450,
+    "name": "F.E.A.R. 2: Project Origin",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 34330,
+    "name": "Total War: SHOGUN 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 40990,
+    "name": "Mafia",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 43160,
+    "name": "Metro: Last Light Complete Edition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 48190,
+    "name": "Assassin's Creed Brotherhood",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 63380,
+    "name": "Sniper Elite V2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 108710,
+    "name": "Alan Wake",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 202750,
+    "name": "Alan Wake's American Nightmare",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 204450,
+    "name": "Call of Juarez Gunslinger",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 205930,
+    "name": "Hitman: Sniper Challenge",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 208140,
+    "name": "ENDLESS Space™ - Definitive Edition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 209000,
+    "name": "Batman™: Arkham Origins",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 214340,
+    "name": "Deponia",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 218620,
+    "name": "PAYDAY 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 226840,
+    "name": "Age of Wonders III",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 241930,
+    "name": "Middle-earth™: Shadow of Mordor™",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 242700,
+    "name": "Injustice: Gods Among Us Ultimate Edition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 246620,
+    "name": "Plague Inc: Evolved",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 247120,
+    "name": "Portal 2 Sixense Perceptual Pack",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 247430,
+    "name": "Hitman: Contracts",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 252130,
+    "name": "Divide by Sheep",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 252150,
+    "name": "Grimm",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 270880,
+    "name": "American Truck Simulator",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 272060,
+    "name": "Serena",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 282100,
+    "name": "Fearless Fantasy",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 282800,
+    "name": "100% Orange Juice",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 286690,
+    "name": "Metro 2033 Redux",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 287390,
+    "name": "Metro: Last Light Redux",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 289690,
+    "name": "Lara Croft and the Temple of Osiris",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 310560,
+    "name": "DiRT Rally",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 312840,
+    "name": "Fahrenheit: Indigo Prophecy Remastered",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 319970,
+    "name": "The Detail",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 322330,
+    "name": "Don't Starve Together",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 325180,
+    "name": "AppGameKit Classic",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 335190,
+    "name": "200% Mixed Juice!",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 346290,
+    "name": "Penumbra: Necrologue",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 348510,
+    "name": "Autobahn Police Simulator",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 351940,
+    "name": "The Descendant",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 356190,
+    "name": "Middle-earth™: Shadow of War™",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 368180,
+    "name": "Polyball",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 370910,
+    "name": "Kathy Rain",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 390710,
+    "name": "Acceleration of SUGURI 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 397720,
+    "name": "Romance of the Three Kingdoms Maker",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 403640,
+    "name": "Dishonored 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 405640,
+    "name": "Pony Island",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 406970,
+    "name": "The Uncertain: Last Quiet Day",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 407530,
+    "name": "ARK: Survival Of The Fittest",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 412020,
+    "name": "Metro Exodus",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 420740,
+    "name": "The Deed",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 431930,
+    "name": "Kabounce",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 442070,
+    "name": "Drawful 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 447700,
+    "name": "Crystal Crisis",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 481870,
+    "name": "Mini Thief",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 489630,
+    "name": "Warhammer 40,000: Gladius - Relics of War",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 493540,
+    "name": "Figment",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 504130,
+    "name": "Manual Samuel - Last Tuesday Edition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 504390,
+    "name": "Along the Edge",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 507490,
+    "name": "Ashes of the Singularity: Escalation",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 527710,
+    "name": "Crown Champion: Legends of the Arena",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 552590,
+    "name": "The Sexy Brutale",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 556130,
+    "name": "Drones, The Human Condition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 561770,
+    "name": "Just Ignore Them",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 566190,
+    "name": "The Search",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 582560,
+    "name": "The Invisible Hours",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 582660,
+    "name": "Black Desert",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 588210,
+    "name": "HELLION",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 600430,
+    "name": "Ticket to Ride: First Journey",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 606150,
+    "name": "Moonlighter",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 618140,
+    "name": "Barro",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 619700,
+    "name": "Steel Rats",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 623990,
+    "name": "Tom Clancy's Rainbow Six Siege - Test Server",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 628950,
+    "name": "Nephise Begins",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 633360,
+    "name": "Remothered: Tormented Fathers",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 640590,
+    "name": "The LEGO® NINJAGO® Movie Video Game",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 640890,
+    "name": "Will Glow the Wisp",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 645630,
+    "name": "Car Mechanic Simulator 2018",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 657200,
+    "name": "Hand Simulator",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 674750,
+    "name": "Yet Another Zombie Defense HD",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 694280,
+    "name": "Zombie Army 4: Dead War",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 699240,
+    "name": "Keyboard Killers",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 699920,
+    "name": "Despotism 3k",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 702150,
+    "name": "Project Mercury",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 727020,
+    "name": "Arcade Moonlander",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 730280,
+    "name": "Protect your planet",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 738520,
+    "name": "Breathedge",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 760620,
+    "name": "Deiland",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 774171,
+    "name": "Muse Dash",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 797410,
+    "name": "Headsnatchers",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 814200,
+    "name": "Simple Story - Alex",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 835950,
+    "name": "Transpose",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 836620,
+    "name": "Black Desert (Retired)",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 858710,
+    "name": "Gravity Circuit",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 897630,
+    "name": "Death Fungeon",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 911400,
+    "name": "Assassin's Creed III Remastered",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 960910,
+    "name": "Heavy Rain",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 978520,
+    "name": "Legend of Keepers",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1029690,
+    "name": "Sniper Elite 5",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1048540,
+    "name": "Kao the Kangaroo: Round 2",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1053710,
+    "name": "The Red Lantern",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1057090,
+    "name": "Ori and the Will of the Wisps",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1069740,
+    "name": "Seen",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1076280,
+    "name": "Showdown Bandit",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1125480,
+    "name": "School Years",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1134700,
+    "name": "Wild Terra 2: New Lands",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1158500,
+    "name": "Between Two Castles - Digital Edition",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1272160,
+    "name": "The Life and Suffering of Sir Brante",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1304930,
+    "name": "The Outlast Trials",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1335790,
+    "name": "Operation Tango",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1433340,
+    "name": "Happy's Humble Burger Farm",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1634080,
+    "name": "Nocturnal",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1741160,
+    "name": "Catch Me!",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 1755300,
+    "name": "Smart Factory Tycoon",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2019300,
+    "name": "Dokimon",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2096610,
+    "name": "Crysis 3 Remastered",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2218460,
+    "name": "Bunny Guys!",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2623090,
+    "name": "Battle Simulator: Counter Stickman",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2792610,
+    "name": "Stickman Killing Zombie",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2835590,
+    "name": "8AM",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2881650,
+    "name": "Content Warning",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 2990600,
+    "name": "Fireside Feelings",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  },
+  {
+    "appid": 4001890,
+    "name": "How to Fish",
+    "hours": 0,
+    "lastPlayed": null,
+    "tags": []
+  }
+]

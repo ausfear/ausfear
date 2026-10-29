@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "games:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/games.mjs sync",
+    "games:images": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs images",
+    "games:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs find"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -23,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

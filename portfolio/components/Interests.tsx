@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import { Music, Gamepad2, Sigma, ChevronLeft, ChevronRight } from "lucide-react";
 import TiltCard from "./TiltCard";
+import GameCollection from "./GameCollection";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 /* ═══════════════════════════════════════════════════
@@ -509,8 +510,8 @@ function GamingSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <div ref={ref} className="interest-section py-20 md:py-32 px-4 md:px-10 bg-[#0a0a0a] text-white">
-      <div className="max-w-7xl mx-auto">
+    <div ref={ref} className="interest-section py-20 md:py-32 bg-[#0a0a0a] text-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -530,7 +531,19 @@ function GamingSection() {
             Gaming
           </h3>
         </motion.div>
+      </div>
 
+      {/* Game collection marquee (full-bleed) + "I play [genre], like [game]." sentence */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <GameCollection />
+      </motion.div>
+
+      {/* Smaller top margin on phones: the sentence above already reserves room for a third line */}
+      <div className="max-w-7xl mx-auto px-4 md:px-10 mt-12 sm:mt-20 md:mt-28">
         {/* Swapped layout: Steam Showcase on LEFT, Gaming text description and metrics on RIGHT */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
           {/* Left Column — Steam Widget (Wider wrapper w-[340px] to prevent clipping) */}

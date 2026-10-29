@@ -132,50 +132,65 @@ Yang perlu dibereskan kalau jadi dibuat (warna yang masih hardcoded):
 
 ## 4. Gaming section: Game Collection + kalimat dinamis
 
-**Status:** rancangan dari sketsa (29 Okt 2026), belum dikerjakan.
+**Status:** sudah dibuat (29 Okt 2026), berdasarkan sketsa.
 
-### Konsep
-1. **Game Collection:** dua baris cover game yang bergerak terus-menerus ke arah berlawanan (baris atas ke kiri, baris bawah ke kanan).
-2. **Kalimat dinamis:** "I play **[GENRE]**, like **[GAME]**."
-   - Genre berganti berkala dengan animasi gulir vertikal ala slot machine, di dalam chip yang di-highlight.
-   - Game dipilih acak dari genre tersebut dan muncul dengan efek mengetik.
+### Yang dibuat
+- **Game Collection:** dua baris cover game yang bergerak terus-menerus ke arah berlawanan, lebar penuh layar. Cover tampil B&W dan redup; saat di-hover berubah berwarna dengan nama game dan jam main. Kedua baris berhenti saat di-hover.
+- **Kalimat dinamis:** "I play **[genre]**, like **[game]**." Genre bergulir vertikal di dalam chip oranye, lalu nama game diketik dengan kursor oranye yang berkedip.
+- **Keduanya terhubung:** cover game yang sedang diketik menyala (berwarna penuh dengan ring oranye).
+- **Beda dari sketsa (disengaja):** sketsa memilih genre dulu, lalu game. Karena satu baris lebarnya ±3.700px, game yang dipilih acak sering sedang di luar layar, sehingga efek menyalanya tidak terlihat. Jadi urutannya dibalik: pilih acak dari cover yang **sedang terlihat**, lalu ambil salah satu genrenya. Bagi pembaca, kalimatnya tetap sama.
 
-### Usulan susunan
+Susunan section: header → label "Game Collection" → marquee → kalimat → grid lama (widget Steam, paragraf, metrics, handles). Paragraf lama belum dipersingkat.
 
+**Tipografi kalimat (revisi 29 Okt 2026):** versi pertama memakai Syne bold untuk seluruh kalimat dengan ukuran sampai 60px, dan terasa terlalu besar. Sekarang kata penghubung ("I play", "like") memakai Inter light dengan warna putih 60%, sementara Syne semibold hanya dipakai di dalam chip. Ukurannya juga turun: 20px (HP) → 36px (desktop). Syne tetap menjadi font identitas tanpa mendominasi.
+
+**Detail teknis yang sudah dibereskan:**
+- Mask pudar di tepi marquee memotong semua yang keluar dari kotaknya, sehingga cover yang di-highlight (membesar + ring) terpotong di atas dan bawah. Solusinya: `py-5` pada `.game-marquee`, dengan `space-y` induk dikurangi sebesar padding itu supaya jarak yang terlihat tetap sama.
+- Nama game yang panjang di HP: chip nama game memakai inline biasa dengan `box-decoration-clone`, sehingga bisa terpecah ke beberapa baris dengan border yang utuh. `min-height` dalam satuan `em` mencadangkan ruang untuk kasus terpanjang ("Hitman: World of Assassination"), supaya konten di bawahnya tidak melompat. Sudah diuji di lebar 320–1920px.
+- Chip genre (`inline-flex`) diselaraskan dengan chip nama game memakai `leading-[1.2]` + `align-baseline`. Selisihnya terukur 0,0–0,2px.
+- Kalau nama game atau genre baru jauh lebih panjang dari yang ada sekarang, cek ulang di lebar 320px. Mungkin `min-h` perlu dinaikkan.
+
+### File yang terlibat
+
+| File | Isi |
+| --- | --- |
+| `data/games.ts` | **Daftar game yang ditampilkan.** Satu-satunya file yang perlu diedit tangan |
+| `data/steam-library.json` | Seluruh library Steam (295 game): jam main, terakhir dimainkan, tag genre. Hanya untuk referensi, tidak dipakai halaman |
+| `data/game-hours.json` | Jam main per `steamAppId`, untuk tampilan hover. Dibuat otomatis |
+| `public/games/*.webp` | Cover 460×215 |
+| `scripts/games.mjs` | Script `games:sync`, `games:images`, `games:find` |
+| `components/GameCollection.tsx` | Komponen marquee dan kalimat |
+| `.env.local` | `STEAM_API_KEY` (diabaikan git, jangan di-commit) |
+
+### Cara mengedit daftar game
+Setiap baris di `data/games.ts`:
+
+```ts
+{ name: "Subnautica", genres: ["survival games"], image: "/games/subnautica.webp", steamAppId: 264710 },
 ```
-┌──────────────────────────────────────────────┐
-│ WHAT I PLAY                                  │
-│ Gaming                                       │  header (tetap)
-├──────────────────────────────────────────────┤
-│ ← [cover][cover][cover][cover][cover] ←      │  full-bleed, tembus batas
-│ → [cover][cover][cover][cover][cover] →      │  container max-w-7xl
-├──────────────────────────────────────────────┤
-│  I play ⟦ roguelikes ⟧, like ⟦ Hades_ ⟧.     │  kalimat besar (font Syne)
-├──────────────────────────────────────────────┤
-│ [Steam widget]  │ paragraf (dipersingkat)    │  grid lama
-│                 │ metrics + handles          │
-└──────────────────────────────────────────────┘
-```
 
-- Marquee dan kalimat harus muat dalam satu layar, karena keduanya saling terhubung (lihat poin interaksi di bawah).
-- Paragraf deskripsi lama bisa dipersingkat, karena pesannya sudah dibawa oleh kalimat dinamis.
+- **Menghapus game:** hapus barisnya. Gambarnya boleh dibiarkan atau dihapus dari `public/games/`.
+- **Mengubah urutan:** marquee mengikuti urutan di file. Game ke-1, 3, 5, … masuk baris atas; ke-2, 4, 6, … masuk baris bawah.
+- **Genre:** ditulis supaya enak dibaca dalam "I play ___, like ___." (bentuk jamak, huruf kecil). Satu game boleh punya beberapa genre. Genre dengan satu game tetap jalan.
+- **Menambah game Steam:**
+  1. `npm run games:find -- "hades"` → menampilkan `steamAppId`, jam main (kalau dimiliki), dan tag genre.
+  2. Tambahkan satu baris ke `data/games.ts`.
+  3. `npm run games:images` → mengunduh cover yang belum ada.
+- **Menambah game non-Steam:** tulis barisnya tanpa `steamAppId`, lalu taruh gambar 460×215 (rasio ±2,14:1) di path `image`. `npm run games:images` akan mendaftar cover yang masih kosong. Jam main tidak tampil untuk game non-Steam.
+- **Memperbarui jam main dan library:** `npm run games:sync` (butuh `.env.local`). Perintah ini juga mengunduh cover yang belum ada.
+- **Mengganti cover** (misalnya banner event musiman seperti "Halloween Event" di Euro Truck Simulator 2): timpa file `.webp`-nya dengan gambar lain berukuran sama.
+- Setelah mengedit, jalankan `npm run lint` dan `npx tsc --noEmit`. Salah ketik nama field akan langsung ketahuan karena file ini bertipe TypeScript.
 
-### Detail yang membuatnya terasa "satu sistem"
-- **Satu sumber data** untuk marquee dan kalimat:
-  ```ts
-  type Game = { name: string; genres: string[]; image: string; steamAppId?: number };
-  ```
-- **Interaksi:** saat kalimat mengetik nama sebuah game, cover game itu di marquee menyala (misalnya berwarna penuh atau ber-border oranye) sementara cover lain tetap redup atau B&W. Marquee boleh melambat sebentar di momen itu.
-- **Cover B&W, berwarna saat di-hover atau di-highlight**, supaya selaras dengan foto hero. Hover juga menampilkan nama game, dan opsional jam main.
-- **Sumber gambar:** CDN Steam, `https://cdn.cloudflare.steamstatic.com/steam/apps/{appid}/header.jpg` (landscape 460×215, sesuai sketsa) atau `library_600x900.jpg` (poster vertikal). Game non-Steam (misalnya gacha HoYoverse) butuh gambar manual di `public/`. Tambahkan domain Steam ke `images.remotePatterns` di `next.config.ts`.
-- **Urutan animasi kalimat:** genre bergulir → nama game diketik → tahan ±2,5 detik → teks dihapus → ulang. Hindari game yang sama muncul dua kali berturut-turut.
-- **Lebar chip berubah-ubah** mengikuti panjang teks, jadi animasikan lebarnya supaya kalimat tidak "melompat". Di HP, kalimat dipecah dua baris.
+### Angka asli dari library (29 Okt 2026), untuk referensi Player Metrics
+- 295 game dimiliki, total **4.894 jam** (klaim "Hours Wasted 5,000+" hampir tepat).
+- **129 game belum pernah dimainkan**, dan 163 dimainkan kurang dari 1 jam. Klaim "Games Owned (Unplayed) 200+" berlebihan.
+- Game yang paling lama dimainkan: Counter-Strike 2, 1.832 jam.
 
 ### Aksesibilitas & performa
-- Marquee: baris duplikat (untuk efek loop) diberi `aria-hidden`; berhenti saat hover dan saat `prefers-reduced-motion`.
-- Kalimat dinamis: bagian animasinya `aria-hidden`, lalu sediakan satu kalimat statis `sr-only` yang menyebut semua genre. Jangan pakai `aria-live`, karena pembaca layar akan membacakannya setiap beberapa detik.
-- Reduced motion: tanpa efek mengetik, cukup ganti teks setiap beberapa detik.
-- Gambar cover lazy-load; marquee memakai CSS transform (seperti marquee "ausfear" di footer), bukan JavaScript per frame.
+- Marquee: hanya salinan pertama setiap game yang terbaca pembaca layar; salinan untuk efek loop diberi `aria-hidden`.
+- Kalimat dinamis: bagian animasinya `aria-hidden`, dan ada satu kalimat `sr-only` yang menyebut semua genre (tanpa `aria-live`).
+- `prefers-reduced-motion`: marquee berhenti tapi bisa digeser manual; kalimat berganti tanpa efek ketik.
+- Kalimat hanya berjalan saat terlihat di layar. Cover memakai lazy loading (±20 KB per gambar). Marquee berjalan dengan CSS, bukan JavaScript per frame.
 
 ---
 
@@ -203,7 +218,7 @@ Diurutkan kira-kira dari yang paling khas "ausfear".
 | **Pesan rahasia di DevTools console** | Easter egg murah untuk sesama developer | Rendah |
 | **Tipografi kinetik**: kecepatan dan kemiringan marquee mengikuti kecepatan scroll; heading "di-decode" dengan efek text scramble saat muncul | Polesan gerak yang terasa premium | Rendah |
 | **Status live lewat Lanyard** (Discord): "currently playing …" di hero | Membuat situs terasa hidup. Perlu bergabung ke server Discord Lanyard | Rendah–sedang |
-| **Player Metrics dengan data asli** dari Steam Web API (jam main, jumlah game) lewat route handler | Mengganti angka karangan ("5,000+") dengan data nyata | Sedang |
+| **Player Metrics dengan data asli**: angka sudah tersedia di `data/steam-library.json` (lihat bagian 4) | Mengganti angka karangan dengan data nyata | Rendah |
 | **Bagian "Things I Made"** | Kekurangan konten terbesar: teks About menyebut suka membuat sesuatu, tapi belum ada karya yang ditampilkan | Tergantung isi |
 
 ---
@@ -213,3 +228,4 @@ Diurutkan kira-kira dari yang paling khas "ausfear".
 - **Swipe carousel playlist di HP** hanya bekerja di baris label, karena iframe Apple menangkap semua sentuhan. Tombol panah dan titik indikator adalah navigasi utama. Tidak bisa diperbaiki tanpa membuat isi playlist tidak bisa diklik.
 - **Iframe Steam** sengaja memakai atribut lama `marginHeight={0}` dan `marginWidth={0}`. Keduanya mengatur margin `<body>` di dalam widget. Kalau dihapus, muncul celah 8px dan efek rounded corner-nya hilang.
 - **Error 404 `/_vercel/insights/script.js`** saat dijalankan di lokal itu normal. Vercel Analytics hanya aktif setelah deploy.
+- **Dev server kadang tidak membuat class Tailwind baru** (Next 16 + Turbopack di Windows, ditemukan 29 Okt 2026). Gejalanya: class baru sudah ada di HTML, tapi tidak punya efek. Penyebabnya, cache CSS di `.next` tidak diperbarui saat file diedit, dan cache itu tetap terbawa walaupun dev server di-restart. Solusinya: hentikan dev server, hapus folder `.next`, lalu jalankan `npm run dev` lagi. Production build (`npm run build`) tidak terpengaruh.

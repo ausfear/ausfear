@@ -209,6 +209,28 @@ body {
   text-shadow: 0 0 60px rgba(255, 107, 43, 0.3);
 }
 
+/* ─── Game Collection Marquee ─── */
+.game-marquee {
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+}
+.game-marquee-track {
+  /* duration is set inline from the row length so every row moves at the same speed */
+  animation: marquee-scroll 60s linear infinite;
+}
+.game-marquee-reverse {
+  animation-direction: reverse;
+}
+.game-marquee:hover .game-marquee-track {
+  animation-play-state: paused;
+}
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+.game-caret {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
 /* ─── Preloader Liquid Wave & Glow ─── */
 @keyframes liquid-wave {
   0% { transform: translate3d(0, 0, 0); }
@@ -245,5 +267,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  /* The game marquee stops moving, so let people scroll the rows by hand instead */
+  .game-marquee {
+    overflow-x: auto;
   }
 }
