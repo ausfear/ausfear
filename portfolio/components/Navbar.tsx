@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { useIntroReady } from "./Providers";
+import { useScrollLock } from "@/hooks/useScrollLock";
 
 const navItems = [
   { label: "About", href: "#about", id: "about" },
@@ -14,6 +16,11 @@ const navItems = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
+  const introReady = useIntroReady();
+  const reduceMotion = useReducedMotion();
+  const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
 
   // Scroll detection & accurate section spy
   useEffect(() => {
@@ -71,17 +78,26 @@ export default function Navbar() {
     };
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock page scroll while the mobile menu is open
+  useScrollLock(mobileOpen);
+
+  // Close the mobile menu with Escape and return focus to the toggle
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
+    if (!mobileOpen) return;
+    firstMenuLinkRef.current?.focus();
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileOpen(false);
+        toggleRef.current?.focus();
+      }
     };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
   }, [mobileOpen]);
 
   const scrollToHero = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior });
     setActiveSection("hero");
     setMobileOpen(false);
   };
@@ -91,7 +107,7 @@ export default function Navbar() {
     setMobileOpen(false);
     const el = document.getElementById(id);
     if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+      el.scrollIntoView({ behavior: scrollBehavior });
     }
   };
 
@@ -101,7 +117,7 @@ export default function Navbar() {
     <>
       <motion.nav
         initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        animate={introReady ? { y: 0, opacity: 1 } : undefined}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
         className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50"
       >
@@ -165,9 +181,13 @@ export default function Navbar() {
 
           {/* Mobile Toggle */}
           <button
+            ref={toggleRef}
+            type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-2 rounded-full hover:bg-black/[0.04] transition-colors"
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -178,6 +198,7 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -186,6 +207,7 @@ export default function Navbar() {
           >
             {/* Logo in mobile menu */}
             <motion.a
+              ref={firstMenuLinkRef}
               href="#hero"
               onClick={scrollToHero}
               initial={{ opacity: 0, scale: 0.8 }}

@@ -1,15 +1,25 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useScroll, animate } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useScroll,
+  useReducedMotion,
+  animate,
+  type MotionValue,
+} from "framer-motion";
 import Image from "next/image";
 import FloatingShapes, { MobileFloatingParticles } from "./FloatingShapes";
+import { useIntroReady } from "./Providers";
 
 const HERO_PHOTOS = [
-  { src: "/cutouts/sunglasses.png", alt: "Audinta with sunglasses" },
-  { src: "/cutouts/guitar.png", alt: "Audinta with guitar" },
-  { src: "/cutouts/gamepad.png", alt: "Audinta with gamepad" },
-  { src: "/cutouts/sunglasses2.png", alt: "Audinta posing with sunglasses" },
+  { src: "/cutouts/sunglasses.webp", alt: "Audinta with sunglasses" },
+  { src: "/cutouts/guitar.webp", alt: "Audinta with guitar" },
+  { src: "/cutouts/gamepad.webp", alt: "Audinta with gamepad" },
+  { src: "/cutouts/sunglasses2.webp", alt: "Audinta posing with sunglasses" },
 ];
 
 export default function Hero() {
@@ -21,6 +31,8 @@ export default function Hero() {
   const [prevPhotoIndex, setPrevPhotoIndex] = useState<number | null>(null);
   const photoIndexRef = useRef(0);
   const animRef = useRef<ReturnType<typeof animate> | null>(null);
+  const introReady = useIntroReady();
+  const reduceMotion = useReducedMotion();
 
   // Pre-load and pre-decode all 4 hero photos in the browser immediately on mount
   useEffect(() => {
@@ -71,7 +83,7 @@ export default function Hero() {
 
       animRef.current?.stop();
       animRef.current = animate(wipeProgress, 1, {
-        duration: 0.65,
+        duration: reduceMotion ? 0 : 0.65,
         ease: [0.16, 1, 0.3, 1],
         onComplete: () => {
           setPrevPhotoIndex(null);
@@ -85,7 +97,7 @@ export default function Hero() {
       clearInterval(timer);
       animRef.current?.stop();
     };
-  }, [wipeProgress]);
+  }, [wipeProgress, reduceMotion]);
 
   // Mouse tracking motion values (-0.5 to 0.5 normalized)
   const mouseX = useMotionValue(0);
@@ -136,7 +148,7 @@ export default function Hero() {
 
   const renderDesktopPhoto = (
     idx: number,
-    clipStyle: any,
+    clipStyle: MotionValue<string> | undefined,
     zIndex: number,
     opacity: number,
     pointerEvents: "auto" | "none"
@@ -158,7 +170,8 @@ export default function Hero() {
           src={photo.src}
           alt={photo.alt}
           fill
-          priority
+          preload={idx === 0}
+          loading="eager"
           unoptimized
           className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
           sizes="(max-width: 1024px) 70vw, 55vw"
@@ -166,6 +179,7 @@ export default function Hero() {
 
         {/* White Text Overlay Masked to Photo Silhouette */}
         <div
+          aria-hidden="true"
           className="absolute inset-0 z-10 pointer-events-none select-none"
           style={{
             maskImage: `url('${photo.src}')`,
@@ -226,19 +240,22 @@ export default function Hero() {
       if (!audintaRef.current || !tCharRef.current) return;
       const audintaRect = audintaRef.current.getBoundingClientRect();
       const tRect = tCharRef.current.getBoundingClientRect();
-      // Distance from left edge of "AUDINTA" to the exact center of letter 'T'
-      const dist = tRect.left + tRect.width / 2 - audintaRect.left;
+      // Distance from left edge of "AUDINTA" to the exact center of letter 'T'.
+      // tRect includes the inner parallax translate, so remove it to measure the resting layout.
+      const dist = tRect.left + tRect.width / 2 - audintaRect.left - audintaX.get();
       setAnchorDistance(dist);
     };
 
     updateAnchor();
+    // Re-measure once Syne has loaded — the first pass may use fallback font metrics
+    document.fonts.ready.then(updateAnchor).catch(() => {});
     // Recompute on window resize to ensure mathematical precision across all viewports
     window.addEventListener("resize", updateAnchor);
     return () => window.removeEventListener("resize", updateAnchor);
-  }, []);
+  }, [audintaX]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!heroRef.current) return;
+    if (!heroRef.current || reduceMotion) return;
     const rect = heroRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -259,6 +276,8 @@ export default function Hero() {
       className="relative w-full h-screen overflow-hidden"
       id="hero"
     >
+      <h1 className="sr-only">Audinta Sakti Firmansyah, also known as ausfear</h1>
+
       {/* ═══════════════════════════════════════════
           MOBILE LAYOUT (stacked, clean)
           ═══════════════════════════════════════════ */}
@@ -268,29 +287,30 @@ export default function Hero() {
 
         {/* Top: Text */}
         <motion.div
+          aria-hidden="true"
           className="text-center px-4 pt-4 space-y-1 z-10"
           initial={{ opacity: 0, y: -30 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introReady ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
         >
-          <h1 className="font-[family-name:var(--font-syne)] font-extrabold text-[12vw] uppercase tracking-tight leading-none text-[var(--color-text)]">
+          <div className="font-[family-name:var(--font-syne)] font-extrabold text-[12vw] uppercase tracking-tight leading-none text-[var(--color-text)]">
             AUDINTA
-          </h1>
+          </div>
           <p
             className="font-[family-name:var(--font-syne-tactile)] text-[9vw] text-[var(--color-pop)] leading-none my-1"
             style={{ textShadow: "0 0 30px rgba(255,107,43,0.3)" }}
           >
             ausfear
           </p>
-          <h1 className="font-[family-name:var(--font-syne)] font-extrabold text-[12vw] uppercase tracking-tight leading-none text-[var(--color-text)]">
+          <div className="font-[family-name:var(--font-syne)] font-extrabold text-[12vw] uppercase tracking-tight leading-none text-[var(--color-text)]">
             SAKTI
-          </h1>
+          </div>
         </motion.div>
 
         {/* Quote on Mobile — Placed between Name (below SAKTI) and Picture */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introReady ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
           className="text-center px-6 my-auto py-1 z-10 pointer-events-none select-none"
         >
@@ -303,7 +323,7 @@ export default function Hero() {
         <motion.div
           className="relative flex-1 w-[90vw] max-w-[420px] mt-1 z-10 overflow-hidden"
           initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introReady ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
           <div className="hero-photo-mask relative w-full h-full">
@@ -333,7 +353,8 @@ export default function Hero() {
                     src={photo.src}
                     alt={photo.alt}
                     fill
-                    priority
+                    preload={idx === 0}
+                    loading="eager"
                     unoptimized
                     className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
                     sizes="90vw"
@@ -360,7 +381,7 @@ export default function Hero() {
         <motion.p
           className="text-[9px] text-[var(--color-text-muted)] tracking-[0.2em] uppercase font-medium text-center pb-2 z-10"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={introReady ? { opacity: 1 } : undefined}
           transition={{ delay: 0.9, duration: 0.6 }}
         >
           Game Enjoyer · Music Listener · Occasional Math Guy
@@ -373,6 +394,7 @@ export default function Hero() {
       <div className="hidden md:flex items-end justify-center h-full relative">
         {/* Giant BG "AUSFEAR" — Layer 0 */}
         <motion.div
+          aria-hidden="true"
           className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
           style={{ x: bgX, y: bgY }}
         >
@@ -389,7 +411,7 @@ export default function Hero() {
           className="relative z-10 flex-shrink-0"
           style={{ x: photoX, y: photoY }}
           initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introReady ? { opacity: 1, y: 0 } : undefined}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
         >
           <div className="hero-photo-mask relative h-[88vh] lg:h-[92vh] aspect-[5/6]">
@@ -429,7 +451,7 @@ export default function Hero() {
           <motion.div
             style={{ x: leftQuoteX, y: leftQuoteY }}
             initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={introReady ? { opacity: 1, x: 0 } : undefined}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
             className="text-right"
           >
@@ -441,12 +463,13 @@ export default function Hero() {
 
         {/* Right Plain Text A.K.A Element (Dual-anchored bounds: right-4 md:right-8 left-[70%] md:left-[75%], text-left) */}
         <div
+          aria-hidden="true"
           className="absolute right-4 md:right-8 left-[70%] md:left-[75%] top-[44%] -translate-y-1/2 pointer-events-none select-none z-20 text-left"
         >
           <motion.div
             style={{ x: rightAliasX, y: rightAliasY }}
             initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
+            animate={introReady ? { opacity: 1, x: 0 } : undefined}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
             className="text-left"
           >
@@ -462,6 +485,7 @@ export default function Hero() {
         {/* "AUDINTA" — Base Layer (Behind Photo, z-[5], Black) */}
         <div
           ref={audintaRef}
+          aria-hidden="true"
           className="absolute pointer-events-none select-none z-[5] whitespace-nowrap"
           style={{
             bottom: "22vh",
@@ -471,7 +495,7 @@ export default function Hero() {
           <motion.div
             style={{ x: audintaX, y: audintaY }}
             initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={introReady ? { opacity: 1, y: 0 } : undefined}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
           >
             <span className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-90 leading-none inline-block">
@@ -484,6 +508,7 @@ export default function Hero() {
 
         {/* "SAKTI" — Base Layer (Behind Photo, z-[5], Black) */}
         <div
+          aria-hidden="true"
           className="absolute pointer-events-none select-none z-[5] whitespace-nowrap"
           style={{
             bottom: "15vh",
@@ -493,7 +518,7 @@ export default function Hero() {
           <motion.div
             style={{ x: saktiX, y: saktiY }}
             initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={introReady ? { opacity: 1, y: 0 } : undefined}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
           >
             <span className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-90 leading-none inline-block">
@@ -509,7 +534,7 @@ export default function Hero() {
         <motion.div
           className="absolute bottom-12 lg:bottom-14 left-0 right-0 flex justify-center z-30 px-6 pointer-events-none select-none"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={introReady ? { opacity: 1, y: 0 } : undefined}
           transition={{ delay: 1, duration: 0.7 }}
         >
           <p className="text-xs text-[var(--color-text)] opacity-75 tracking-[0.3em] uppercase font-medium">
@@ -521,13 +546,13 @@ export default function Hero() {
         <motion.div
           className="absolute bottom-5 lg:bottom-6 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={introReady ? { opacity: 1 } : undefined}
           transition={{ delay: 1.5, duration: 0.5 }}
         >
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            className="w-5 h-8 rounded-full border-2 border-[var(--color-text-faint)] flex items-start justify-center pt-1.5"
+            className="w-5 h-8 rounded-full border-2 border-[var(--color-decor)] flex items-start justify-center pt-1.5"
           >
             <div className="w-1 h-1.5 bg-[var(--color-text-muted)] rounded-full" />
           </motion.div>

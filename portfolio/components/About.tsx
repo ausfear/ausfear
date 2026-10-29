@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 
 const aboutLines = [
-  "I'm Audinta — but most people on the internet know me as ausfear.",
-  "I'm not a professional developer, designer, or any of that fancy stuff. I just like making cool things on the internet for fun, listening to good tracks on repeat until they lose all meaning, and spending way too many hours in games I'll never actually master.",
-  "I managed to finish a Mathematics degree at Universitas Lambung Mangkurat in about 3.5 years. Sounds impressive, but graduating early in abstract math doesn't stop me from needing ten seconds of total silence just to split a dinner bill. Mostly, that degree just gets put to work calculating gacha pity rates and min-maxing build stats.",
-  "Consider this my corner of the web to tinker, build, and leave things unpolished on purpose.",
+  "I'm Audinta, though most people online know me as ausfear.",
+  "I'm not a professional developer or designer. I just like making stuff on the internet for fun, playing the same song on repeat until it stops sounding like a song, and sinking way too many hours into games I'll never get good at.",
+  "I finished a Mathematics degree at Universitas Lambung Mangkurat in about 3.5 years. I still need ten seconds of complete silence to split a dinner bill, though. These days the degree mostly goes into calculating gacha pity and min-maxing build stats.",
+  "This is my little corner of the web. I tinker here, try things out, and leave some of it unpolished on purpose.",
 ];
 
 function RevealLine({ text, index }: { text: string; index: number }) {
@@ -42,33 +42,9 @@ export default function About() {
   const lineRef = useRef<HTMLDivElement>(null);
   const lineInView = useInView(lineRef, { once: true, margin: "-50px" });
 
-  useEffect(() => {
-    let ctx: ReturnType<typeof import("gsap").gsap.context> | undefined;
-
-    const initGSAP = async () => {
-      const gsapModule = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      const gsap = gsapModule.gsap;
-      gsap.registerPlugin(ScrollTrigger);
-
-      if (sectionRef.current) {
-        ctx = gsap.context(() => {
-          gsap.to(".about-deco-number", {
-            y: -80,
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          });
-        }, sectionRef.current);
-      }
-    };
-
-    initGSAP();
-    return () => { ctx?.revert(); };
-  }, []);
+  // Decorative "01" drifts up as the section scrolls past (start entering -> fully left)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const decoY = useSpring(useTransform(scrollYProgress, [0, 1], [0, -80]), { stiffness: 120, damping: 30 });
 
   return (
     <section
@@ -77,11 +53,15 @@ export default function About() {
       className="relative py-24 md:py-44 px-4 md:px-10 max-w-7xl mx-auto overflow-hidden"
     >
       {/* Large Decorative Number */}
-      <div className="about-deco-number absolute -top-10 right-0 md:right-10 pointer-events-none select-none">
+      <motion.div
+        aria-hidden="true"
+        style={{ y: decoY }}
+        className="absolute -top-10 right-0 md:right-10 pointer-events-none select-none"
+      >
         <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[#f5f5f5] leading-none">
           01
         </span>
-      </div>
+      </motion.div>
 
       {/* Section Label */}
       <motion.div

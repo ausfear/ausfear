@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useEffect, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import {
   motion,
   useMotionValue,
   useSpring,
   useMotionTemplate,
+  useReducedMotion,
 } from "framer-motion";
 
 interface TiltCardProps {
@@ -24,6 +25,7 @@ export default function TiltCard({
   onClick,
 }: TiltCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   // Raw tilt motion values
   const rotateX = useMotionValue(0);
@@ -40,51 +42,39 @@ export default function TiltCard({
   // Dynamic glare radial gradient
   const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.14) 0%, transparent 65%)`;
 
-  useEffect(() => {
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      if (rect.width === 0 || rect.height === 0) return;
+  // Listen on the card itself — a window-level listener per card ran getBoundingClientRect
+  // on every mouse move anywhere on the page.
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (reduceMotion || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
 
-      const { clientX, clientY } = e;
-      const isInside =
-        clientX >= rect.left &&
-        clientX <= rect.right &&
-        clientY >= rect.top &&
-        clientY <= rect.bottom;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const normalizedX = x / rect.width - 0.5;
+    const normalizedY = y / rect.height - 0.5;
 
-      if (isInside) {
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-        const normalizedX = x / rect.width - 0.5;
-        const normalizedY = y / rect.height - 0.5;
+    rotateX.set(-normalizedY * 2 * tiltAmount);
+    rotateY.set(normalizedX * 2 * tiltAmount);
+    glareX.set((x / rect.width) * 100);
+    glareY.set((y / rect.height) * 100);
+    glareOpacity.set(1);
+  };
 
-        rotateX.set(-normalizedY * 2 * tiltAmount);
-        rotateY.set(normalizedX * 2 * tiltAmount);
-        glareX.set((x / rect.width) * 100);
-        glareY.set((y / rect.height) * 100);
-        glareOpacity.set(1);
-      } else {
-        if (rotateX.get() !== 0 || rotateY.get() !== 0 || glareOpacity.get() !== 0) {
-          rotateX.set(0);
-          rotateY.set(0);
-          glareOpacity.set(0);
-          glareX.set(50);
-          glareY.set(50);
-        }
-      }
-    };
-
-    window.addEventListener("mousemove", handleGlobalMouseMove, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", handleGlobalMouseMove);
-    };
-  }, [tiltAmount, rotateX, rotateY, glareX, glareY, glareOpacity]);
+  const handleMouseLeave = () => {
+    rotateX.set(0);
+    rotateY.set(0);
+    glareOpacity.set(0);
+    glareX.set(50);
+    glareY.set(50);
+  };
 
   return (
     <div
       ref={containerRef}
       onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{ perspective: 1100 }}
       className={`relative select-none ${className}`}
     >

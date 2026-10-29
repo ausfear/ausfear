@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Syne, Syne_Tactile } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import Providers from "@/components/Providers";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,9 +26,12 @@ const syneTactile = Syne_Tactile({
 });
 
 export const metadata: Metadata = {
-  title: "Audinta Sakti Firmansyah — ausfear",
+  // Resolves relative URLs (og:image, canonical) to absolute ones
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
+  title: "Audinta Sakti Firmansyah (ausfear)",
   description:
-    "Personal site of Audinta Sakti Firmansyah (ausfear) — game enjoyer, music listener, and occasional math guy.",
+    "Personal site of Audinta Sakti Firmansyah (ausfear). Game enjoyer, music listener, and occasional math guy.",
   keywords: [
     "Audinta Sakti",
     "ausfear",
@@ -37,18 +42,20 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Audinta Sakti Firmansyah" }],
   openGraph: {
-    title: "Audinta Sakti Firmansyah — ausfear",
+    title: "Audinta Sakti Firmansyah (ausfear)",
     description:
       "Game enjoyer, music listener & occasional math guy. Just vibing on the internet.",
     type: "website",
+    url: "/",
+    siteName: "ausfear",
   },
-  icons: {
-    icon: [
-      { url: "/icon.png", type: "image/png" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    apple: "/apple-icon.png",
+  twitter: {
+    card: "summary_large_image",
+    title: "Audinta Sakti Firmansyah (ausfear)",
+    description:
+      "Game enjoyer, music listener & occasional math guy. Just vibing on the internet.",
   },
+  // Icons come from the file conventions: app/favicon.ico, app/icon.png, app/apple-icon.png
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -64,7 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="dns-prefetch" href="https://play.itunes.apple.com" />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
-        {children}
+        <Providers>{children}</Providers>
         <Analytics />
       </body>
     </html>

@@ -6,8 +6,11 @@
   --color-bg-alt: #f0f0f0;
   --color-surface: #ffffff;
   --color-text: #0a0a0a;
-  --color-text-muted: #737373;
-  --color-text-faint: #a3a3a3;
+  /* Text greys tuned for WCAG AA (≥4.5:1) on --color-bg */
+  --color-text-muted: #5e5e5e;
+  --color-text-faint: #737373;
+  /* Decorative-only grey (particles, lines, indicators) — never use for text */
+  --color-decor: #a3a3a3;
   --color-border: #e5e5e5;
   --color-accent: #000000;
   --color-pop: #ff6b2b;
@@ -25,6 +28,8 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Keep the scrollbar's space reserved so locking scroll (useScrollLock) doesn't shift the layout */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -85,18 +90,6 @@ body {
   color: var(--color-text);
   user-select: none;
   white-space: nowrap;
-}
-
-/* ─── Hero ausfear accent (Syne Tactile) ─── */
-.hero-fg-tactile {
-  font-family: var(--font-syne-tactile), cursive;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  color: var(--color-pop);
-  user-select: none;
-  white-space: nowrap;
-  text-shadow: 0 0 50px rgba(255, 107, 43, 0.3);
 }
 
 /* ─── Photo Bottom Mask ─── */
@@ -165,24 +158,6 @@ body {
   box-shadow: 0 0 20px rgba(255, 107, 43, 0.1);
 }
 
-/* ─── Music Embed Container ─── */
-.music-embed-glow {
-  position: relative;
-  border-radius: 1rem;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid var(--color-border);
-}
-.music-embed-glow::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,107,43,0.15), transparent 50%, rgba(255,107,43,0.08));
-  z-index: -1;
-  pointer-events: none;
-}
-
 /* ─── CTA Underline ─── */
 .cta-underline {
   position: relative;
@@ -234,29 +209,6 @@ body {
   text-shadow: 0 0 60px rgba(255, 107, 43, 0.3);
 }
 
-/* ─── Stat Bar ─── */
-.stat-bar-bg {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color-bg-alt);
-  overflow: hidden;
-}
-.stat-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--color-pop), var(--color-pop-glow));
-  transform-origin: left;
-  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* ─── Steam Embed ─── */
-.steam-embed-wrapper {
-  border-radius: 1rem;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(0,0,0,0.2);
-}
-
 /* ─── Preloader Liquid Wave & Glow ─── */
 @keyframes liquid-wave {
   0% { transform: translate3d(0, 0, 0); }
@@ -282,3 +234,16 @@ body {
   box-shadow: 0 0 60px rgba(255, 107, 43, 0.25), inset 0 0 30px rgba(255, 107, 43, 0.08);
 }
 
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

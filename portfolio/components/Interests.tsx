@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
 import { Music, Gamepad2, Sigma, ChevronLeft, ChevronRight } from "lucide-react";
 import TiltCard from "./TiltCard";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 /* ═══════════════════════════════════════════════════
    MUSIC DATA
@@ -30,7 +31,7 @@ const scatteredSongs = [
     src: "https://embed.music.apple.com/id/song/deep-blue-feat-monika-santucci/1652371778",
     height: 175,
     labelPos: "above" as const,
-    targetX: "-175%",
+    targetX: "-170%",
     targetY: "-130%",
     rotate: -4,
     delay: 0.1,
@@ -83,7 +84,7 @@ const scatteredSongs = [
     src: "https://embed.music.apple.com/id/song/cold/1473421589",
     height: 175,
     labelPos: "below" as const,
-    targetX: "180%",
+    targetX: "170%",
     targetY: "110%",
     rotate: -6,
     delay: 0.3,
@@ -117,15 +118,9 @@ function MusicSection() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "350px 0px" });
   const [activeIndex, setActiveIndex] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
-
-  /* Detect mobile for conditional scatter animation */
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  /* The exploded spiderweb only fits from xl (1280px) up — below that, cards stack.
+     Layout comes from CSS breakpoints; this only picks the animation targets. */
+  const isWide = useMediaQuery("(min-width: 1280px)");
 
   /* Circular modulo logic — always exactly 1 center, 1 left, 1 right */
   const getCarouselVariant = (index: number) => {
@@ -172,14 +167,13 @@ function MusicSection() {
           </h3>
 
           <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4 max-w-2xl">
-            If I&apos;m not gaming or doomscrolling without purpose, I&apos;m probably lost in a playlist somewhere.
-            My taste has zero consistency — one minute it&apos;s stripped-back acoustic tracks, the next it&apos;s
-            aggressive EDM drops, and occasionally a sudden pivot straight into Koplo without any warning.
+            When I&apos;m not gaming or doomscrolling, I&apos;m probably deep in some playlist. My taste is
+            all over the place. I can go from quiet acoustic songs to loud EDM drops, and then straight into
+            Koplo out of nowhere.
           </p>
           <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed max-w-2xl">
-            Beyond just listening, I also play a few instruments myself — guitar, keyboard, and even the flute.
-            A textbook jack-of-all-trades: just good enough to look like I know what I&apos;m doing for thirty
-            seconds, but definitely not taking any stage requests.
+            I also play a bit of guitar, keyboard, and even the flute. I&apos;m good enough to look like I
+            know what I&apos;m doing for about thirty seconds, so please don&apos;t ask me to perform.
           </p>
         </motion.div>
 
@@ -219,7 +213,7 @@ function MusicSection() {
                       />
                     )}
                     <iframe
-                      loading="eager"
+                      loading="lazy"
                       allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                       frameBorder="0"
                       height="450"
@@ -232,7 +226,7 @@ function MusicSection() {
                       }}
                       sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
                       src={pl.src}
-                      title={`Playlist — ${pl.label}`}
+                      title={`Playlist: ${pl.label}`}
                     />
                   </div>
                   {/* Playlist label pill with navigation arrows */}
@@ -284,10 +278,11 @@ function MusicSection() {
             {mainPlaylists.map((_, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => setActiveIndex(i)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeIndex
                   ? "bg-[var(--color-pop)] scale-125 shadow-[0_0_8px_var(--color-pop)]"
-                  : "bg-[var(--color-text-faint)]/30 hover:bg-[var(--color-text-faint)]/60"
+                  : "bg-[var(--color-decor)]/30 hover:bg-[var(--color-decor)]/60"
                   }`}
                 aria-label={`Show playlist ${i + 1}`}
               />
@@ -296,10 +291,10 @@ function MusicSection() {
         </motion.div>
 
         {/* ── Spiderweb Ingredients ── */}
-        <div className="relative w-full flex flex-col items-center gap-10 md:block" style={{ minHeight: isMobile ? "auto" : "90vh" }}>
+        <div className="relative w-full flex flex-col items-center gap-10 md:grid md:grid-cols-2 md:justify-items-center md:gap-x-8 md:gap-y-14 xl:block xl:min-h-[90vh]">
           {/* SVG connecting lines — hidden on mobile */}
           <svg
-            className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+            className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden xl:block"
             viewBox="0 0 100 100"
             preserveAspectRatio="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -329,7 +324,7 @@ function MusicSection() {
                 y2={50 + song.lineEndY}
                 stroke={`url(#line-fade-${i})`}
                 strokeWidth="0.15"
-                className="text-[var(--color-text-faint)]"
+                className="text-[var(--color-decor)]"
                 initial={{ pathLength: 0, opacity: 0 }}
                 whileInView={{ pathLength: 1, opacity: 1 }}
                 viewport={{ once: true }}
@@ -342,7 +337,7 @@ function MusicSection() {
           {spiderwebParticles.map((p, i) => (
             <motion.div
               key={`particle-${i}`}
-              className="absolute pointer-events-none z-[1] hidden md:block"
+              className="absolute pointer-events-none z-[1] hidden xl:block"
               style={{ left: p.x, top: p.y }}
               animate={{ y: ["-8px", "8px"], opacity: [p.opacity, p.opacity * 1.8, p.opacity] }}
               transition={{
@@ -355,27 +350,27 @@ function MusicSection() {
             >
               {p.type === "dot" && (
                 <div
-                  className="rounded-full bg-[var(--color-text-faint)]"
+                  className="rounded-full bg-[var(--color-decor)]"
                   style={{ width: p.size, height: p.size, opacity: p.opacity }}
                 />
               )}
               {p.type === "ring" && (
                 <div
-                  className="rounded-full border border-[var(--color-text-faint)]"
+                  className="rounded-full border border-[var(--color-decor)]"
                   style={{ width: p.size * 2, height: p.size * 2, opacity: p.opacity }}
                 />
               )}
               {p.type === "cross" && (
                 <div className="relative" style={{ width: p.size * 2, height: p.size * 2, opacity: p.opacity }}>
-                  <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--color-text-faint)] -translate-y-1/2" />
-                  <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--color-text-faint)] -translate-x-1/2" />
+                  <div className="absolute top-1/2 left-0 w-full h-px bg-[var(--color-decor)] -translate-y-1/2" />
+                  <div className="absolute left-1/2 top-0 h-full w-px bg-[var(--color-decor)] -translate-x-1/2" />
                 </div>
               )}
             </motion.div>
           ))}
 
           {/* Central readable title */}
-          <div className="flex items-center justify-center py-10 md:py-0" style={isMobile ? {} : { minHeight: "90vh" }}>
+          <div className="flex items-center justify-center py-10 md:col-span-2 xl:py-0 xl:min-h-[90vh]">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -395,23 +390,18 @@ function MusicSection() {
           {scatteredSongs.map((song) => (
             <motion.div
               key={song.src}
-              className={`z-[4] ${
-                isMobile
-                  ? "relative w-full max-w-[380px]"
-                  : "w-[280px] absolute top-1/2 left-1/2"
-              }`}
-              style={isMobile ? {} : { marginLeft: "-140px", marginTop: "-88px" }}
-              initial={{ opacity: 0, scale: 0.8, y: isMobile ? 30 : 0 }}
+              className="z-[4] relative w-full max-w-[380px] xl:absolute xl:top-1/2 xl:left-1/2 xl:w-[280px] xl:max-w-none xl:-ml-[140px] xl:-mt-[88px]"
+              initial={{ opacity: 0, scale: 0.8, y: isWide ? 0 : 30 }}
               whileInView={
-                isMobile
-                  ? { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }
-                  : {
+                isWide
+                  ? {
                       opacity: 1,
                       scale: 1,
                       x: song.targetX,
                       y: song.targetY,
                       rotate: song.rotate,
                     }
+                  : { opacity: 1, scale: 1, x: 0, y: 0, rotate: 0 }
               }
               viewport={{ once: true, margin: "300px 0px" }}
               transition={{
@@ -423,7 +413,7 @@ function MusicSection() {
             >
               {/* Continuous async floating (desktop only) */}
               <motion.div
-                animate={isMobile ? {} : { y: ["-10px", "10px"] }}
+                animate={isWide ? { y: ["-10px", "10px"] } : { y: 0 }}
                 transition={{
                   duration: song.floatDuration,
                   repeat: Infinity,
@@ -432,14 +422,17 @@ function MusicSection() {
                 }}
               >
                 <div className="relative">
-                  {(song.labelPos === "above" || isMobile) && (
-                    <span className="absolute bottom-full mb-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)]/50 whitespace-nowrap">
-                      {song.genre}
-                    </span>
-                  )}
+                  {/* Stacked layout always labels above; the exploded layout follows labelPos */}
+                  <span
+                    className={`absolute bottom-full mb-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)] whitespace-nowrap ${
+                      song.labelPos === "below" ? "xl:hidden" : ""
+                    }`}
+                  >
+                    {song.genre}
+                  </span>
                   <TiltCard tiltAmount={10} glareEnabled className="rounded-xl w-full">
                     <iframe
-                      loading="eager"
+                      loading="lazy"
                       allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
                       frameBorder="0"
                       height={song.height}
@@ -455,8 +448,8 @@ function MusicSection() {
                       title={song.genre}
                     />
                   </TiltCard>
-                  {song.labelPos === "below" && !isMobile && (
-                    <span className="absolute top-full mt-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)]/50 whitespace-nowrap">
+                  {song.labelPos === "below" && (
+                    <span className="hidden xl:block absolute top-full mt-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)] whitespace-nowrap">
                       {song.genre}
                     </span>
                   )}
@@ -529,7 +522,7 @@ function GamingSection() {
             <div className="w-10 h-10 rounded-lg bg-white/[0.06] flex items-center justify-center">
               <Gamepad2 size={20} className="text-[var(--color-pop)]" />
             </div>
-            <span className="text-xs tracking-[0.4em] uppercase text-white/30 font-medium">
+            <span className="text-xs tracking-[0.4em] uppercase text-white/50 font-medium">
               What I Play
             </span>
           </div>
@@ -549,7 +542,7 @@ function GamingSection() {
           >
             <div className="w-full max-w-[325px] sm:max-w-[406px]">
               <div className="flex items-center justify-between mb-3 px-1">
-                <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold flex items-center gap-2">
+                <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/50 font-semibold flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
                   Steam Live
                 </span>
@@ -592,23 +585,23 @@ function GamingSection() {
             {/* Descriptive Text */}
             <div className="space-y-4">
               <p className="text-white/60 text-sm md:text-base lg:text-lg leading-relaxed">
-                I have an unhealthy relationship with my Steam library. Hundreds of
-                games, most untouched, while I keep playing the same three on rotation.
-                It&apos;s a lifestyle choice, not a problem.
+                My Steam library is a bit of a problem. I own hundreds of games, haven&apos;t
+                touched most of them, and still keep playing the same three over and over.
+                I&apos;m at peace with that.
               </p>
               <p className="text-white/60 text-sm md:text-base lg:text-lg leading-relaxed">
-                From competitive FPS rounds where I convince myself &quot;that was lag&quot; to
-                story-driven RPGs that make me question my life at 3 AM — gaming is
-                where I decompress, strategize, and occasionally rage quit with dignity.
+                I play competitive FPS where every lost round was obviously lag, and
+                story-heavy RPGs that keep me up until 3 AM thinking about life. Games are
+                how I unwind, and sometimes how I rage quit.
               </p>
-              <p className="text-white/35 text-xs md:text-sm leading-relaxed italic">
+              <p className="text-white/50 text-xs md:text-sm leading-relaxed italic">
                 Current status: telling myself &quot;one more game&quot; for the fourth hour in a row.
               </p>
             </div>
 
             {/* Redesigned Player Metrics: Reduced padding, smaller label, drastically larger value, bottom-left and bottom-right anchored */}
             <div className="pt-2">
-              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold mb-4 block">
+              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/50 font-semibold mb-4 block">
                 Player Metrics &amp; Habits
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -620,7 +613,7 @@ function GamingSection() {
                     transition={{ duration: 0.5, delay: 0.3 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                     className="px-4 py-3.5 rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm hover:border-white/20 transition-colors flex flex-row items-end justify-between gap-3 overflow-hidden"
                   >
-                    <span className="text-white/40 text-[10px] md:text-[11px] tracking-wider uppercase font-medium pb-1 leading-snug">
+                    <span className="text-white/50 text-[10px] md:text-[11px] tracking-wider uppercase font-medium pb-1 leading-snug">
                       {stat.label}
                     </span>
                     <span className="text-[var(--color-pop)] text-2xl md:text-3xl font-[family-name:var(--font-syne-tactile)] leading-none text-right flex-shrink-0">
@@ -633,7 +626,7 @@ function GamingSection() {
 
             {/* Connected Platform Handles */}
             <div className="pt-2">
-              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/40 font-semibold mb-3 block">
+              <span className="text-[10px] md:text-xs tracking-[0.3em] uppercase text-white/50 font-semibold mb-3 block">
                 Connected Handles
               </span>
               <div className="flex flex-wrap gap-2.5">
@@ -644,7 +637,7 @@ function GamingSection() {
                   >
                     {platform.icon}
                     <span>{platform.name}</span>
-                    <span className="text-white/30 text-[10px]">({platform.handle})</span>
+                    <span className="text-white/50 text-[10px]">({platform.handle})</span>
                   </div>
                 ))}
               </div>
@@ -695,18 +688,18 @@ function MathSection() {
             </h3>
 
             <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4">
-              I have a Mathematics background, which I now exclusively use to
-              calculate my terrible gacha pull rates, optimize game damage stats,
-              and appreciate the aesthetic of Greek symbols.
+              I studied Mathematics, and right now I mostly use it to calculate my
+              bad gacha luck, optimize damage stats, and admire how nice Greek
+              letters look.
             </p>
             <p className="text-[var(--color-text-muted)] text-sm md:text-base lg:text-lg leading-relaxed mb-4">
-              Years of proofs and theorems, and my most practical application
-              is figuring out whether a 0.6% banner rate is worth my dignity.
-              Spoiler: it never is, but I pull anyway.
+              After years of proofs and theorems, the most useful thing I do with
+              it is decide whether a 0.6% banner rate is worth it. It never is.
+              I still pull anyway.
             </p>
             <p className="text-[var(--color-text-muted)] text-xs md:text-sm leading-relaxed italic">
-              &quot;Mathematics is the queen of sciences&quot; — Gauss, who clearly never
-              had to deal with gacha.
+              Gauss called mathematics &quot;the queen of the sciences.&quot; He never had
+              to deal with gacha.
             </p>
           </motion.div>
 
@@ -753,44 +746,22 @@ export default function Interests() {
   const titleRef = useRef<HTMLDivElement>(null);
   const titleInView = useInView(titleRef, { once: true, margin: "-100px" });
 
-  useEffect(() => {
-    let ctx: ReturnType<typeof import("gsap").gsap.context> | undefined;
-
-    const initGSAP = async () => {
-      const gsapModule = await import("gsap");
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      const gsap = gsapModule.gsap;
-      gsap.registerPlugin(ScrollTrigger);
-
-      if (sectionRef.current) {
-        ctx = gsap.context(() => {
-          gsap.to(".interests-deco-number", {
-            y: -60,
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          });
-        }, sectionRef.current);
-      }
-    };
-
-    initGSAP();
-    return () => {
-      ctx?.revert();
-    };
-  }, []);
+  // Decorative "02" drifts up as the section scrolls past (start entering -> fully left)
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const decoY = useSpring(useTransform(scrollYProgress, [0, 1], [0, -60]), { stiffness: 120, damping: 30 });
 
   return (
     <section ref={sectionRef} id="interests" className="relative">
       <div className="relative py-16 md:py-28 px-4 md:px-10 max-w-7xl mx-auto">
-        <div className="interests-deco-number absolute -top-10 left-0 md:left-10 pointer-events-none select-none">
+        <motion.div
+          aria-hidden="true"
+          style={{ y: decoY }}
+          className="absolute -top-10 left-0 md:left-10 pointer-events-none select-none"
+        >
           <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[#f5f5f5] leading-none">
             02
           </span>
-        </div>
+        </motion.div>
 
         <motion.div
           ref={titleRef}

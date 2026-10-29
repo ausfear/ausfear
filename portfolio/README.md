@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ausfear
 
-## Getting Started
+Personal site of Audinta Sakti Firmansyah (ausfear): a single-page Next.js app with a preloader, a parallax hero, and sections for music, gaming, and math.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router), React 19, TypeScript
+- Tailwind CSS v4 (design tokens live in `app/globals.css`)
+- framer-motion for all animation
+- Vercel Web Analytics
+
+## Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | What's there |
+| --- | --- |
+| `app/layout.tsx` | Fonts, metadata, `<Providers>` wrapper |
+| `app/opengraph-image.tsx`, `robots.ts`, `sitemap.ts` | Social preview card and SEO routes |
+| `components/Providers.tsx` | Intro-ready context and `MotionConfig` (respects reduced motion) |
+| `components/LoadingScreen.tsx` + `hooks/useAssetPreloader.ts` | Preloader that waits for the hero images and fonts |
+| `components/Hero.tsx` | Hero with rotating photos and mouse parallax |
+| `components/Interests.tsx` | Music (Apple Music embeds), Gaming (Steam widget), and Math |
+| `public/cutouts/*.webp` | Hero photos. The full-resolution PNG originals are in `../cutout/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Notes
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The production URL is set in `lib/site.ts` and is used by the metadata, robots, and sitemap.
+- To change a hero photo, export it as WebP into `public/cutouts/` and update the list in both `Hero.tsx` and `useAssetPreloader.ts`.

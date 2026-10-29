@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, ArrowUpRight } from "lucide-react";
 
@@ -61,15 +61,29 @@ const socials = [
 
 const MARQUEE_REPEATS = 8;
 
+// The page is prerendered, so render the build year during hydration and
+// switch to the visitor's current year right after — no hydration mismatch.
+const BUILD_YEAR = Number(process.env.BUILD_YEAR);
+const noopSubscribe = () => () => {};
+
+function useCurrentYear() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => new Date().getFullYear(),
+    () => BUILD_YEAR
+  );
+}
+
 export default function Footer() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaInView = useInView(ctaRef, { once: true, margin: "-80px" });
+  const year = useCurrentYear();
 
   return (
     <footer id="contact" className="relative overflow-hidden">
       {/* ── Kinetic Typography Marquee ── */}
       <div className="py-8 md:py-16 overflow-hidden">
-        <div className="marquee-track">
+        <div className="marquee-track" aria-hidden="true">
           {[...Array(MARQUEE_REPEATS)].map((_, i) => (
             <span key={i} className="marquee-word text-[18vw] md:text-[12vw] lg:text-[10vw] px-[3vw]">
               ausfear
@@ -150,10 +164,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 md:px-10 pb-6 md:pb-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 md:pt-8 border-t border-[var(--color-border)]">
           <p className="text-[10px] md:text-xs text-[var(--color-text-faint)] tracking-wider">
-            © {new Date().getFullYear()} Audinta Sakti Firmansyah
-          </p>
-          <p className="text-[10px] md:text-xs text-[var(--color-text-faint)] tracking-wider">
-            Just vibing on the internet
+            © {year} Audinta Sakti Firmansyah
           </p>
         </div>
       </div>

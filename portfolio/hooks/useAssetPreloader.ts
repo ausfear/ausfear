@@ -1,83 +1,99 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 export const PRELOAD_IMAGES = [
   "/icon.png",
-  "/cutouts/sunglasses.png",
-  "/cutouts/guitar.png",
-  "/cutouts/gamepad.png",
-  "/cutouts/sunglasses2.png",
+  "/cutouts/sunglasses.webp",
+  "/cutouts/guitar.webp",
+  "/cutouts/gamepad.webp",
+  "/cutouts/sunglasses2.webp",
 ];
+
+// Minimum on-screen time so the liquid fill still reads as an animation
+const MIN_DURATION_FIRST_VISIT = 2200;
+// Assets are already in the browser cache on repeat visits within a session
+const MIN_DURATION_REPEAT_VISIT = 900;
+// Never hold visitors hostage if an asset hangs
+const MAX_WAIT = 8000;
+// Progress the timer may reach on its own before real assets catch up
+const TIME_PROGRESS_CAP = 0.9;
+const SEEN_KEY = "ausfear:preloader-seen";
+
+function hasSeenPreloader() {
+  try {
+    return sessionStorage.getItem(SEEN_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function markPreloaderSeen() {
+  try {
+    sessionStorage.setItem(SEEN_KEY, "1");
+  } catch {
+    // Storage may be unavailable (private mode, blocked cookies)
+  }
+}
 
 export function useAssetPreloader() {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  const isMountedRef = useRef(true);
-
   useEffect(() => {
-    isMountedRef.current = true;
+    let cancelled = false;
+    let rafId = 0;
+    let holdTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const totalImages = PRELOAD_IMAGES.length;
-    let loadedCount = 0;
-    let assetsDone = false;
-
-    // Track real image decoding
-    const handleOneLoaded = () => {
-      loadedCount += 1;
-      if (loadedCount >= totalImages) {
-        assetsDone = true;
-      }
+    const totalTasks = PRELOAD_IMAGES.length + 1; // images + web fonts
+    let doneTasks = 0;
+    const markTaskDone = () => {
+      doneTasks += 1;
     };
 
+    // Real image loading + decoding (decode() resolves once, so cached images aren't double-counted)
     PRELOAD_IMAGES.forEach((src) => {
       const img = new Image();
-      img.onload = handleOneLoaded;
-      img.onerror = handleOneLoaded;
       img.src = src;
-      // If already cached by browser
-      if (img.complete) {
-        handleOneLoaded();
-      }
+      img.decode().catch(() => {}).finally(markTaskDone);
     });
 
-    // Also check fonts
-    if (typeof document !== "undefined" && document.fonts) {
-      document.fonts.ready.catch(() => {}).finally(() => {
-        // fonts ready
-      });
-    }
+    // Web fonts (Syne / Inter) — the hero layout is measured against these
+    document.fonts.ready.catch(() => {}).finally(markTaskDone);
 
-    // Smooth progress animation over ~2.2s for steady, enjoyable liquid filling
+    const minDuration = hasSeenPreloader() ? MIN_DURATION_REPEAT_VISIT : MIN_DURATION_FIRST_VISIT;
     const startTime = performance.now();
-    const duration = 2200; // 2.2 seconds animation duration
-    let rafId: number;
+    let displayed = 0;
 
     const update = (now: number) => {
-      if (!isMountedRef.current) return;
+      if (cancelled) return;
 
       const elapsed = now - startTime;
-      const progressFraction = Math.min(elapsed / duration, 1);
+      const timeFraction = Math.min(elapsed / minDuration, 1);
 
-      // Smooth ease-in-out quadratic: gentle start, steady middle, graceful arrival at 100%
+      // Smooth ease-in-out quadratic: gentle start, steady middle, graceful arrival
       const eased =
-        progressFraction < 0.5
-          ? 2 * progressFraction * progressFraction
-          : 1 - Math.pow(-2 * progressFraction + 2, 2) / 2;
+        timeFraction < 0.5
+          ? 2 * timeFraction * timeFraction
+          : 1 - Math.pow(-2 * timeFraction + 2, 2) / 2;
 
-      const currentPct = Math.min(Math.round(eased * 100), 100);
+      const assetsDone = doneTasks >= totalTasks || elapsed >= MAX_WAIT;
+      // Until every asset is ready the bar can't pass the cap — it waits for the real load
+      const target = assetsDone ? eased : Math.min(eased, TIME_PROGRESS_CAP);
+      // Ease toward the target so a late asset finish glides from 90% instead of jumping
+      displayed += (target - displayed) * 0.2;
+      if (target - displayed < 0.005) displayed = target;
+      const currentPct = Math.round(displayed * 100);
 
       setProgress(currentPct);
 
       if (currentPct < 100) {
         rafId = requestAnimationFrame(update);
       } else {
+        markPreloaderSeen();
         // Reached 100% — hold briefly for visual payoff, then complete
-        setTimeout(() => {
-          if (isMountedRef.current) {
-            setIsComplete(true);
-          }
+        holdTimer = setTimeout(() => {
+          if (!cancelled) setIsComplete(true);
         }, 260);
       }
     };
@@ -85,10 +101,11 @@ export function useAssetPreloader() {
     rafId = requestAnimationFrame(update);
 
     return () => {
-      isMountedRef.current = false;
+      cancelled = true;
       cancelAnimationFrame(rafId);
+      clearTimeout(holdTimer);
     };
-  }, []); // Run once on mount
+  }, []);
 
   return {
     progress,

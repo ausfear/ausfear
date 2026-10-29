@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type MotionValue, useTransform } from "framer-motion";
+import { useIntroReady } from "./Providers";
 
 interface ParticleBase {
   className?: string;
@@ -23,13 +24,14 @@ function Circle({
 }: ParticleBase & { size?: number; color?: string; animClass?: string }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
+      animate={introReady ? { opacity: 1, scale: 1 } : undefined}
       transition={{ delay: 0.6 + delay, duration: 0.6 }}
     >
       <div
@@ -54,17 +56,18 @@ function Plus({
   springX,
   springY,
   parallaxMultiplier = 80,
-  color = "var(--color-text-faint)",
+  color = "var(--color-decor)",
 }: ParticleBase & { size?: number; color?: string }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 0.6, scale: 1 }}
+      animate={introReady ? { opacity: 0.6, scale: 1 } : undefined}
       transition={{ delay: 0.7 + delay, duration: 0.5 }}
     >
       <div
@@ -91,17 +94,18 @@ function Triangle({
   springX,
   springY,
   parallaxMultiplier = 100,
-  color = "var(--color-text-faint)",
+  color = "var(--color-decor)",
 }: ParticleBase & { size?: number; color?: string }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 0.45, scale: 1 }}
+      animate={introReady ? { opacity: 0.45, scale: 1 } : undefined}
       transition={{ delay: 0.8 + delay, duration: 0.5 }}
     >
       <div
@@ -130,13 +134,14 @@ function Ring({
 }: ParticleBase & { size?: number }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0, scale: 0.5 }}
-      animate={{ opacity: 0.35, scale: 1 }}
+      animate={introReady ? { opacity: 0.35, scale: 1 } : undefined}
       transition={{ delay: 0.5 + delay, duration: 0.8 }}
     >
       <div
@@ -164,13 +169,14 @@ function Diamond({
 }: ParticleBase & { size?: number; color?: string }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 0.5, scale: 1 }}
+      animate={introReady ? { opacity: 0.5, scale: 1 } : undefined}
       transition={{ delay: 0.7 + delay, duration: 0.5 }}
     >
       <div
@@ -199,13 +205,14 @@ function Dot({
 }: ParticleBase & { size?: number; color?: string }) {
   const x = useTransform(springX, [-0.5, 0.5], [-parallaxMultiplier, parallaxMultiplier]);
   const y = useTransform(springY, [-0.5, 0.5], [-parallaxMultiplier * 0.8, parallaxMultiplier * 0.8]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none ${className}`}
       style={{ x, y }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 0.6 }}
+      animate={introReady ? { opacity: 0.6 } : undefined}
       transition={{ delay: 0.8 + delay, duration: 0.4 }}
     >
       <div
@@ -287,13 +294,14 @@ function MobileParallaxItem({
   children,
 }: MobileParallaxItemProps) {
   const y = useTransform(scrollYProgress, [0, 1], [0, -speed]);
+  const introReady = useIntroReady();
 
   return (
     <motion.div
       className={`absolute pointer-events-none select-none ${className}`}
       style={{ y }}
       initial={{ opacity: 0, scale: 0.6 }}
-      animate={{ opacity: 1, scale: 1 }}
+      animate={introReady ? { opacity: 1, scale: 1 } : undefined}
       transition={{ delay: 0.3 + delay, duration: 0.6 }}
     >
       {children}
@@ -412,8 +420,8 @@ export function MobileFloatingParticles({
             animation: "float-med 6s ease-in-out infinite",
           }}
         >
-          <div className="absolute top-1/2 left-0 w-full h-[1.5px] -translate-y-1/2 bg-[var(--color-text-faint)]" />
-          <div className="absolute top-0 left-1/2 w-[1.5px] h-full -translate-x-1/2 bg-[var(--color-text-faint)]" />
+          <div className="absolute top-1/2 left-0 w-full h-[1.5px] -translate-y-1/2 bg-[var(--color-decor)]" />
+          <div className="absolute top-0 left-1/2 w-[1.5px] h-full -translate-x-1/2 bg-[var(--color-decor)]" />
         </div>
       </MobileParallaxItem>
 
@@ -430,7 +438,7 @@ export function MobileFloatingParticles({
             height: 0,
             borderLeft: "6px solid transparent",
             borderRight: "6px solid transparent",
-            borderBottom: "11px solid var(--color-text-faint)",
+            borderBottom: "11px solid var(--color-decor)",
             animation: "float-slow 8s ease-in-out infinite",
           }}
         />

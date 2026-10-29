@@ -3,25 +3,21 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAssetPreloader } from "@/hooks/useAssetPreloader";
+import { useScrollLock } from "@/hooks/useScrollLock";
+import { useMarkIntroReady } from "./Providers";
 
 export default function LoadingScreen() {
   const { progress, isComplete } = useAssetPreloader();
   const [shouldRender, setShouldRender] = useState(true);
+  const markIntroReady = useMarkIntroReady();
 
-  // Lock body scroll while the preloader is active
+  // Start the hero/nav entrance animations as the curtain begins to lift
   useEffect(() => {
-    if (!isComplete) {
-      document.body.style.overflow = "hidden";
-    } else {
-      const timer = setTimeout(() => {
-        document.body.style.overflow = "";
-      }, 900);
-      return () => clearTimeout(timer);
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isComplete]);
+    if (isComplete) markIntroReady();
+  }, [isComplete, markIntroReady]);
+
+  // Lock scrolling until the curtain has fully lifted (shouldRender flips on exit complete)
+  useScrollLock(shouldRender);
 
   // Circumference for 92px radius SVG circle
   const radius = 92;
