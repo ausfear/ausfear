@@ -9,7 +9,9 @@
     "lint": "eslint",
     "games:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/games.mjs sync",
     "games:images": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs images",
-    "games:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs find"
+    "games:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs find",
+    "songs:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/songs.mjs",
+    "playlists:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/playlists.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

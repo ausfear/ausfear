@@ -72,6 +72,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="preconnect" href="https://embed.music.apple.com" />
         <link rel="dns-prefetch" href="https://embed.music.apple.com" />
         <link rel="preconnect" href="https://play.itunes.apple.com" />
+        {/* Song previews are fetched with CORS (for the visualizer), so the preconnect must be too */}
+        <link rel="preconnect" href="https://audio-ssl.itunes.apple.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://play.itunes.apple.com" />
       </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>

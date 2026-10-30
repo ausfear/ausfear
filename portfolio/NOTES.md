@@ -6,98 +6,87 @@ Catatan rancangan dan temuan teknis untuk dilanjutkan nanti. Terakhir diperbarui
 
 ## 1. Kartu lagu buatan sendiri (pengganti embed Apple Music di spiderweb)
 
-**Status:** rancangan, belum dikerjakan.
+**Status:** sudah dibuat (30 Okt 2026).
 
-### Masalah yang mau diselesaikan
-Kartu lagu di bagian "Ingredients of My Music Library" tampil sebagai kotak abu-abu berikon not musik selama beberapa detik sebelum isinya muncul.
+### Kenapa
+Embed Apple Music baru merender isinya setelah terlihat di layar, lalu butuh ±3 detik lagi (diuji 29 Okt 2026: iframe eager di luar layar tetap kosong selama 10 detik). Masalah itu ada di sisi Apple, bukan karena `loading="lazy"`. Di dark mode, kotak putihnya juga makin terlihat janggal.
 
-Hasil tes (29 Okt 2026, Edge):
-- Iframe Apple Music dengan `loading="eager"` yang diletakkan di luar layar **tetap kosong selama 10 detik** (hanya kerangka, tanpa teks atau gambar).
-- Setelah di-scroll ke layar, isinya baru muncul **±3 detik kemudian**.
-- Jadi penyebabnya ada di embed Apple atau di browser yang menahan iframe lintas domain yang tidak terlihat, **bukan** `loading="lazy"`. Mengubah ke eager tidak membantu.
-- Konten embed Apple dirender di dalam Shadow DOM.
+### Yang dibuat
+- **Kartu lagu** (`components/SongCard.tsx`): cover, judul, artis, tombol play/pause, bar visualizer, sisa waktu, progress, dan link ↗ ke Apple Music. Kartu langsung tampil bersama halaman, mengikuti tema terang/gelap, dan tetap memakai efek tilt. Efek tilt hanya bereaksi pada mouse (di layar sentuh kartu sempat miring tertahan setelah di-tap). Kilau yang mengikuti kursor (`--tilt-glare`) berwarna gelap di mode terang dan terang di mode gelap.
+- **Satu pemutar global** (`components/AudioPlayer.tsx`, dipasang di `Providers`): satu elemen `<audio>` untuk seluruh situs, jadi memutar lagu lain otomatis menghentikan yang sebelumnya. Lagu juga bisa dikendalikan dari kontrol media OS dan layar kunci HP (Media Session API).
+- **Mini player melayang** (`components/MiniPlayer.tsx`): muncul saat ada lagu aktif tapi kartunya tidak terlihat di layar. Berisi cover, judul, bar visualizer, play/pause, dan tombol tutup (yang menghentikan lagu). Klik judulnya untuk kembali ke kartu. Di HP tampil selebar layar di bawah; di desktop berupa pil di pojok kanan bawah.
 
-### Solusi: kartu sendiri dengan data dari iTunes Lookup API
-API publik, tanpa API key:
+### Data
+- `data/songs.ts`: daftar lagu (`trackId` + label genre). **Ini yang diedit tangan.**
+- `npm run songs:sync`: mengambil judul, artis, URL preview, dan link Apple Music dari iTunes Lookup API ke `data/songs.generated.json`, serta cover ke `public/songs/<trackId>.webp`. Tanpa API key.
+- Posisi kartu di desktop ada di `spiderwebLayout` (`components/Interests.tsx`), satu posisi per lagu sesuai urutan. Menambah lagu ke-6 berarti juga menambah posisi ke-6.
+- Kalau suatu saat preview tidak bisa diputar (Apple sesekali memindahkan file preview), jalankan ulang `npm run songs:sync`. Kartu akan menampilkan "Preview unavailable" beserta link ke Apple Music.
 
-```
-https://itunes.apple.com/lookup?id=<trackId>&country=id
-```
+### Batasan
+- Hanya preview 30 detik. Untuk lagu penuh, pengunjung membuka link Apple Music di kartu.
+- Belum diuji di Safari iOS (tidak tersedia di lingkungan pengujian). Secara teori didukung (Web Audio dengan audio CORS didukung sejak Safari 14.1), tapi sebaiknya dicek langsung di iPhone.
+- Safari iOS membisukan audio yang lewat Web Audio saat tombol silent iPhone aktif. Pemutar menyetel `navigator.audioSession.type = "playback"` (Safari 16.4+) supaya diperlakukan seperti aplikasi musik. Di iOS yang lebih lama, lagu tetap tidak bersuara selama mode silent aktif.
 
-Field yang dipakai dari `results[0]`:
-
-| Field | Isi |
-| --- | --- |
-| `trackName` | Judul lagu |
-| `artistName` | Artis (bisa sangat panjang, misalnya lagu Anime; potong dengan ellipsis) |
-| `artworkUrl100` | Cover 100×100. Ganti `100x100` di URL menjadi `600x600` untuk resolusi lebih besar |
-| `previewUrl` | Preview audio 30 detik (`.m4a`) |
-| `trackViewUrl` | Link ke Apple Music |
-
-`trackId` adalah angka terakhir di URL embed. Kelima lagu sudah dicek dan datanya lengkap:
-
-| Genre | trackId | Lagu |
-| --- | --- | --- |
-| EDM - Melodic Bass | 1652371778 | Deep Blue (feat. Monika Santucci), William Black |
-| Acoustic | 1482863953 | All You Need To Know (feat. Calle Lehmann) [Acoustic], Gryffin & SLANDER |
-| Koplo - Dangdut | 1726193449 | Wirang, Guyon Waton |
-| Anime | 1813815070 | NEXT FRONTIER, Grass Wonder (CV: Rena Maeda) dkk. |
-| Alt Z | 1473421589 | Cold, Boy In Space & unheard |
-
-### Rancangan implementasi
-- **Ambil data saat build, bukan di browser pengunjung.** `Interests.tsx` adalah client component, jadi fetch dilakukan di `app/page.tsx` (server component) lalu diteruskan sebagai props. Alternatifnya, simpan hasilnya di file JSON.
-- **Komponen `SongCard`:** cover, judul, artis, label genre, tombol play/pause dengan indikator progres, dan link "Open in Apple Music".
-- **Hanya satu lagu diputar dalam satu waktu.** Pakai satu pengendali audio bersama (context): memutar lagu lain otomatis menghentikan yang sedang berjalan.
-- Kartu tetap memakai posisi spiderweb, `TiltCard`, dan animasi yang sudah ada.
-- **Playlist di carousel (`pl.u-…`) tetap memakai embed.** Itu playlist pribadi dan tidak tersedia lewat API publik.
-
-### Keputusan yang belum diambil
-Tombol Play sebaiknya:
-- **(a) Memutar preview 30 detik langsung lewat `<audio>`**: seketika, ringan, dan **wajib** kalau mau ada visualizer (bagian 2); atau
-- **(b) Memuat player Apple asli saat diklik**: lagu penuh untuk pelanggan yang login, tapi ada jeda ±3 detik dan tidak bisa divisualisasikan.
-
-Kombinasi yang masuk akal: (a) sebagai aksi utama, ditambah link "Open in Apple Music" untuk yang ingin lagu penuh. Catatan: pengunjung yang tidak login juga hanya mendapat preview 30 detik di embed Apple.
+**Menguji di iPhone tanpa push ke GitHub** (laptop dan iPhone di Wi-Fi yang sama):
+1. `npm run build`, lalu `npx next start -H 0.0.0.0 -p 3001`.
+2. Di iPhone buka `http://<IP Wi-Fi laptop>:3001`. Cek IP-nya dengan `ipconfig` (bagian "Wireless LAN adapter Wi-Fi"); per 30 Okt 2026 alamatnya 192.168.1.42. Alamat "Network" yang ditampilkan `npm run dev` bisa jadi milik Radmin VPN (26.x.x.x), jangan pakai itu.
+3. Pakai build produksi, bukan `npm run dev`: Next 16 memblokir aset dev dari alamat selain localhost (`allowedDevOrigins`), sehingga JavaScript-nya bisa tidak berjalan di iPhone.
+4. Kalau iPhone tidak bisa membuka halaman, Windows Firewall memblokirnya karena jaringan Wi-Fi terdaftar sebagai "Public". Ubah ke "Private" (Settings → Network & internet → Wi-Fi → nama jaringan → Network profile type → Private), atau izinkan Node.js saat Windows menampilkan dialog firewall.
 
 ---
 
-## 2. Visualizer audio yang mengikuti lagu
+## 2. Visualizer audio
 
-**Status:** ide, bergantung pada bagian 1 opsi (a).
+**Status:** sudah dibuat (30 Okt 2026) di sekitar "Ingredients of my music library".
 
-### Yang tidak bisa (sudah diselidiki)
-- **Audio di dalam iframe Apple Music** tidak bisa dibaca oleh halaman, karena same-origin policy membuat iframe lintas domain terisolasi total. Embed Apple juga tidak mengirim data audio lewat `postMessage`.
-- **MusicKit JS** (SDK resmi Apple): lagu penuh diputar dengan DRM, dan browser hanya memberi keheningan kalau audio terenkripsi disambungkan ke Web Audio.
-- **Merekam audio tab** (`getDisplayMedia`): memunculkan dialog izin berbagi layar setiap kali dan dukungan browser-nya terbatas. Tidak cocok untuk portofolio.
+### Yang bergerak mengikuti lagu
+- **Bar di kartu, di baris playlist, dan di mini player** (`components/FrequencyBars.tsx`): spektrum frekuensi sungguhan di `<canvas>`, dengan sebaran logaritmik supaya bass dan treble sama-sama terlihat.
+- **Garis waveform** (`components/WaveformLine.tsx`): garis dari judul ke kartu yang sedang diputar meliuk mengikuti lagu. Bentuknya disusun dari empat gelombang sinus (bass, low-mid, mid, high), masing-masing dengan amplitudo dari pita frekuensinya. Garisnya meruncing di kedua ujung, memudar di dekat judul, dan ditemani satu garis bayangan tipis. Saat di-pause, garisnya merata menjadi lurus dan meredup.
+- **Judul "Ingredients…"** membesar sedikit di setiap ketukan kick, dengan cahaya oranye di belakangnya yang mengikuti kerasnya lagu.
 
-### Yang bisa: menganalisis preview dari kartu sendiri
-CDN preview iTunes (`audio-ssl.itunes.apple.com`) mengirim `Access-Control-Allow-Origin: *` (dicek 29 Okt 2026). Jadi:
+### Garis spiderweb selalu tepat ke tengah kartu
+Ujung garis tidak lagi memakai koordinat tetap. `useCardCenters` (di `WaveformLine.tsx`) mengukur titik tengah setiap kartu di setiap frame, hanya selama spiderweb terlihat di desktop. Hasilnya tepat walaupun kartu diputar, ditilt, melayang, atau tingginya berbeda. Terukur: selisih 0 px di lebar 1280/1440/1920. Garis abu-abu memudar ke arah tengah lewat mask radial supaya tidak menembus judul.
 
-```ts
-const audio = new Audio();
-audio.crossOrigin = "anonymous"; // wajib diset SEBELUM src
-audio.src = previewUrl;
+### Cara kerja dan kalibrasi
+- Preview iTunes dikirim dengan `Access-Control-Allow-Origin: *`, jadi `<audio crossOrigin="anonymous">` bisa disambungkan ke `AnalyserNode`. Sudah diverifikasi: 96 dari 128 band frekuensi berisi data sungguhan.
+- **Rentang desibel diubah menjadi −85…−10 dB.** Dengan rentang bawaan (−100…−30 dB), lagu yang di-master keras membuat bass mentok di 0,91–1,0 sehingga tidak ada yang terlihat bergerak. Setelah diubah, kerasnya lagu berada di ±0,35–0,50 dan bar menyebar dari 0,2 sampai 0,9 (diukur pada lagu EDM, akustik, dan koplo).
+- **Denyut judul memakai "beat"**: seberapa jauh bass melonjak di atas rata-ratanya yang lambat (±0,04–0,05 di setiap kick), bukan level absolut, sehingga tetap berdenyut berapa pun kerasnya master lagu.
+- Analisis hanya berjalan saat lagu diputar: satu loop `requestAnimationFrame` untuk seluruh situs, dengan nilai disalurkan lewat MotionValue (tanpa render ulang React per frame).
+- `prefers-reduced-motion`: judul tidak berdenyut, cahaya mati, waveform menjadi garis lurus, dan bar tampil sebagai bentuk diam.
 
-const ctx = new AudioContext(); // buat/resume di dalam klik pengguna (autoplay policy)
-const source = ctx.createMediaElementSource(audio); // hanya boleh sekali per elemen audio
-const analyser = ctx.createAnalyser();
-analyser.fftSize = 256; // 128 bin frekuensi
-source.connect(analyser);
-analyser.connect(ctx.destination); // jangan lupa, kalau tidak suaranya hilang
+### Ide lanjutan
+- Bar melingkar di sekeliling judul, atau partikel spiderweb yang bereaksi terhadap bass.
 
-const bins = new Uint8Array(analyser.frequencyBinCount);
-// tiap requestAnimationFrame: analyser.getByteFrequencyData(bins)
-```
+---
 
-Catatan teknis:
-- Simpan satu `AudioContext` dan satu `MediaElementSource` per elemen audio di pengendali bersama, jangan dibuat ulang setiap kali play.
-- Kalau `prefers-reduced-motion`, tampilkan bar statis atau level sederhana tanpa animasi.
-- Hentikan loop `requestAnimationFrame` saat audio di-pause supaya tidak membebani CPU.
-- Uji di Safari (iOS): `AudioContext` harus di-resume dari gesture pengguna.
+## 2b. Playlist (carousel)
 
-### Ide tampilan
-- Bar visualizer kecil di kartu yang sedang diputar.
-- Garis-garis spiderweb berdenyut mengikuti energi bass (ketebalan atau opacity garis).
-- Judul "INGREDIENTS OF MY MUSIC LIBRARY" sedikit membesar dan mengecil mengikuti beat.
+**Status:** sudah dibuat (30 Okt 2026). Ketiga embed Apple Music di carousel diganti kartu playlist sendiri.
+
+### Yang dibuat
+- **Kartu playlist** (`components/PlaylistCard.tsx`): cover, judul, "Playlist by … · N songs", tombol **Play** (memutar dari lagu pertama, atau pause/resume kalau lagu dari playlist ini sedang diputar), tombol **Full playlist ↗**, dan daftar 8 lagu yang masing-masing bisa diputar. Di bawahnya ada link "+N more songs on Apple Music".
+- **Setiap lagu memakai pemutar global yang sama** dengan spiderweb, jadi bar visualizer dan mini player otomatis ikut bekerja. Baris yang sedang diputar disorot oranye, dan nomor urutnya berganti menjadi bar mini.
+- **Swipe carousel di HP kini berfungsi penuh**, karena tidak ada lagi iframe yang menelan sentuhan. Kartu samping diberi `inert`, sehingga tombolnya tidak bisa dicapai lewat Tab; satu klik pada kartu samping memindahkannya ke tengah.
+- Kedelapan lagu muat tanpa scroll di lebar 320–1440px (diuji). Header mobile dibuat bertinggi tetap (judul dan subtitle satu baris, tombol di baris sendiri) supaya tinggi kartu bisa dihitung pasti.
+
+### Cara kerja data
+`npm run playlists:sync` (`scripts/playlists.mjs`), untuk setiap playlist di `data/playlists.ts`:
+1. Membaca halaman publik `music.apple.com/id/playlist/<slug>/<id>`. Data JSON di dalamnya (`serialized-server-data`) memuat header (judul, kurator, jumlah lagu, template cover) dan daftar lagu berurutan. Bagian-bagian ini dicari berdasarkan jenisnya (`containerDetailHeader…`, `trackLockup`), bukan posisinya.
+2. Mencari preview setiap lagu lewat iTunes Lookup API.
+3. Menulis `data/playlists.generated.json`, cover playlist ke `public/playlists/`, dan cover lagu ke `public/songs/`.
+
+Lagu yang tidak punya preview atau tidak tersedia di storefront Indonesia dilewati, dan diganti lagu berikutnya di playlist.
+
+### Mengedit
+- **Mengganti jumlah lagu:** tambahkan `limit: 10` pada playlist di `data/playlists.ts`. Kalau lebih dari 8, tinggi kartu di `PlaylistCard.tsx` dan tinggi container carousel di `Interests.tsx` juga perlu dinaikkan.
+- **Memilih lagu tertentu:** `trackIds: [123, 456, …]` (ID lagu dari link Apple Music-nya, sesuai urutan yang diinginkan).
+- **Menambah atau mengganti playlist:** isi `id`, `slug`, dan `label` dari link publik playlist-nya. Playlist harus publik. Carousel saat ini dirancang untuk tepat 3 playlist (kiri, tengah, kanan).
+- **Memperbarui isi** (setelah playlist di Apple Music berubah): jalankan ulang `npm run playlists:sync`.
+
+### Risiko
+- **Ini membaca halaman yang tidak terdokumentasi.** Kalau Apple mengubah formatnya, script akan berhenti dengan pesan error yang jelas. Situsnya tetap aman, karena memakai data hasil sync terakhir.
+- Hanya preview 30 detik per lagu.
+- Jalur resmi lewat Apple Music API membutuhkan developer token dari Apple Developer Program (berbayar per tahun).
 
 ---
 
@@ -237,7 +226,7 @@ Diurutkan kira-kira dari yang paling khas "ausfear".
 
 ## 7. Keterbatasan yang sudah diketahui
 
-- **Swipe carousel playlist di HP** hanya bekerja di baris label, karena iframe Apple menangkap semua sentuhan. Tombol panah dan titik indikator adalah navigasi utama. Tidak bisa diperbaiki tanpa membuat isi playlist tidak bisa diklik.
+- ~~Swipe carousel playlist di HP hanya bekerja di baris label~~. Teratasi 30 Okt 2026: embed Apple diganti kartu playlist sendiri (bagian 2b).
 - **Iframe Steam** sengaja memakai atribut lama `marginHeight={0}` dan `marginWidth={0}`. Keduanya mengatur margin `<body>` di dalam widget. Kalau dihapus, muncul celah 8px dan efek rounded corner-nya hilang.
 - **Error 404 `/_vercel/insights/script.js`** saat dijalankan di lokal itu normal. Vercel Analytics hanya aktif setelah deploy.
 - **Dev server kadang tidak membuat class Tailwind baru** (Next 16 + Turbopack di Windows, ditemukan 29 Okt 2026). Gejalanya: class baru sudah ada di HTML, tapi tidak punya efek. Penyebabnya, cache CSS di `.next` tidak diperbarui saat file diedit, dan cache itu tetap terbawa walaupun dev server di-restart. Solusinya: hentikan dev server, hapus folder `.next`, lalu jalankan `npm run dev` lagi. Production build (`npm run build`) tidak terpengaruh.

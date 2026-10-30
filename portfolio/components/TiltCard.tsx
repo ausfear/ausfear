@@ -40,12 +40,14 @@ export default function TiltCard({
   const springGlareOpacity = useSpring(glareOpacity, { stiffness: 250, damping: 25 });
 
   // Dynamic glare radial gradient
-  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.14) 0%, transparent 65%)`;
+  // --tilt-glare: a dark sheen on light cards, a light one on dark cards (white on white is invisible)
+  const glareBg = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, var(--tilt-glare) 0%, transparent 65%)`;
 
   // Listen on the card itself — a window-level listener per card ran getBoundingClientRect
   // on every mouse move anywhere on the page.
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (reduceMotion || !containerRef.current) return;
+  // Mouse only: a tap on a touch screen would tilt the card and leave it stuck, since touch has no "leave".
+  const handleMouseMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse" || reduceMotion || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
@@ -73,8 +75,8 @@ export default function TiltCard({
     <div
       ref={containerRef}
       onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerMove={handleMouseMove}
+      onPointerLeave={handleMouseLeave}
       style={{ perspective: 1100 }}
       className={`relative select-none ${className}`}
     >

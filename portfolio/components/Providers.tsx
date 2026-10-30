@@ -3,6 +3,8 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 import { MotionConfig } from "framer-motion";
 import { useSystemThemeSync } from "@/hooks/useTheme";
+import { AudioPlayerProvider } from "./AudioPlayer";
+import MiniPlayer from "./MiniPlayer";
 
 /* Intro state — flips to true once the preloader starts its exit,
    so above-the-fold entrance animations play when they're actually visible. */
@@ -27,7 +29,13 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <IntroContext.Provider value={{ ready, markReady }}>
       {/* Respect the OS "reduce motion" setting for every framer-motion animation */}
-      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+      <MotionConfig reducedMotion="user">
+        {/* One audio element for the whole site: song cards and the floating mini player share it */}
+        <AudioPlayerProvider>
+          {children}
+          <MiniPlayer />
+        </AudioPlayerProvider>
+      </MotionConfig>
     </IntroContext.Provider>
   );
 }

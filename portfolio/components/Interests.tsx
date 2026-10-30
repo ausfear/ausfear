@@ -1,107 +1,68 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView, useScroll, useSpring, useTransform } from "framer-motion";
+import { useRef, useState, type ReactNode } from "react";
+import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { Music, Gamepad2, Sigma, ChevronLeft, ChevronRight } from "lucide-react";
 import TiltCard from "./TiltCard";
 import GameCollection from "./GameCollection";
+import SongCard from "./SongCard";
+import { useAudioPlayer, type Track } from "./AudioPlayer";
+import { songs } from "@/data/songs";
+import songMeta from "@/data/songs.generated.json";
+import PlaylistCard, { type PlaylistData } from "./PlaylistCard";
+import WaveformLine, { useCardCenters } from "./WaveformLine";
+import playlistData from "@/data/playlists.generated.json";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useTheme } from "@/hooks/useTheme";
-import type { Theme } from "@/lib/theme";
-
-/* Apple's embed has its own dark variant. Switching theme reloads the iframes, which is fine:
-   they're lazy and below the fold, so on a normal visit they haven't loaded yet when this resolves. */
-function appleEmbedSrc(src: string, theme: Theme) {
-  return theme === "dark" ? `${src}?theme=dark` : src;
-}
 
 /* ═══════════════════════════════════════════════════
    MUSIC DATA
    ═══════════════════════════════════════════════════ */
 
-const mainPlaylists = [
-  {
-    label: "acoustic",
-    src: "https://embed.music.apple.com/id/playlist/acoustic/pl.u-kv9l2aaIJ36ybe0",
-  },
-  {
-    label: "2024 recap | edm",
-    src: "https://embed.music.apple.com/id/playlist/2024-recap-ytmusic/pl.u-KVXBkXVCLedbN9B",
-  },
-  {
-    label: "jowo",
-    src: "https://embed.music.apple.com/id/playlist/jowo/pl.u-KVXBkPLtLedbN9B",
-  },
+/* Carousel playlists, generated from data/playlists.ts by `npm run playlists:sync` */
+const mainPlaylists: PlaylistData[] = playlistData.map((p) => ({
+  ...p,
+  tracks: p.tracks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    artist: t.artist,
+    artwork: t.artwork,
+    src: t.previewUrl,
+    appleMusicUrl: t.appleMusicUrl,
+    // Rows are told apart from the same song elsewhere on the page by their playlist
+    source: p.id,
+  })),
+}));
+
+/* Desktop (xl) spots around the title, one per entry in data/songs.ts, in the same order */
+const spiderwebLayout = [
+  // targetX/Y move the card from the center (% of its own size); its line follows wherever it lands
+  { labelPos: "above" as const, targetX: "-170%", targetY: "-130%", rotate: -4, delay: 0.1, floatDuration: 3.8 },
+  { labelPos: "above" as const, targetX: "165%", targetY: "-140%", rotate: 3, delay: 0.2, floatDuration: 4.2 },
+  { labelPos: "below" as const, targetX: "-160%", targetY: "120%", rotate: -2, delay: 0.15, floatDuration: 5.5 },
+  { labelPos: "below" as const, targetX: "-20%", targetY: "150%", rotate: 5, delay: 0.25, floatDuration: 4.8 },
+  { labelPos: "below" as const, targetX: "170%", targetY: "110%", rotate: -6, delay: 0.3, floatDuration: 3.2 },
 ];
 
-const scatteredSongs = [
-  {
-    genre: "EDM - Melodic Bass",
-    src: "https://embed.music.apple.com/id/song/deep-blue-feat-monika-santucci/1652371778",
-    height: 175,
-    labelPos: "above" as const,
-    targetX: "-170%",
-    targetY: "-130%",
-    rotate: -4,
-    delay: 0.1,
-    floatDuration: 3.8,
-    // SVG line endpoint (% of container from center)
-    lineEndX: -38,
-    lineEndY: -34,
-  },
-  {
-    genre: "Acoustic",
-    src: "https://embed.music.apple.com/id/song/all-you-need-to-know-feat-calle-lehmann-acoustic/1482863953",
-    height: 175,
-    labelPos: "above" as const,
-    targetX: "165%",
-    targetY: "-140%",
-    rotate: 3,
-    delay: 0.2,
-    floatDuration: 4.2,
-    lineEndX: 36,
-    lineEndY: -36,
-  },
-  {
-    genre: "Koplo - Dangdut",
-    src: "https://embed.music.apple.com/id/song/wirang/1726193449",
-    height: 175,
-    labelPos: "below" as const,
-    targetX: "-160%",
-    targetY: "120%",
-    rotate: -2,
-    delay: 0.15,
-    floatDuration: 5.5,
-    lineEndX: -35,
-    lineEndY: 30,
-  },
-  {
-    genre: "Anime",
-    src: "https://embed.music.apple.com/id/song/next-frontier/1813815070",
-    height: 175,
-    labelPos: "below" as const,
-    targetX: "-20%",
-    targetY: "150%",
-    rotate: 5,
-    delay: 0.25,
-    floatDuration: 4.8,
-    lineEndX: -4,
-    lineEndY: 38,
-  },
-  {
-    genre: "Alt Z",
-    src: "https://embed.music.apple.com/id/song/cold/1473421589",
-    height: 175,
-    labelPos: "below" as const,
-    targetX: "170%",
-    targetY: "110%",
-    rotate: -6,
-    delay: 0.3,
-    floatDuration: 3.2,
-    lineEndX: 39,
-    lineEndY: 28,
-  },
-];
+type SongMeta = { title: string; artist: string; previewUrl: string | null; appleMusicUrl: string; artwork: string };
+const songMetaById = songMeta as Record<string, SongMeta>;
+
+/* Songs from data/songs.ts joined with their synced metadata (npm run songs:sync) and a layout slot.
+   A song without metadata, a preview or a slot is left out rather than shown broken. */
+const scatteredSongs = songs.flatMap((song, i) => {
+  const meta = songMetaById[song.trackId];
+  const layout = spiderwebLayout[i];
+  if (!meta?.previewUrl || !layout) return [];
+  const track: Track = {
+    id: String(song.trackId),
+    title: meta.title,
+    artist: meta.artist,
+    artwork: meta.artwork,
+    src: meta.previewUrl,
+    appleMusicUrl: meta.appleMusicUrl,
+    source: "spiderweb",
+  };
+  return [{ ...layout, genre: song.genre, track }];
+});
 
 /* Floating particles scattered around the spiderweb */
 const spiderwebParticles = [
@@ -120,6 +81,41 @@ const spiderwebParticles = [
 ];
 
 /* ═══════════════════════════════════════════════════
+   AUDIO-REACTIVE PIECES
+   ═══════════════════════════════════════════════════ */
+
+/** The spiderweb title: swells on each kick, with a warm glow that follows the loudness */
+function PulsingTitle({ children }: { children: ReactNode }) {
+  const { beat, energy } = useAudioPlayer();
+  const reduceMotion = useReducedMotion();
+  // Measured: idle between kicks, peaks of ~0.4–0.6 on them → a swell of roughly 2.5–4%
+  const scale = useTransform(beat, (b) => (reduceMotion ? 1 : 1 + b * 0.065));
+  const glowOpacity = useTransform(energy, (e) => (reduceMotion ? 0 : e));
+  const glowScale = useTransform(beat, (b) => 0.9 + b * 0.35);
+
+  return (
+    <div className="relative">
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vmin] h-[70vmin] rounded-full"
+        style={{
+          opacity: glowOpacity,
+          scale: glowScale,
+          background:
+            "radial-gradient(circle, rgba(255,107,43,0.24) 0%, rgba(255,107,43,0.07) 40%, transparent 68%)",
+        }}
+      />
+      <motion.h4
+        style={{ scale }}
+        className="relative font-[family-name:var(--font-syne)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-[var(--color-text)]"
+      >
+        {children}
+      </motion.h4>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    MUSIC SECTION
    ═══════════════════════════════════════════════════ */
 
@@ -130,7 +126,13 @@ function MusicSection() {
   /* The exploded spiderweb only fits from xl (1280px) up — below that, cards stack.
      Layout comes from CSS breakpoints; this only picks the animation targets. */
   const isWide = useMediaQuery("(min-width: 1280px)");
-  const theme = useTheme();
+  const { current } = useAudioPlayer();
+
+  // Spiderweb geometry: live card centers, only measured while the exploded layout is on screen
+  const webRef = useRef<HTMLDivElement>(null);
+  const webInView = useInView(webRef, { margin: "200px 0px" });
+  const { centers, origin, lineEnds } = useCardCenters(webRef, scatteredSongs.length, isWide && webInView);
+  const playingIndex = scatteredSongs.findIndex((s) => s.track.id === current?.id);
 
   /* Circular modulo logic — always exactly 1 center, 1 left, 1 right */
   const getCarouselVariant = (index: number) => {
@@ -194,13 +196,14 @@ function MusicSection() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="mb-24 md:mb-32"
         >
-          <div className="relative flex items-center justify-center w-full" style={{ height: 500 }}>
+          {/* Height = playlist card (680 / 530) + the pill row under it */}
+          <div className="relative flex items-center justify-center w-full h-[740px] sm:h-[590px]">
             {mainPlaylists.map((pl, i) => {
               const variant = getCarouselVariant(i);
               const isActive = i === activeIndex;
               return (
                 <motion.div
-                  key={pl.label}
+                  key={pl.id}
                   animate={variant}
                   transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   drag={isActive ? "x" : false}
@@ -214,30 +217,18 @@ function MusicSection() {
                     zIndex: variant.zIndex,
                   }}
                 >
-                  <div className={`relative transition-shadow duration-500 ${isActive ? "shadow-2xl shadow-black/30" : ""}`}>
-                    {/* Transparent overlay catches clicks on inactive iframes */}
+                  <div className={`relative rounded-2xl transition-shadow duration-500 ${isActive ? "shadow-2xl shadow-black/30" : ""}`}>
+                    {/* Side cards: one click brings them to the center instead of playing a song */}
                     {!isActive && (
                       <div
                         className="absolute inset-0 z-50 cursor-pointer"
                         onClick={() => setActiveIndex(i)}
                       />
                     )}
-                    <iframe
-                      loading="lazy"
-                      allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-                      frameBorder="0"
-                      height="450"
-                      style={{
-                        width: "100%",
-                        maxWidth: "660px",
-                        overflow: "hidden",
-                        borderRadius: "10px",
-                        display: "block",
-                      }}
-                      sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                      src={appleEmbedSrc(pl.src, theme)}
-                      title={`Playlist: ${pl.label}`}
-                    />
+                    {/* inert keeps the side cards' buttons out of the tab order */}
+                    <div inert={!isActive}>
+                      <PlaylistCard playlist={pl} />
+                    </div>
                   </div>
                   {/* Playlist label pill with navigation arrows */}
                   <div className="flex items-center justify-center gap-2.5 mt-4">
@@ -301,8 +292,11 @@ function MusicSection() {
         </motion.div>
 
         {/* ── Spiderweb Ingredients ── */}
-        <div className="relative w-full flex flex-col items-center gap-10 md:grid md:grid-cols-2 md:justify-items-center md:gap-x-8 md:gap-y-14 xl:block xl:min-h-[90vh]">
-          {/* SVG connecting lines — hidden on mobile */}
+        <div
+          ref={webRef}
+          className="relative w-full flex flex-col items-center gap-10 md:grid md:grid-cols-2 md:justify-items-center md:gap-x-8 md:gap-y-14 xl:block xl:min-h-[90vh]"
+        >
+          {/* SVG connecting lines — desktop only. Each ends at its card's measured center (useCardCenters). */}
           <svg
             className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden xl:block"
             viewBox="0 0 100 100"
@@ -310,38 +304,44 @@ function MusicSection() {
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              {scatteredSongs.map((song, i) => (
-                <linearGradient
-                  key={`grad-${i}`}
-                  id={`line-fade-${i}`}
-                  x1="50%" y1="50%"
-                  x2={`${50 + song.lineEndX}%`}
-                  y2={`${50 + song.lineEndY}%`}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-                  <stop offset="25%" stopColor="currentColor" stopOpacity="0.12" />
-                  <stop offset="75%" stopColor="currentColor" stopOpacity="0.12" />
-                  <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-                </linearGradient>
-              ))}
+              {/* Lines fade out toward the middle so they never run through the title */}
+              <radialGradient id="web-center-fade" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="black" />
+                <stop offset="15%" stopColor="black" />
+                <stop offset="30%" stopColor="white" />
+                <stop offset="100%" stopColor="white" />
+              </radialGradient>
+              <mask id="web-fade" maskUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+                <rect width="100" height="100" fill="url(#web-center-fade)" />
+              </mask>
             </defs>
-            {scatteredSongs.map((song, i) => (
-              <motion.line
-                key={`line-${i}`}
-                x1="50" y1="50"
-                x2={50 + song.lineEndX}
-                y2={50 + song.lineEndY}
-                stroke={`url(#line-fade-${i})`}
-                strokeWidth="0.15"
-                className="text-[var(--color-decor)]"
-                initial={{ pathLength: 0, opacity: 0 }}
-                whileInView={{ pathLength: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, delay: 0.3 + song.delay, ease: "easeOut" }}
-              />
-            ))}
+            <g mask="url(#web-fade)" className="text-[var(--color-decor)]">
+              {scatteredSongs.map((song, i) => (
+                <motion.line
+                  key={`line-${i}`}
+                  x1="50"
+                  y1="50"
+                  x2={lineEnds[i].x}
+                  y2={lineEnds[i].y}
+                  stroke="currentColor"
+                  strokeOpacity="0.14"
+                  strokeWidth="0.15"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: 0.3 + song.delay, ease: "easeOut" }}
+                />
+              ))}
+            </g>
           </svg>
+
+          {/* The line to the song that's playing, as a live waveform (desktop only) */}
+          <WaveformLine
+            centers={centers}
+            origin={origin}
+            activeIndex={isWide ? playingIndex : -1}
+            className="absolute inset-0 w-full h-full pointer-events-none z-[1] hidden xl:block"
+          />
 
           {/* Floating particles — hidden on mobile */}
           {spiderwebParticles.map((p, i) => (
@@ -388,19 +388,19 @@ function MusicSection() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="text-center select-none relative z-[3]"
             >
-              <h4 className="font-[family-name:var(--font-syne)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight text-[var(--color-text)]">
+              <PulsingTitle>
                 INGREDIENTS OF
                 <br />
                 MY MUSIC LIBRARY
-              </h4>
+              </PulsingTitle>
             </motion.div>
           </div>
 
-          {/* Scattered song embeds — stacked on mobile, explode on desktop */}
+          {/* Scattered song cards — stacked on mobile, explode on desktop */}
           {scatteredSongs.map((song) => (
             <motion.div
-              key={song.src}
-              className="z-[4] relative w-full max-w-[380px] xl:absolute xl:top-1/2 xl:left-1/2 xl:w-[280px] xl:max-w-none xl:-ml-[140px] xl:-mt-[88px]"
+              key={song.track.id}
+              className="z-[4] relative w-full max-w-[380px] xl:absolute xl:top-1/2 xl:left-1/2 xl:w-[280px] xl:max-w-none xl:-ml-[140px] xl:-mt-[76px]"
               initial={{ opacity: 0, scale: 0.8, y: isWide ? 0 : 30 }}
               whileInView={
                 isWide
@@ -441,22 +441,7 @@ function MusicSection() {
                     {song.genre}
                   </span>
                   <TiltCard tiltAmount={10} glareEnabled className="rounded-xl w-full">
-                    <iframe
-                      loading="lazy"
-                      allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-                      frameBorder="0"
-                      height={song.height}
-                      style={{
-                        width: "100%",
-                        maxWidth: "660px",
-                        overflow: "hidden",
-                        borderRadius: "10px",
-                        display: "block",
-                      }}
-                      sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                      src={appleEmbedSrc(song.src, theme)}
-                      title={song.genre}
-                    />
+                    <SongCard track={song.track} />
                   </TiltCard>
                   {song.labelPos === "below" && (
                     <span className="hidden xl:block absolute top-full mt-3 left-0 text-xs uppercase tracking-widest text-[var(--color-text-faint)] whitespace-nowrap">

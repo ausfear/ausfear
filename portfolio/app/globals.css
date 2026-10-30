@@ -24,6 +24,8 @@
   /* Interaction tints */
   --color-hover: rgba(0, 0, 0, 0.04);
   --color-active: rgba(0, 0, 0, 0.06);
+  /* Cursor-following sheen on tilt cards */
+  --tilt-glare: rgba(10, 10, 10, 0.13);
 
   /* Navbar pill */
   --nav-bg: rgba(255, 255, 255, 0.55);
@@ -59,6 +61,7 @@
 
   --color-hover: rgba(255, 255, 255, 0.06);
   --color-active: rgba(255, 255, 255, 0.09);
+  --tilt-glare: rgba(255, 255, 255, 0.14);
 
   --nav-bg: rgba(22, 22, 24, 0.55);
   --nav-bg-scrolled: rgba(22, 22, 24, 0.75);
