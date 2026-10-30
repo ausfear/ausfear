@@ -1,6 +1,6 @@
 # Catatan Pengembangan ausfear
 
-Catatan rancangan dan temuan teknis untuk dilanjutkan nanti. Terakhir diperbarui 29 Oktober 2026.
+Catatan rancangan dan temuan teknis untuk dilanjutkan nanti. Terakhir diperbarui 30 Oktober 2026.
 
 ---
 
@@ -103,30 +103,42 @@ Catatan teknis:
 
 ## 3. Dark mode
 
-**Status:** sudah disimulasikan (CSS disuntikkan ke halaman), belum diimplementasikan.
+**Status:** sudah dibuat (30 Okt 2026).
 
-Temuan dari simulasi hero di background `#0b0b0c`:
-- **Foto tidak tenggelam total.** Wajah, tangan, dan garis kerah tetap terang. Tapi bahu, rambut, dan bagian bawah baju hitam menyatu dengan background.
-- **Efek khas hero hilang.** Nama AUDINTA/SAKTI yang berubah warna saat melintasi siluet jadi putih semua, karena teks di luar dan di dalam siluet sama-sama putih.
+### Cara kerjanya
+- **Tema awal mengikuti pengaturan sistem** (`prefers-color-scheme`). Setelah pengunjung memilih lewat tombol bulan/matahari di navbar, pilihannya disimpan di `localStorage` (`ausfear:theme`) dan tidak lagi mengikuti sistem.
+- **Tidak ada kedipan putih.** Script kecil di `<head>` (`themeInitScript` di `lib/theme.ts`) memasang `data-theme` di `<html>` sebelum halaman digambar.
+- **Transisi:** tema baru menyapu dari bawah ke atas dengan garis scanline oranye, motif yang sama dengan pergantian foto hero (View Transitions API). Browser tanpa dukungan, atau pengunjung dengan reduced-motion, langsung berganti tanpa animasi.
+- **Kelas Tailwind `dark:`** mengikuti `data-theme`, bukan pengaturan sistem langsung (`@custom-variant` di `globals.css`).
 
-Resep yang terbukti bekerja di simulasi:
+### Keputusan desain
+- **Hero:** foto diberi rim light (drop-shadow tipis putih ditambah glow oranye) dan spotlight samar di belakangnya, supaya baju hitam tidak tenggelam. Nama di dalam siluet berubah oranye (`--hero-name-inside`), karena putih-di-atas-putih akan menghapus efeknya.
+- **Gaming section:** tetap gelap di kedua tema. Di mode gelap menjadi permukaan yang sedikit lebih terang (`#141416` vs halaman `#0b0b0c`) dengan cahaya oranye samar dari atas, sehingga tetap terbaca sebagai "panggung". Opsi membaliknya menjadi terang ditolak, karena pita terang di halaman gelap menyilaukan.
+- **Embed Apple Music** memakai `?theme=dark` (sudah diuji dan berfungsi). Saat tema diganti, iframe dimuat ulang dan isinya muncul ±3 detik kemudian, perilaku normal embed Apple.
+- **Widget Steam** sudah gelap dari sananya, jadi tidak diubah.
 
-```css
-/* Rim light mengikuti tepi alpha foto cutout */
-filter: grayscale(1) contrast(1.12) brightness(1.08)
-  drop-shadow(0 0 1px rgba(255,255,255,.55))
-  drop-shadow(0 0 18px rgba(255,107,43,.28));
-```
+### Mengubah warna
+Semua warna ada di `app/globals.css`: nilai terang di `:root`, nilai gelap di `[data-theme="dark"]`. Token yang paling sering perlu disetel:
 
-- Tambahkan spotlight samar di belakang foto: `radial-gradient` putih dengan opacity ±10%.
-- **Teks nama di dalam siluet diubah menjadi oranye (`--color-pop`)**, sementara yang di luar tetap putih. Efek perpindahan warnanya kembali, dan hasilnya terlihat lebih dramatis daripada versi terang.
+| Token | Terang | Gelap | Dipakai untuk |
+| --- | --- | --- | --- |
+| `--color-bg` | `#fafafa` | `#0b0b0c` | Background halaman |
+| `--color-text-muted` / `--color-text-faint` | `#5e5e5e` / `#737373` | `#a8a8a8` / `#8c8c8c` | Teks sekunder (semua ≥4,5:1) |
+| `--gaming-bg` | `#0a0a0a` | `#141416` | Gaming section |
+| `--hero-name-inside` | putih | oranye | Nama di dalam siluet foto |
+| `--hero-watermark`, `--deco-number` | abu sangat terang | abu sangat gelap | Tulisan "AUSFEAR" raksasa dan angka "01"/"02" |
+| `--nav-*` | | | Pill navbar |
 
-Yang perlu dibereskan kalau jadi dibuat (warna yang masih hardcoded):
-- Angka dekoratif "01"/"02" (`text-[#f5f5f5]`) di `About.tsx` dan `Interests.tsx`.
-- `.hero-giant-text` (`#eeeeee`) dan `.nav-pill` (background putih transparan) di `globals.css`.
-- Quote desktop di `Hero.tsx` (`text-black`) dan inline style `color: "#ffffff"` di teks dalam siluet.
-- Bagian Gaming sudah gelap (`bg-[#0a0a0a]`), jadi di dark mode perlu dibedakan, misalnya dengan warna surface yang sedikit lebih terang atau garis batas.
-- Toggle-nya bisa memakai transisi scanline wipe yang sama dengan pergantian foto hero.
+Rim light dan spotlight foto ada di blok `[data-theme="dark"] .hero-photo` dan `.hero-photo-mask::before`.
+
+### Yang sudah diuji (30 Okt 2026, build produksi)
+- Semua section di 1440px dan 390px, tanpa error di console.
+- Tema terpasang sebelum `DOMContentLoaded`, baik dari pengaturan sistem maupun pilihan tersimpan.
+- Toggle (desktop dan mobile), pilihan yang bertahan setelah reload, dan pilihan yang menang atas perubahan pengaturan sistem.
+- Regresi mode terang: tidak ada perubahan.
+
+### Ikut diperbaiki
+- **Kursor ketik di kalimat "I play …" bisa terlempar sendirian ke baris baru** saat nama game sedang diketik di layar sempit, dan padding chip menonjol ±10px melewati batas konten. Sekarang huruf terakhir dan kursor menjadi satu unit, dan paragraf diberi padding kanan. Diuji untuk setiap tahap ketikan dari ke-31 nama game di 7 lebar layar.
 
 ---
 

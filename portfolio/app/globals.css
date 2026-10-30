@@ -1,7 +1,12 @@
 @import "tailwindcss";
 
+/* `dark:` utilities follow the data-theme attribute (set before paint by the script in layout.tsx),
+   not the OS setting directly, so the navbar toggle can override it */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* ─── Design Tokens ─── */
 :root {
+  color-scheme: light;
   --color-bg: #fafafa;
   --color-bg-alt: #f0f0f0;
   --color-surface: #ffffff;
@@ -15,6 +20,62 @@
   --color-accent: #000000;
   --color-pop: #ff6b2b;
   --color-pop-glow: #ff8f5e;
+
+  /* Interaction tints */
+  --color-hover: rgba(0, 0, 0, 0.04);
+  --color-active: rgba(0, 0, 0, 0.06);
+
+  /* Navbar pill */
+  --nav-bg: rgba(255, 255, 255, 0.55);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.75);
+  --nav-border: rgba(0, 0, 0, 0.06);
+  --nav-border-scrolled: rgba(0, 0, 0, 0.1);
+  --nav-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+
+  /* Section decoration */
+  --hero-watermark: #eeeeee;
+  /* The name as seen through the photo's silhouette */
+  --hero-name-inside: #ffffff;
+  --deco-number: #f5f5f5;
+  /* The Gaming section stays a dark "stage" in both themes */
+  --gaming-bg: #0a0a0a;
+
+  --scrollbar-thumb: #d4d4d4;
+  --scrollbar-thumb-hover: #a3a3a3;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0b0b0c;
+  --color-bg-alt: #161617;
+  --color-surface: #121213;
+  --color-text: #f2f2f2;
+  /* Both ≥4.5:1 on --color-bg and --color-surface */
+  --color-text-muted: #a8a8a8;
+  --color-text-faint: #8c8c8c;
+  --color-decor: #4a4a4c;
+  --color-border: #262628;
+  --color-accent: #ffffff;
+
+  --color-hover: rgba(255, 255, 255, 0.06);
+  --color-active: rgba(255, 255, 255, 0.09);
+
+  --nav-bg: rgba(22, 22, 24, 0.55);
+  --nav-bg-scrolled: rgba(22, 22, 24, 0.75);
+  --nav-border: rgba(255, 255, 255, 0.06);
+  --nav-border-scrolled: rgba(255, 255, 255, 0.1);
+  /* Kept soft: a heavier shadow visibly darkens the text scrolling underneath the pill */
+  --nav-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+
+  --hero-watermark: #151516;
+  /* White-on-white would erase the effect, so the inside switches to the accent */
+  --hero-name-inside: var(--color-pop);
+  --deco-number: #141415;
+  /* A raised surface (vs. #0b0b0c page) so the section still reads as a stage */
+  --gaming-bg: #141416;
+
+  --scrollbar-thumb: #3a3a3c;
+  --scrollbar-thumb-hover: #5a5a5c;
 }
 
 @theme inline {
@@ -48,24 +109,24 @@ body {
 /* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #a3a3a3; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
 /* ─── Navbar Pill ─── */
 .nav-pill {
   backdrop-filter: blur(20px) saturate(200%);
   -webkit-backdrop-filter: blur(20px) saturate(200%);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--nav-bg);
+  border: 1px solid var(--nav-border);
   border-radius: 9999px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
   transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .nav-pill-scrolled {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+  background: var(--nav-bg-scrolled);
+  border-color: var(--nav-border-scrolled);
+  box-shadow: var(--nav-shadow);
 }
 
 /* ─── Hero Giant BG Text ─── */
@@ -75,7 +136,7 @@ body {
   text-transform: uppercase;
   letter-spacing: -0.03em;
   line-height: 0.85;
-  color: #eeeeee;
+  color: var(--hero-watermark);
   user-select: none;
   white-space: nowrap;
 }
@@ -103,6 +164,72 @@ body {
     mask-image: linear-gradient(to bottom, black 82%, transparent 95%);
     -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 95%);
   }
+}
+
+/* ─── Hero Photo in Dark Mode ───
+   The black shirt and hair melt into a dark page. A thin rim light follows the cutout's alpha edge
+   (drop-shadow respects transparency) and a faint spotlight sits behind the figure. */
+[data-theme="dark"] .hero-photo {
+  filter: grayscale(1) contrast(1.12) brightness(1.08)
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.55))
+    drop-shadow(0 0 18px rgba(255, 107, 43, 0.28));
+}
+[data-theme="dark"] .hero-photo-mask::before {
+  content: "";
+  position: absolute;
+  inset: 8% 5% 0;
+  background: radial-gradient(ellipse at 50% 45%, rgba(255, 255, 255, 0.1), transparent 62%);
+  pointer-events: none;
+}
+
+/* ─── Gaming Stage ───
+   Dark in both themes. In dark mode it becomes a raised surface with a faint warm light from above,
+   so it still stands apart from the page instead of disappearing into it. */
+.gaming-stage {
+  background: var(--gaming-bg);
+}
+[data-theme="dark"] .gaming-stage {
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 107, 43, 0.07), transparent 70%),
+    var(--gaming-bg);
+}
+
+/* ─── Theme Switch Transition ───
+   Same motif as the hero photo swap: the new theme wipes up from the bottom behind an orange scanline.
+   Driven by the View Transitions API in lib/theme.ts; browsers without it just switch instantly. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  animation: theme-wipe 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes theme-wipe {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.theme-scanline {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  pointer-events: none;
+  view-transition-name: theme-scanline;
+  background: linear-gradient(to right, transparent, var(--color-pop), transparent);
+  box-shadow: 0 0 16px var(--color-pop), 0 0 32px var(--color-pop);
+}
+/* The line rides the wipe's edge: same duration and easing, travelling from the bottom to the top */
+::view-transition-group(theme-scanline) {
+  animation: theme-scan 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+::view-transition-old(theme-scanline),
+::view-transition-new(theme-scanline) {
+  animation: none;
+}
+@keyframes theme-scan {
+  from { transform: translateY(100vh); opacity: 1; }
+  80% { opacity: 1; }
+  to { transform: translateY(0); opacity: 0; }
 }
 
 /* ─── Particle Animations ─── */

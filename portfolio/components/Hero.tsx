@@ -173,7 +173,7 @@ export default function Hero() {
           preload={idx === 0}
           loading="eager"
           unoptimized
-          className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
+          className="hero-photo object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
           sizes="(max-width: 1024px) 70vw, 55vw"
         />
 
@@ -203,7 +203,7 @@ export default function Hero() {
             <motion.div style={{ x: audintaDiffX, y: audintaDiffY }}>
               <span
                 className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
-                style={{ color: "#ffffff" }}
+                style={{ color: "var(--hero-name-inside)" }}
               >
                 <span>AUDIN</span>
                 <span>T</span>
@@ -223,7 +223,7 @@ export default function Hero() {
             <motion.div style={{ x: saktiDiffX, y: saktiDiffY }}>
               <span
                 className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
-                style={{ color: "#ffffff" }}
+                style={{ color: "var(--hero-name-inside)" }}
               >
                 SAKTI
               </span>
@@ -356,7 +356,7 @@ export default function Hero() {
                     preload={idx === 0}
                     loading="eager"
                     unoptimized
-                    className="object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
+                    className="hero-photo object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
                     sizes="90vw"
                   />
                 </motion.div>
@@ -455,7 +455,7 @@ export default function Hero() {
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
             className="text-right"
           >
-            <p className="font-[family-name:var(--font-syne-tactile)] text-2xl md:text-3xl lg:text-4xl text-black leading-snug">
+            <p className="font-[family-name:var(--font-syne-tactile)] text-2xl md:text-3xl lg:text-4xl text-[var(--color-text)] leading-snug">
               the best thing isn&apos;t<br />always the best choice.
             </p>
           </motion.div>

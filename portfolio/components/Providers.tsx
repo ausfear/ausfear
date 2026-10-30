@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 import { MotionConfig } from "framer-motion";
+import { useSystemThemeSync } from "@/hooks/useTheme";
 
 /* Intro state — flips to true once the preloader starts its exit,
    so above-the-fold entrance animations play when they're actually visible. */
@@ -21,6 +22,7 @@ export function useMarkIntroReady() {
 export default function Providers({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
   const markReady = useCallback(() => setReady(true), []);
+  useSystemThemeSync();
 
   return (
     <IntroContext.Provider value={{ ready, markReady }}>

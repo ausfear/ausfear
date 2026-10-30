@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import Image from "next/image";
 import { useIntroReady } from "./Providers";
 import { useScrollLock } from "@/hooks/useScrollLock";
+import { useTheme } from "@/hooks/useTheme";
+import { setTheme } from "@/lib/theme";
 
 const navItems = [
   { label: "About", href: "#about", id: "about" },
@@ -19,6 +21,7 @@ export default function Navbar() {
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
   const introReady = useIntroReady();
+  const theme = useTheme();
   const reduceMotion = useReducedMotion();
   const scrollBehavior: ScrollBehavior = reduceMotion ? "auto" : "smooth";
 
@@ -133,7 +136,7 @@ export default function Navbar() {
             href="#hero"
             onClick={scrollToHero}
             aria-label="Home"
-            className="relative flex items-center justify-center p-1.5 md:px-2.5 md:py-1.5 rounded-full hover:bg-black/[0.04] transition-colors z-10 mr-0.5 group"
+            className="relative flex items-center justify-center p-1.5 md:px-2.5 md:py-1.5 rounded-full hover:bg-[var(--color-hover)] transition-colors z-10 mr-0.5 group"
           >
             <Image
               src="/icon.png"
@@ -164,7 +167,7 @@ export default function Navbar() {
                   {isActive && (
                     <motion.div
                       layoutId="nav-active-pill"
-                      className="absolute inset-0 rounded-full bg-black/[0.06]"
+                      className="absolute inset-0 rounded-full bg-[var(--color-active)]"
                       style={{ zIndex: -1 }}
                       transition={{
                         type: "spring",
@@ -179,12 +182,23 @@ export default function Navbar() {
             })}
           </div>
 
+          {/* Theme Toggle. Icons swap via CSS so the first paint is already correct */}
+          <button
+            type="button"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark", { animate: true, persist: true })}
+            className="p-2 rounded-full text-[var(--color-text-muted)] hover:text-[var(--color-text)] hover:bg-[var(--color-hover)] transition-colors"
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <Moon size={16} className="dark:hidden" />
+            <Sun size={16} className="hidden dark:block" />
+          </button>
+
           {/* Mobile Toggle */}
           <button
             ref={toggleRef}
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 rounded-full hover:bg-black/[0.04] transition-colors"
+            className="md:hidden p-2 rounded-full hover:bg-[var(--color-hover)] transition-colors"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
@@ -213,7 +227,7 @@ export default function Navbar() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.05, duration: 0.3 }}
-              className="p-2 mb-2 rounded-full hover:bg-black/[0.04] transition-colors"
+              className="p-2 mb-2 rounded-full hover:bg-[var(--color-hover)] transition-colors"
               aria-label="Home"
             >
               <Image

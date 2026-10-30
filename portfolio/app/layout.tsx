@@ -3,6 +3,7 @@ import { Inter, Syne, Syne_Tactile } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Providers from "@/components/Providers";
 import { SITE_URL } from "@/lib/site";
+import { themeInitScript } from "@/lib/theme";
 import "./globals.css";
 
 const inter = Inter({
@@ -63,8 +64,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${inter.variable} ${syne.variable} ${syneTactile.variable} h-full antialiased`}
+      // data-theme is set by the inline script below before React hydrates
+      suppressHydrationWarning
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="preconnect" href="https://embed.music.apple.com" />
         <link rel="dns-prefetch" href="https://embed.music.apple.com" />
         <link rel="preconnect" href="https://play.itunes.apple.com" />

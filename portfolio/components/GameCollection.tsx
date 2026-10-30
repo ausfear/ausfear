@@ -201,7 +201,9 @@ function PlaySentence({
           min-height reserves the longest case so the content below doesn't jump as names change. */}
       <p
         aria-hidden="true"
-        className="font-light text-white/60 leading-[1.6] text-xl sm:text-2xl md:text-3xl lg:text-4xl min-h-[5.4em] sm:min-h-[3.6em] xl:min-h-[2em]"
+        // pr matches the chip's px: line breaking ignores the padding box-decoration-clone adds at a
+        // line's end, so without it a chip ending a line pokes ~10px past the content edge
+        className="font-light text-white/60 leading-[1.6] text-xl sm:text-2xl md:text-3xl lg:text-4xl min-h-[5.4em] sm:min-h-[3.6em] xl:min-h-[2em] pr-3 md:pr-4"
       >
         I play{" "}
         {/* Keep the comma glued to the genre chip */}
@@ -231,8 +233,12 @@ function PlaySentence({
         {/* Plain inline (not inline-flex) so long names can wrap; box-decoration-clone repeats
             the chip's border and padding on every line it spans */}
         <span className="box-decoration-clone rounded-lg px-2.5 md:px-3 py-0.5 bg-white/[0.06] border border-white/10 font-[family-name:var(--font-syne)] font-semibold tracking-tight text-white">
-          {typed || " "}
-          <span className="game-caret inline-block ml-1 w-[2px] h-[0.95em] align-[-0.12em] bg-[var(--color-pop)]" />
+          {typed.slice(0, -1)}
+          {/* The caret is glued to the last character so it can never wrap onto a line of its own */}
+          <span className="whitespace-nowrap">
+            {typed.slice(-1) || " "}
+            <span className="game-caret inline-block ml-1 w-[2px] h-[0.95em] align-[-0.12em] bg-[var(--color-pop)]" />
+          </span>
         </span>
         .
       </p>

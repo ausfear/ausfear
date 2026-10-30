@@ -24,7 +24,8 @@ npm run build
 | --- | --- |
 | `app/layout.tsx` | Fonts, metadata, `<Providers>` wrapper |
 | `app/opengraph-image.tsx`, `robots.ts`, `sitemap.ts` | Social preview card and SEO routes |
-| `components/Providers.tsx` | Intro-ready context and `MotionConfig` (respects reduced motion) |
+| `components/Providers.tsx` | Intro-ready context, `MotionConfig` (respects reduced motion), OS theme sync |
+| `lib/theme.ts`, `hooks/useTheme.ts` | Light/dark theme: pre-paint init script, toggle with scanline wipe, `useTheme()` |
 | `components/LoadingScreen.tsx` + `hooks/useAssetPreloader.ts` | Preloader that waits for the hero images and fonts |
 | `components/Hero.tsx` | Hero with rotating photos and mouse parallax |
 | `components/Interests.tsx` | Music (Apple Music embeds), Gaming (Steam widget), and Math |
@@ -38,5 +39,6 @@ npm run build
 ## Notes
 
 - The production URL is set in `lib/site.ts` and is used by the metadata, robots, and sitemap.
+- Colors are tokens in `app/globals.css`: light values in `:root`, dark values in `[data-theme="dark"]`. Use the tokens (or `dark:` utilities) instead of hard-coded colors so both themes keep working.
 - To change a hero photo, export it as WebP into `public/cutouts/` and update the list in both `Hero.tsx` and `useAssetPreloader.ts`.
 - Editing the game list (adding Steam and non-Steam games, refreshing hours) is documented at the top of `data/games.ts` and in `NOTES.md`, section 4.

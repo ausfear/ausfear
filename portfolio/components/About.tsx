@@ -58,7 +58,7 @@ export default function About() {
         style={{ y: decoY }}
         className="absolute -top-10 right-0 md:right-10 pointer-events-none select-none"
       >
-        <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[#f5f5f5] leading-none">
+        <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[var(--deco-number)] leading-none">
           01
         </span>
       </motion.div>

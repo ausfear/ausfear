@@ -6,6 +6,14 @@ import { Music, Gamepad2, Sigma, ChevronLeft, ChevronRight } from "lucide-react"
 import TiltCard from "./TiltCard";
 import GameCollection from "./GameCollection";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useTheme } from "@/hooks/useTheme";
+import type { Theme } from "@/lib/theme";
+
+/* Apple's embed has its own dark variant. Switching theme reloads the iframes, which is fine:
+   they're lazy and below the fold, so on a normal visit they haven't loaded yet when this resolves. */
+function appleEmbedSrc(src: string, theme: Theme) {
+  return theme === "dark" ? `${src}?theme=dark` : src;
+}
 
 /* ═══════════════════════════════════════════════════
    MUSIC DATA
@@ -122,6 +130,7 @@ function MusicSection() {
   /* The exploded spiderweb only fits from xl (1280px) up — below that, cards stack.
      Layout comes from CSS breakpoints; this only picks the animation targets. */
   const isWide = useMediaQuery("(min-width: 1280px)");
+  const theme = useTheme();
 
   /* Circular modulo logic — always exactly 1 center, 1 left, 1 right */
   const getCarouselVariant = (index: number) => {
@@ -226,7 +235,7 @@ function MusicSection() {
                         display: "block",
                       }}
                       sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                      src={pl.src}
+                      src={appleEmbedSrc(pl.src, theme)}
                       title={`Playlist: ${pl.label}`}
                     />
                   </div>
@@ -445,7 +454,7 @@ function MusicSection() {
                         display: "block",
                       }}
                       sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                      src={song.src}
+                      src={appleEmbedSrc(song.src, theme)}
                       title={song.genre}
                     />
                   </TiltCard>
@@ -510,7 +519,7 @@ function GamingSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <div ref={ref} className="interest-section py-20 md:py-32 bg-[#0a0a0a] text-white">
+    <div ref={ref} className="interest-section gaming-stage py-20 md:py-32 text-white">
       <div className="max-w-7xl mx-auto px-4 md:px-10">
         {/* Header */}
         <motion.div
@@ -771,7 +780,7 @@ export default function Interests() {
           style={{ y: decoY }}
           className="absolute -top-10 left-0 md:left-10 pointer-events-none select-none"
         >
-          <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[#f5f5f5] leading-none">
+          <span className="font-[family-name:var(--font-syne)] text-[10rem] md:text-[18rem] font-black text-[var(--deco-number)] leading-none">
             02
           </span>
         </motion.div>
