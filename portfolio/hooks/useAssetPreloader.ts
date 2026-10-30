@@ -1,14 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import heroPhotos from "@/data/hero-photos.generated.json";
 
-export const PRELOAD_IMAGES = [
-  "/icon.png",
-  "/cutouts/sunglasses.webp",
-  "/cutouts/guitar.webp",
-  "/cutouts/gamepad.webp",
-  "/cutouts/sunglasses2.webp",
-];
+// The logo plus every hero photo (generated list, so new photos are preloaded automatically)
+export const PRELOAD_IMAGES = ["/icon.png", ...heroPhotos.map((p) => p.src)];
 
 // Minimum on-screen time so the liquid fill still reads as an animation
 const MIN_DURATION_FIRST_VISIT = 2200;

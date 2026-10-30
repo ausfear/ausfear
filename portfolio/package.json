@@ -11,7 +11,8 @@
     "games:images": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs images",
     "games:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/games.mjs find",
     "songs:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/songs.mjs",
-    "playlists:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/playlists.mjs"
+    "playlists:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/playlists.mjs",
+    "hero:photos": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/hero-photos.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

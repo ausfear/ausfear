@@ -224,6 +224,29 @@ Diurutkan kira-kira dari yang paling khas "ausfear".
 
 ---
 
+## 6b. Transisi foto hero patah-patah di iPhone (diperbaiki 30 Okt 2026)
+
+**Gejala:** di Safari iPhone, wipe pergantian foto hero terlihat seperti beberapa fps saja.
+
+**Diagnosis dari rekaman layar** (60 fps, dianalisis per frame dengan ffmpeg): dalam 650 ms wipe, hanya 3 dari ±40 frame yang berubah. Lima frame berturut-turut identik, lalu foto baru tiba-tiba muncul utuh. Scroll halaman di rekaman yang sama mulus 60 fps, jadi bukan karena perangkat dibatasi (Low Power Mode).
+
+**Penyebab:** wipe menganimasikan `clip-path` lewat JavaScript per frame. Safari iOS tidak bisa menangani itu di GPU, jadi foto digambar ulang oleh CPU setiap frame, lengkap dengan filter `grayscale/contrast/brightness`, dua `drop-shadow` rim light di dark mode, dan `mask-image` di container. Scanline juga digerakkan lewat `top` (memicu layout ulang). Diukur di Chrome dengan CPU 4× lebih lambat: ±470 operasi paint selama satu wipe.
+
+**Perbaikan:**
+- Wipe kini hanya memakai `transform`. Setiap foto berupa "jendela": pembungkus `overflow: hidden` digeser satu arah dan isinya digeser balik, sehingga foto diam dan hanya bagian di dalam jendela yang terlihat. GPU tinggal menggeser layer yang sudah jadi. Scanline juga digerakkan dengan transform. Hasil ukur: 7 operasi paint (hanya di awal), waktu paint 45–50 ms → ±2 ms.
+- Efek B&W dibakar ke file foto, sehingga mode terang tidak memakai filter sama sekali. Rumusnya meniru CSS lama persis (selisih rata-rata 0,5/255). Di dark mode hanya tersisa rim light (`brightness(1.06)` + `drop-shadow`), yang cukup dihitung sekali per transisi.
+- Hanya foto yang sedang tampil yang dijadikan layer GPU, supaya memori iPhone tidak terbebani.
+
+**Uji kedua di iPhone (rekaman kedua): sudah 60 fps, tapi dua masalah baru.**
+- *Foto tampil berwarna:* foto B&W baru memakai nama file yang sama dengan foto berwarna lama, dan Safari memakai salinan lama dari cache (sementara filter CSS-nya sudah dihapus). Ini juga akan menimpa pengunjung live yang pernah membuka situs. Solusi: nama file kini memakai hash isinya (`guitar.82b101a8.webp`), sehingga foto yang berubah selalu mendapat URL baru.
+- *Wipe terasa instan:* frame pertama transisi tersendat (Safari menyiapkan layer foto baru). Karena animasinya dihitung berdasarkan waktu, setelah sendatan itu ia melompat: dalam satu frame scanline sudah di ±85%. Solusi: animasi kini maju per frame (maksimal 1/30 detik per frame), sehingga sendatan hanya menunda dan tidak membuat lompatan; layer foto baru disiapkan dua frame sebelum gerakan mulai; durasi 1 detik dengan ease-in-out (sebelumnya 650 ms dengan kurva yang 85%-nya habis di ±150 ms pertama). Diuji dengan CPU 6× lebih lambat: lompatan terbesar 2,4–2,9% tinggi foto per frame, scanline terlihat bergerak ±1 detik.
+
+**Mengganti foto hero:** letakkan PNG transparan resolusi penuh (potret ±5:6, seperti 1000×1200 sekarang) di `assets/hero-photos/`, daftarkan beserta alt text di `data/hero-photos.ts`, lalu jalankan `npm run hero:photos`. Script membuat file B&W ber-hash di `public/cutouts/`, menghapus versi lama, dan menulis `data/hero-photos.generated.json` yang dibaca hero dan preloader. Tidak perlu mengubah kode.
+
+**Jangan** menambahkan filter CSS atau animasi `clip-path`/`top` pada foto hero lagi, dan jangan menaruh foto hero langsung di `public/cutouts/` dengan nama tetap.
+
+---
+
 ## 7. Keterbatasan yang sudah diketahui
 
 - ~~Swipe carousel playlist di HP hanya bekerja di baris label~~. Teratasi 30 Okt 2026: embed Apple diganti kartu playlist sendiri (bagian 2b).

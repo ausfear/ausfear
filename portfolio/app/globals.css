@@ -173,7 +173,9 @@ body {
    The black shirt and hair melt into a dark page. A thin rim light follows the cutout's alpha edge
    (drop-shadow respects transparency) and a faint spotlight sits behind the figure. */
 [data-theme="dark"] .hero-photo {
-  filter: grayscale(1) contrast(1.12) brightness(1.08)
+  /* The photos are already black-and-white with contrast 1.12 / brightness 1.02 baked in
+     (npm run hero:photos); 1.06 more brightness gives the dark theme's 1.08 */
+  filter: brightness(1.06)
     drop-shadow(0 0 1px rgba(255, 255, 255, 0.55))
     drop-shadow(0 0 18px rgba(255, 107, 43, 0.28));
 }

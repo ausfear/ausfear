@@ -8,19 +8,19 @@ import {
   useTransform,
   useScroll,
   useReducedMotion,
-  animate,
-  type MotionValue,
+  cubicBezier,
 } from "framer-motion";
 import Image from "next/image";
 import FloatingShapes, { MobileFloatingParticles } from "./FloatingShapes";
 import { useIntroReady } from "./Providers";
+// Built by `npm run hero:photos` from data/hero-photos.ts (black-and-white baked in, hashed file names)
+import HERO_PHOTOS from "@/data/hero-photos.generated.json";
 
-const HERO_PHOTOS = [
-  { src: "/cutouts/sunglasses.webp", alt: "Audinta with sunglasses" },
-  { src: "/cutouts/guitar.webp", alt: "Audinta with guitar" },
-  { src: "/cutouts/gamepad.webp", alt: "Audinta with gamepad" },
-  { src: "/cutouts/sunglasses2.webp", alt: "Audinta posing with sunglasses" },
-];
+// Photo wipe: long enough to watch the scanline travel up, even on both ends of the curve
+const WIPE_DURATION_MS = 1000;
+const wipeEase = cubicBezier(0.65, 0, 0.35, 1);
+const WIPE_MAX_STEP_MS = 1000 / 30;
+const nextFrame = () => new Promise<number>((resolve) => requestAnimationFrame(resolve));
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -30,7 +30,7 @@ export default function Hero() {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [prevPhotoIndex, setPrevPhotoIndex] = useState<number | null>(null);
   const photoIndexRef = useRef(0);
-  const animRef = useRef<ReturnType<typeof animate> | null>(null);
+  const wipeRaf = useRef(0);
   const introReady = useIntroReady();
   const reduceMotion = useReducedMotion();
 
@@ -47,14 +47,44 @@ export default function Hero() {
 
   // Synchronized scanline wipe progress: 0 (start of wipe) -> 1 (wipe complete)
   const wipeProgress = useMotionValue(1);
-  const scanlineTop = useTransform(wipeProgress, (v) => `${(1 - v) * 100}%`);
-  const newPhotoClip = useTransform(wipeProgress, (v) => `inset(${(1 - v) * 100}% 0% 0% 0%)`);
-  // Overlap by 0.2% to guarantee zero subpixel seam, seamlessly covered by the 3px laser scanline
-  const oldPhotoClip = useTransform(
-    wipeProgress,
-    (v) => `inset(0% 0% ${Math.max(0, v * 100 - 0.2)}% 0%)`
-  );
+  /*
+   * The wipe uses transforms only, so the GPU just slides already-painted layers. (It used to animate
+   * clip-path, which repainted the photos every frame — on iPhone that dropped it to a few fps.)
+   * Each photo is a "window": an overflow-hidden box shifted one way, with its content shifted back
+   * the same amount, so the photo stays put and only the band inside the box shows.
+   */
+  // New photo: window covers the bottom (1 - v) of the frame and grows upward
+  const enterOuterY = useTransform(wipeProgress, (v) => `${(1 - v) * 100}%`);
+  const enterInnerY = useTransform(wipeProgress, (v) => `${-(1 - v) * 100}%`);
+  // Old photo: keeps the top part. Overlaps the new one by 0.2% so no seam shows under the scanline
+  const exitOuterY = useTransform(wipeProgress, (v) => `${-Math.max(0, v * 100 - 0.2)}%`);
+  const exitInnerY = useTransform(wipeProgress, (v) => `${Math.max(0, v * 100 - 0.2)}%`);
+  // The scanline rides the boundary: same offset as the new photo's window
+  const scanlineY = enterOuterY;
   const scanlineOpacity = useTransform(wipeProgress, [0, 0.06, 0.82, 1], [0, 1, 1, 0]);
+
+  /** Outer/inner styles for photo `idx` in the current wipe state */
+  const photoLayer = (idx: number) => {
+    const isEntering = prevPhotoIndex !== null && idx === photoIndex;
+    const isExiting = prevPhotoIndex !== null && idx === prevPhotoIndex;
+    const isCurrent = prevPhotoIndex === null && idx === photoIndex;
+    const isVisible = isEntering || isExiting || isCurrent;
+    return {
+      outer: {
+        y: isEntering ? enterOuterY : isExiting ? exitOuterY : 0,
+        zIndex: isEntering || isCurrent ? 10 : isExiting ? 5 : 0,
+        opacity: isVisible ? 1 : 0,
+        visibility: isVisible ? ("visible" as const) : ("hidden" as const),
+        pointerEvents: isVisible ? ("auto" as const) : ("none" as const),
+        // Only the photos on screen get their own GPU layer; four full-size layers is a lot of iPhone memory
+        willChange: isVisible ? "transform" : "auto",
+      },
+      inner: {
+        y: isEntering ? enterInnerY : isExiting ? exitInnerY : 0,
+        willChange: isVisible ? "transform" : "auto",
+      },
+    };
+  };
 
   // Automatic photo rotation every 6.5 seconds with zero-latency pre-decoded synchronized sweep
   useEffect(() => {
@@ -76,18 +106,40 @@ export default function Hero() {
         // Continue if decode API encounters any issue
       }
 
+      cancelAnimationFrame(wipeRaf.current);
       wipeProgress.set(0);
       setPrevPhotoIndex(current);
       setPhotoIndex(next);
       photoIndexRef.current = next;
 
-      animRef.current?.stop();
-      animRef.current = animate(wipeProgress, 1, {
-        duration: reduceMotion ? 0 : 0.65,
-        ease: [0.16, 1, 0.3, 1],
-        onComplete: () => {
-          setPrevPhotoIndex(null);
-        },
+      if (reduceMotion) {
+        wipeProgress.set(1);
+        setPrevPhotoIndex(null);
+        return;
+      }
+
+      // Give the browser two frames to mount and paint the new photo's layer before anything moves
+      await nextFrame();
+      await nextFrame();
+
+      /*
+       * Frame-stepped, not clock-driven: each frame advances by at most WIPE_MAX_STEP_MS. A hitch (iPhone
+       * preparing the new photo's layer) then pauses the wipe briefly instead of letting it jump ahead —
+       * with a clock-driven animation the scanline appeared already near the top after one frame.
+       */
+      let elapsed = 0;
+      let last = performance.now();
+      const step = (now: number) => {
+        elapsed += Math.min(now - last, WIPE_MAX_STEP_MS);
+        last = now;
+        const t = Math.min(1, elapsed / WIPE_DURATION_MS);
+        wipeProgress.set(wipeEase(t));
+        if (t < 1) wipeRaf.current = requestAnimationFrame(step);
+        else setPrevPhotoIndex(null);
+      };
+      wipeRaf.current = requestAnimationFrame((now) => {
+        last = now;
+        step(now);
       });
     };
 
@@ -95,7 +147,7 @@ export default function Hero() {
 
     return () => {
       clearInterval(timer);
-      animRef.current?.stop();
+      cancelAnimationFrame(wipeRaf.current);
     };
   }, [wipeProgress, reduceMotion]);
 
@@ -146,90 +198,78 @@ export default function Hero() {
   const saktiDiffX = useTransform(springX, [-0.5, 0.5], [-33, 33]);
   const saktiDiffY = useTransform(springY, [-0.5, 0.5], [-24, 24]);
 
-  const renderDesktopPhoto = (
-    idx: number,
-    clipStyle: MotionValue<string> | undefined,
-    zIndex: number,
-    opacity: number,
-    pointerEvents: "auto" | "none"
-  ) => {
+  const renderDesktopPhoto = (idx: number) => {
     const photo = HERO_PHOTOS[idx];
+    const layer = photoLayer(idx);
     return (
-      <motion.div
-        key={`photo-d-${idx}`}
-        className="absolute inset-0"
-        style={{
-          clipPath: clipStyle ?? "none",
-          zIndex,
-          opacity,
-          pointerEvents,
-          willChange: "clip-path",
-        }}
-      >
-        <Image
-          src={photo.src}
-          alt={photo.alt}
-          fill
-          preload={idx === 0}
-          loading="eager"
-          unoptimized
-          className="hero-photo object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
-          sizes="(max-width: 1024px) 70vw, 55vw"
-        />
+      <motion.div key={`photo-d-${idx}`} className="absolute inset-0 overflow-hidden" style={layer.outer}>
+        <motion.div className="absolute inset-0" style={layer.inner}>
+          {/* Black-and-white is baked into the files (npm run hero:photos), not applied with CSS filters */}
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            preload={idx === 0}
+            loading="eager"
+            unoptimized
+            className="hero-photo object-contain object-bottom"
+            sizes="(max-width: 1024px) 70vw, 55vw"
+          />
 
-        {/* White Text Overlay Masked to Photo Silhouette */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 z-10 pointer-events-none select-none"
-          style={{
-            maskImage: `url('${photo.src}')`,
-            WebkitMaskImage: `url('${photo.src}')`,
-            maskSize: "contain",
-            WebkitMaskSize: "contain",
-            maskPosition: "bottom center",
-            WebkitMaskPosition: "bottom center",
-            maskRepeat: "no-repeat",
-            WebkitMaskRepeat: "no-repeat",
-          }}
-        >
-          {/* White "AUDINTA" */}
+          {/* White Text Overlay Masked to Photo Silhouette */}
           <div
-            className="absolute pointer-events-none select-none whitespace-nowrap"
+            aria-hidden="true"
+            className="absolute inset-0 z-10 pointer-events-none select-none"
             style={{
-              bottom: "22vh",
-              left: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
+              maskImage: `url('${photo.src}')`,
+              WebkitMaskImage: `url('${photo.src}')`,
+              maskSize: "contain",
+              WebkitMaskSize: "contain",
+              maskPosition: "bottom center",
+              WebkitMaskPosition: "bottom center",
+              maskRepeat: "no-repeat",
+              WebkitMaskRepeat: "no-repeat",
             }}
           >
-            <motion.div style={{ x: audintaDiffX, y: audintaDiffY }}>
-              <span
-                className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
-                style={{ color: "var(--hero-name-inside)" }}
-              >
-                <span>AUDIN</span>
-                <span>T</span>
-                <span>A</span>
-              </span>
-            </motion.div>
-          </div>
+            {/* White "AUDINTA" */}
+            <div
+              className="absolute pointer-events-none select-none whitespace-nowrap"
+              style={{
+                bottom: "22vh",
+                left: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
+              }}
+            >
+              <motion.div style={{ x: audintaDiffX, y: audintaDiffY }}>
+                <span
+                  className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
+                  style={{ color: "var(--hero-name-inside)" }}
+                >
+                  <span>AUDIN</span>
+                  <span>T</span>
+                  <span>A</span>
+                </span>
+              </motion.div>
+            </div>
 
-          {/* White "SAKTI" */}
-          <div
-            className="absolute pointer-events-none select-none whitespace-nowrap"
-            style={{
-              bottom: "15vh",
-              right: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
-            }}
-          >
-            <motion.div style={{ x: saktiDiffX, y: saktiDiffY }}>
-              <span
-                className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
-                style={{ color: "var(--hero-name-inside)" }}
-              >
-                SAKTI
-              </span>
-            </motion.div>
+            {/* White "SAKTI" */}
+            <div
+              className="absolute pointer-events-none select-none whitespace-nowrap"
+              style={{
+                bottom: "15vh",
+                right: anchorDistance ? `calc(50% - ${anchorDistance}px)` : "18%",
+              }}
+            >
+              <motion.div style={{ x: saktiDiffX, y: saktiDiffY }}>
+                <span
+                  className="hero-fg-bold text-[6.5vw] lg:text-[5.5vw] opacity-95 leading-none inline-block"
+                  style={{ color: "var(--hero-name-inside)" }}
+                >
+                  SAKTI
+                </span>
+              </motion.div>
+            </div>
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     );
   };
@@ -328,50 +368,38 @@ export default function Hero() {
         >
           <div className="hero-photo-mask relative w-full h-full">
             {HERO_PHOTOS.map((photo, idx) => {
-              const isEntering = prevPhotoIndex !== null && idx === photoIndex;
-              const isExiting = prevPhotoIndex !== null && idx === prevPhotoIndex;
-              const isCurrent = prevPhotoIndex === null && idx === photoIndex;
-              const isVisible = isEntering || isExiting || isCurrent;
-
+              const layer = photoLayer(idx);
               return (
-                <motion.div
-                  key={`photo-m-${idx}`}
-                  className="absolute inset-0"
-                  style={{
-                    clipPath: isEntering
-                      ? newPhotoClip
-                      : isExiting
-                      ? oldPhotoClip
-                      : "none",
-                    zIndex: isEntering ? 10 : isExiting ? 5 : isCurrent ? 10 : 0,
-                    opacity: isVisible ? 1 : 0,
-                    pointerEvents: isVisible ? "auto" : "none",
-                    willChange: "clip-path",
-                  }}
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    preload={idx === 0}
-                    loading="eager"
-                    unoptimized
-                    className="hero-photo object-contain object-bottom grayscale contrast-[1.12] brightness-[1.02]"
-                    sizes="90vw"
-                  />
+                <motion.div key={`photo-m-${idx}`} className="absolute inset-0 overflow-hidden" style={layer.outer}>
+                  <motion.div className="absolute inset-0" style={layer.inner}>
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      preload={idx === 0}
+                      loading="eager"
+                      unoptimized
+                      className="hero-photo object-contain object-bottom"
+                      sizes="90vw"
+                    />
+                  </motion.div>
                 </motion.div>
               );
             })}
 
-            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
+            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top). A full-height layer slid with
+                transform (not `top`), so moving it never triggers layout */}
             {prevPhotoIndex !== null && (
               <motion.div
                 key={`scan-m-${photoIndex}`}
-                className="absolute inset-x-0 pointer-events-none z-20 -translate-y-1/2"
-                style={{ top: scanlineTop, opacity: scanlineOpacity }}
+                data-hero-scanline
+                className="absolute inset-0 pointer-events-none z-20"
+                style={{ y: scanlineY, opacity: scanlineOpacity, willChange: "transform, opacity" }}
               >
-                <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_14px_var(--color-pop),0_0_28px_var(--color-pop)]" />
-                <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 top-0 -translate-y-1/2">
+                  <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_14px_var(--color-pop),0_0_28px_var(--color-pop)]" />
+                  <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+                </div>
               </motion.div>
             )}
           </div>
@@ -415,30 +443,20 @@ export default function Hero() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
         >
           <div className="hero-photo-mask relative h-[88vh] lg:h-[92vh] aspect-[5/6]">
-            {HERO_PHOTOS.map((_, idx) => {
-              const isEntering = prevPhotoIndex !== null && idx === photoIndex;
-              const isExiting = prevPhotoIndex !== null && idx === prevPhotoIndex;
-              const isCurrent = prevPhotoIndex === null && idx === photoIndex;
-              const isVisible = isEntering || isExiting || isCurrent;
+            {HERO_PHOTOS.map((_, idx) => renderDesktopPhoto(idx))}
 
-              return renderDesktopPhoto(
-                idx,
-                isEntering ? newPhotoClip : isExiting ? oldPhotoClip : undefined,
-                isEntering ? 10 : isExiting ? 5 : isCurrent ? 10 : 0,
-                isVisible ? 1 : 0,
-                isVisible ? "auto" : "none"
-              );
-            })}
-
-            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top) */}
+            {/* Vertical Laser Scanline Sweep on Switch (Bottom to Top), transform-driven like the mobile one */}
             {prevPhotoIndex !== null && (
               <motion.div
                 key={`scan-d-${photoIndex}`}
-                className="absolute inset-x-0 pointer-events-none z-20 -translate-y-1/2"
-                style={{ top: scanlineTop, opacity: scanlineOpacity }}
+                data-hero-scanline
+                className="absolute inset-0 pointer-events-none z-20"
+                style={{ y: scanlineY, opacity: scanlineOpacity, willChange: "transform, opacity" }}
               >
-                <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_16px_var(--color-pop),0_0_32px_var(--color-pop)]" />
-                <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+                <div className="absolute inset-x-0 top-0 -translate-y-1/2">
+                  <div className="w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--color-pop)] to-transparent shadow-[0_0_16px_var(--color-pop),0_0_32px_var(--color-pop)]" />
+                  <div className="w-full h-12 bg-gradient-to-b from-[var(--color-pop)]/25 to-transparent pointer-events-none" />
+                </div>
               </motion.div>
             )}
           </div>
