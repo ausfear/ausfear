@@ -1,7 +1,5 @@
-<picture>
-  ![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-light.png#gh-light-mode-only)
-  ![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-dark.png#gh-dark-mode-only)
-</picture>
+![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-light.png#gh-light-mode-only)
+![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-dark.png#gh-dark-mode-only)
 
 ### Hi, I'm Audinta
 
