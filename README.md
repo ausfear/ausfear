@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/header-dark.png">
-  <img alt="Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy." src="assets/header-light.png">
+  ![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-light.png#gh-light-mode-only)
+  ![Welcome to my profile. Audinta Sakti, also known as ausfear. Game enjoyer, music listener, occasional math guy.](assets/header-dark.png#gh-dark-mode-only)
 </picture>
 
 ### Hi, I'm Audinta
